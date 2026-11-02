@@ -125,19 +125,3 @@ veri-rag-harness/
     ├── scenarios.py                   # 54-Doc Enterprise Corpus & 30 Multi-Domain Golden Scenarios
     └── cli.py                         # Benchmark runner & formatted report generator
 ```
-
----
-
-## Resume Bullets
-
-- **Amazon Same-Day Delivery LLM & Agentic Workflows (SDE III, WW Speed & AI Tech — Role #3):**
-  > Engineered **VeriRAG**, a hybrid lexical (`BM25Okapi`) and dense hashing-vector retrieval engine with Reciprocal Rank Fusion (`RRF`), regional metadata filtering, and policy version freshness weighting across Same-Day Delivery SLA and routing policies, lifting Top-1 Hit Rate from **75.0% to 100.0%** (`MRR@3 = 1.0000`) and resolving 2026 vs. 2024 policy conflicts at **100.0% accuracy**.
-
-- **Amazon Selling Partner Support & Seller Assistant (Senior Applied Scientist / PM-T — Roles #10 & #18):**
-  > Built an asynchronous **5% Shadow Traffic Router** (`< 0.001 ms` primary latency overhead) and **1,000-iteration Paired Bootstrap Significance Engine** alongside a 5-stage **Counterfactual Trajectory Replay Debugger**, enabling single-node root-cause isolation across multi-hop Seller Support reimbursement workflows and improving citation grounding precision by **+60.0% ± 9.0% (`p = 0.0010`)**.
-
-- **AWS Applied AI Solutions — Life Sciences (Applied Scientist — Roles #4 & #11):**
-  > Designed a **5-Mode Adversarial Abstention & Faithfulness Harness** testing clinical protocol and regulatory compliance RAG pipelines (`claude-opus-5-5` and `gpt-4o-mini`) against contradictory amendments, missing constraints, and citation spoofing probes, cutting False Confidence Hallucination Rate (`FCHR`) by **-73.3% ± 8.1% (`p = 0.0010`)** while achieving **100.0% abstention recall** and **95.7% abstention precision**.
-
-- **Scale AI / DoorDash / Microsoft AI (ML Research Engineer — Evaluations & Post-Training):**
-  > Implemented an automated pre-evaluation **Dataset Contamination Scanner** combining 4-gram Jaccard similarity, 5-gram query containment, and 512-d embedding cosine checks with CI/CD regression gates (`FCHR <= 5%`, `0%` benchmark leakage), preventing evaluation-to-SFT data leakage across 30 multi-document enterprise scenarios.
