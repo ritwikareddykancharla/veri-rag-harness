@@ -55,7 +55,7 @@ def load_dotenv_if_present() -> None:
         Path.cwd() / ".env.local",
         Path.cwd().parent / ".env.local",
         Path.cwd().parent.parent / ".env.local",
-        Path("/Users/ritwika/projects/interview-prep/.env.local"),
+        *[p / ".env.local" for p in Path(__file__).resolve().parents],
     ]
     for env_path in candidates:
         if env_path.is_file():
