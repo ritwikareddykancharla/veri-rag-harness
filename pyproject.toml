@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veri-rag-harness"
+version = "1.0.0"
+description = "VeriRAG: Hybrid Retrieval Engine, Adversarial Abstention Harness, 5% Shadow Traffic Router & Counterfactual Replay Debugger"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Ritwika"}
+]
+dependencies = []
+
+[project.scripts]
+veri-rag = "veri_rag.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["veri_rag*"]

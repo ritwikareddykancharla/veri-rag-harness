@@ -1,0 +1,275 @@
+{
+  "corpus_summary": {
+    "total_documents": 54,
+    "total_chunks": 54,
+    "golden_scenarios": 30,
+    "adversarial_trials": 105
+  },
+  "retrieval_benchmark": {
+    "lexical_only": {
+      "recall_at_k": 1.0,
+      "top1_hit_rate": 0.75,
+      "mrr_at_k": 0.875,
+      "ndcg_at_k": 0.9077,
+      "fresh_conflict_win_rate": 0.5
+    },
+    "vector_only": {
+      "recall_at_k": 1.0,
+      "top1_hit_rate": 0.6667,
+      "mrr_at_k": 0.8264,
+      "ndcg_at_k": 0.8715,
+      "fresh_conflict_win_rate": 0.4167
+    },
+    "hybrid_rrf_no_freshness": {
+      "recall_at_k": 1.0,
+      "top1_hit_rate": 0.75,
+      "mrr_at_k": 0.875,
+      "ndcg_at_k": 0.9077,
+      "fresh_conflict_win_rate": 0.5
+    },
+    "hybrid_rrf": {
+      "recall_at_k": 1.0,
+      "top1_hit_rate": 1.0,
+      "mrr_at_k": 1.0,
+      "ndcg_at_k": 1.0,
+      "fresh_conflict_win_rate": 1.0
+    }
+  },
+  "adversarial_harness": {
+    "baseline_naive_rag": {
+      "pipeline_name": "NaiveTopK-RAG (Baseline)",
+      "total_trials": 105,
+      "abstention_precision": 0.0,
+      "abstention_recall": 0.0,
+      "abstention_f1": 0.0,
+      "false_confidence_hallucination_rate": 0.7333,
+      "citation_grounding_precision": 0.4031,
+      "conflict_resolution_accuracy": 0.4167,
+      "per_mode_fchr": {
+        "IRRELEVANT_DISTRACTOR_INJECTION": 0.0417,
+        "CONTRADICTORY_EVIDENCE_CONFLICT": 0.5833,
+        "MISSING_CRITICAL_CONSTRAINT": 1.0,
+        "CITATION_SPOOFING_PROBE": 1.0,
+        "OUT_OF_DISTRIBUTION_BOUNDARY": 1.0
+      },
+      "per_mode_accuracy": {
+        "IRRELEVANT_DISTRACTOR_INJECTION": 0.9583,
+        "CONTRADICTORY_EVIDENCE_CONFLICT": 0.4167,
+        "MISSING_CRITICAL_CONSTRAINT": 0.0,
+        "CITATION_SPOOFING_PROBE": 0.0,
+        "OUT_OF_DISTRIBUTION_BOUNDARY": 0.0
+      }
+    },
+    "candidate_veri_rag": {
+      "pipeline_name": "VeriRAG-Guarded (Candidate)",
+      "total_trials": 105,
+      "abstention_precision": 0.9574,
+      "abstention_recall": 1.0,
+      "abstention_f1": 0.9783,
+      "false_confidence_hallucination_rate": 0.0,
+      "citation_grounding_precision": 1.0,
+      "conflict_resolution_accuracy": 1.0,
+      "per_mode_fchr": {
+        "IRRELEVANT_DISTRACTOR_INJECTION": 0.0,
+        "CONTRADICTORY_EVIDENCE_CONFLICT": 0.0,
+        "MISSING_CRITICAL_CONSTRAINT": 0.0,
+        "CITATION_SPOOFING_PROBE": 0.0,
+        "OUT_OF_DISTRIBUTION_BOUNDARY": 0.0
+      },
+      "per_mode_accuracy": {
+        "IRRELEVANT_DISTRACTOR_INJECTION": 0.9583,
+        "CONTRADICTORY_EVIDENCE_CONFLICT": 1.0,
+        "MISSING_CRITICAL_CONSTRAINT": 1.0,
+        "CITATION_SPOOFING_PROBE": 0.9583,
+        "OUT_OF_DISTRIBUTION_BOUNDARY": 1.0
+      }
+    }
+  },
+  "shadow_routing": {
+    "full_benchmark_100pct": {
+      "total_queries": 105,
+      "shadowed_queries": 105,
+      "mean_primary_caller_overhead_ms": 0.0,
+      "agreement_rate": 0.2571,
+      "fchr_bootstrap": {
+        "metric_name": "False Confidence Hallucination Rate",
+        "mean_primary": 0.73333,
+        "mean_candidate": 0.0,
+        "mean_delta": -0.73333,
+        "ci_lower": -0.80952,
+        "ci_upper": -0.64762,
+        "half_width": 0.08095,
+        "p_value": 0.001,
+        "is_statistically_significant": true,
+        "formatted_summary": "Candidate reduces False Confidence Hallucination Rate by -73.3% \u00b1 8.1% (95% CI [-81.0%, -64.8%], p = 0.0010)"
+      },
+      "citation_precision_bootstrap": {
+        "metric_name": "Citation Grounding Precision",
+        "mean_primary": 0.38095,
+        "mean_candidate": 0.98095,
+        "mean_delta": 0.6,
+        "ci_lower": 0.50952,
+        "ci_upper": 0.69048,
+        "half_width": 0.09048,
+        "p_value": 0.001,
+        "is_statistically_significant": true,
+        "formatted_summary": "Candidate increases Citation Grounding Precision by +60.0% \u00b1 9.0% (95% CI [+51.0%, +69.0%], p = 0.0010)"
+      },
+      "latency_ms_bootstrap": {
+        "metric_name": "End-to-End Latency (ms)",
+        "mean_primary": 15.8,
+        "mean_candidate": 19.15333,
+        "mean_delta": 3.35333,
+        "ci_lower": 3.27048,
+        "ci_upper": 3.43333,
+        "half_width": 0.08143,
+        "p_value": 0.001,
+        "is_statistically_significant": true,
+        "formatted_summary": "Candidate delta on End-to-End Latency (ms): +3.3533 \u00b1 0.0814 (95% CI [+3.2705, +3.4333], p = 0.0010)"
+      },
+      "cost_usd_bootstrap": {
+        "metric_name": "Cost per Query (USD)",
+        "mean_primary": 0.00048,
+        "mean_candidate": 0.00054,
+        "mean_delta": 6e-05,
+        "ci_lower": 6e-05,
+        "ci_upper": 6e-05,
+        "half_width": 0.0,
+        "p_value": 0.001,
+        "is_statistically_significant": true,
+        "formatted_summary": "Candidate delta on Cost per Query (USD): +0.0001 \u00b1 0.0000 (95% CI [+0.0001, +0.0001], p = 0.0010)"
+      }
+    },
+    "production_simulation_5pct": {
+      "total_queries": 400,
+      "shadowed_queries": 22,
+      "configured_sample_rate": 0.05,
+      "actual_sample_rate": 0.055,
+      "mean_primary_caller_overhead_ms": 0.0,
+      "fchr_bootstrap_summary": "Candidate reduces False Confidence Hallucination Rate by -86.4% \u00b1 15.9% (95% CI [-100.0%, -68.2%], p = 0.0010)"
+    }
+  },
+  "counterfactual_replay_debugger": {
+    "case_studies": [
+      {
+        "trial_id": "SCN-SSD-01::CONFLICT",
+        "stress_mode": "CONTRADICTORY_EVIDENCE_CONFLICT",
+        "original_defect": "STALE_POLICY_CONFLICT_HALLUCINATION",
+        "earliest_resolving_stage": "RERANK_FILTER",
+        "original_node": "NaiveTopKFilter",
+        "replacement_node": "ConflictAwareRRF",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE"
+        ],
+        "reexecuted_downstream_stages": [
+          "RERANK_FILTER",
+          "CONFLICT_CHECK",
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "original_cited_docs": [
+          "DOC-SSD-2024-01"
+        ],
+        "counterfactual_cited_docs": [
+          "DOC-SSD-2026-01"
+        ],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [RERANK_FILTER]: Swapping `NaiveTopKFilter` -> `ConflictAwareRRF` (reusing 2 upstream stages) eliminated `STALE_POLICY_CONFLICT_HALLUCINATION` and restored `FAITHFUL` output (citations: ['DOC-SSD-2024-01'] -> ['DOC-SSD-2026-01'])."
+      },
+      {
+        "trial_id": "SCN-SPS-17::DISTRACTOR",
+        "stress_mode": "IRRELEVANT_DISTRACTOR_INJECTION",
+        "original_defect": "UNGROUNDED_DISTRACTOR_HALLUCINATION",
+        "earliest_resolving_stage": "RERANK_FILTER",
+        "original_node": "NaiveTopKFilter",
+        "replacement_node": "ConflictAwareRRF",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE"
+        ],
+        "reexecuted_downstream_stages": [
+          "RERANK_FILTER",
+          "CONFLICT_CHECK",
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "original_cited_docs": [
+          "DOC-SPS-DIST-04"
+        ],
+        "counterfactual_cited_docs": [
+          "DOC-SPS-2026-07"
+        ],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [RERANK_FILTER]: Swapping `NaiveTopKFilter` -> `ConflictAwareRRF` (reusing 2 upstream stages) eliminated `UNGROUNDED_DISTRACTOR_HALLUCINATION` and restored `FAITHFUL` output (citations: ['DOC-SPS-DIST-04'] -> ['DOC-SPS-2026-07'])."
+      },
+      {
+        "trial_id": "SCN-SSD-01::MISSING_CONSTRAINT",
+        "stress_mode": "MISSING_CRITICAL_CONSTRAINT",
+        "original_defect": "FALSE_CONFIDENCE_ON_MISSING_OR_OOD_CONSTRAINT",
+        "earliest_resolving_stage": "SYNTHESIZE_WITH_CITATIONS",
+        "original_node": "PermissivePromptSynthesizer",
+        "replacement_node": "StrictCitationEntailmentSynthesizer",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE",
+          "RERANK_FILTER",
+          "CONFLICT_CHECK"
+        ],
+        "reexecuted_downstream_stages": [
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "original_cited_docs": [
+          "DOC-SSD-DIST-01"
+        ],
+        "counterfactual_cited_docs": [],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [SYNTHESIZE_WITH_CITATIONS]: Swapping `PermissivePromptSynthesizer` -> `StrictCitationEntailmentSynthesizer` (reusing 4 upstream stages) eliminated `FALSE_CONFIDENCE_ON_MISSING_OR_OOD_CONSTRAINT` and restored `FAITHFUL` output (citations: ['DOC-SSD-DIST-01'] -> [])."
+      },
+      {
+        "trial_id": "SCN-SSD-01::CITATION_SPOOF",
+        "stress_mode": "CITATION_SPOOFING_PROBE",
+        "original_defect": "SPOOFED_CITATION_HALLUCINATION",
+        "earliest_resolving_stage": "RERANK_FILTER",
+        "original_node": "NaiveTopKFilter",
+        "replacement_node": "ConflictAwareRRF",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE"
+        ],
+        "reexecuted_downstream_stages": [
+          "RERANK_FILTER",
+          "CONFLICT_CHECK",
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "original_cited_docs": [
+          "DOC-SSD-2026-01",
+          "DOC-SPOOF-01"
+        ],
+        "counterfactual_cited_docs": [
+          "DOC-SSD-2026-01"
+        ],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [RERANK_FILTER]: Swapping `NaiveTopKFilter` -> `ConflictAwareRRF` (reusing 2 upstream stages) eliminated `SPOOFED_CITATION_HALLUCINATION` and restored `FAITHFUL` output (citations: ['DOC-SSD-2026-01', 'DOC-SPOOF-01'] -> ['DOC-SSD-2026-01'])."
+      }
+    ]
+  },
+  "dataset_contamination_audit": {
+    "active_2026_corpus_scan": {
+      "total_scenarios": 30,
+      "clean_count": 26,
+      "borderline_count": 4,
+      "contaminated_leak_count": 0,
+      "contamination_rate": 0.0,
+      "flagged_scenario_ids": []
+    },
+    "leaked_sft_split_scan": {
+      "total_scenarios": 30,
+      "clean_count": 26,
+      "borderline_count": 3,
+      "contaminated_leak_count": 1,
+      "contamination_rate": 0.0333,
+      "flagged_scenario_ids": [
+        "SCN-SPS-11"
+      ]
+    }
+  }
+}

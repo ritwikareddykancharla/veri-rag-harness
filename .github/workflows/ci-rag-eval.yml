@@ -1,0 +1,43 @@
+name: VeriRAG Faithfulness, Abstention & Shadow Evaluation Gate
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  veri-rag-evaluation-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run Unit & Integration Tests (20 tests)
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Execute VeriRAG Benchmark Suite & Generate Report
+        run: python3 -m veri_rag.cli --output benchmarks/latest_results.json
+
+      - name: Enforce Faithfulness, Abstention & Contamination CI Gates
+        run: |
+          python3 -c '
+          import json, sys
+          with open("benchmarks/latest_results.json") as f:
+              data = json.load(f)
+          cand = data["adversarial_harness"]["candidate_veri_rag"]
+          retr = data["retrieval_benchmark"]["hybrid_rrf"]
+          contam = data["dataset_contamination_audit"]["active_2026_corpus_scan"]
+          assert retr["top1_hit_rate"] >= 0.95, f"Hybrid RRF Top-1 hit rate regressed: {retr}"
+          assert cand["false_confidence_hallucination_rate"] <= 0.05, f"FCHR gate breached: {cand}"
+          assert cand["abstention_recall"] >= 0.95, f"Abstention recall gate breached: {cand}"
+          assert cand["citation_grounding_precision"] >= 0.95, f"Citation grounding breached: {cand}"
+          assert cand["conflict_resolution_accuracy"] >= 0.95, f"Conflict resolution breached: {cand}"
+          assert contam["contaminated_leak_count"] == 0, f"Dataset contamination detected: {contam}"
+          print("All VeriRAG CI gates passed successfully.")
+          '
