@@ -29,6 +29,7 @@ from veri_rag.hybrid_retriever import (
     RetrievedResult,
     SemanticChunker,
 )
+from veri_rag.llm_generator import LiveLLMVeriRAGGenerator
 from veri_rag.replay_debugger import (
     CounterfactualReplayDebugger,
     CounterfactualReplayDiff,
@@ -68,6 +69,7 @@ __all__ = [
     "HarnessMetricsSummary",
     "HashingVectorIndex",
     "HybridRRFRetriever",
+    "LiveLLMVeriRAGGenerator",
     "MetadataFilter",
     "NaiveRAGGenerator",
     "NodeExecutionSnapshot",

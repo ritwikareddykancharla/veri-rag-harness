@@ -31,6 +31,7 @@ from veri_rag.hybrid_retriever import (
     SemanticChunker,
     tokenize,
 )
+from veri_rag.llm_generator import LiveLLMVeriRAGGenerator
 from veri_rag.replay_debugger import (
     CounterfactualReplayDebugger,
     WorkflowStage,
@@ -373,6 +374,84 @@ class TestVeriRAGSuite(unittest.TestCase):
             self.assertIn("shadow_routing", payload)
             self.assertIn("counterfactual_replay_debugger", payload)
             self.assertIn("dataset_contamination_audit", payload)
+
+    # -------------------------------------------------------------------------
+    # 7. Multi-Provider Live LLM Generator (Prompt, Citation Guard & Abstention)
+    # -------------------------------------------------------------------------
+    def test_21_llm_generator_prompt_construction_and_conflict_filtering(self) -> None:
+        conflict_trial = next(
+            t
+            for t in self.trials
+            if t.stress_mode == AdversarialStressMode.CONTRADICTORY_EVIDENCE_CONFLICT
+        )
+        captured_prompts: list[str] = []
+
+        def mock_transport(sys_inst: str, user_prompt: str) -> str:
+            captured_prompts.append(user_prompt)
+            return "Per [DOC-SSD-2026-01], the sortation cutoff is 14:30 local facility time."
+
+        llm_gen = LiveLLMVeriRAGGenerator(
+            provider="gemini",
+            model="gemini-2.5-flash",
+            custom_transport=mock_transport,
+        )
+        out = llm_gen.generate(
+            conflict_trial.perturbed_query, conflict_trial.context_chunks
+        )
+        self.assertEqual(len(captured_prompts), 1)
+        # Verify superseded 2024 doc was excluded from prompt context and noted as dropped
+        self.assertIn("DOC-SSD-2026-01", captured_prompts[0])
+        self.assertIn("Superseded/untrusted documents automatically excluded", captured_prompts[0])
+        self.assertFalse(out.abstained)
+        self.assertEqual(out.cited_doc_ids, ["DOC-SSD-2026-01"])
+        self.assertTrue(out.conflict_detected)
+
+    def test_22_llm_generator_citation_verification_rejects_hallucinated_doc_id(self) -> None:
+        conflict_trial = next(
+            t
+            for t in self.trials
+            if t.stress_mode == AdversarialStressMode.CONTRADICTORY_EVIDENCE_CONFLICT
+        )
+
+        # Mock LLM attempting to cite a spoofed / non-existent doc ID
+        llm_bad_cite = LiveLLMVeriRAGGenerator(
+            provider="openai",
+            model="gpt-4o-mini",
+            custom_transport=lambda _s, _p: "The cutoff is 14:30 per [DOC-HALLUCINATED-999].",
+        )
+        out_bad = llm_bad_cite.generate(
+            conflict_trial.perturbed_query, conflict_trial.context_chunks
+        )
+        self.assertTrue(out_bad.abstained)
+        self.assertEqual(
+            out_bad.abstention_reason, "post_generation_citation_guard_triggered"
+        )
+        self.assertEqual(out_bad.cited_doc_ids, [])
+
+    def test_23_llm_generator_abstention_enforcement_and_fallback(self) -> None:
+        llm_abstain = LiveLLMVeriRAGGenerator(
+            provider="anthropic",
+            model="claude-3-5-haiku-latest",
+            custom_transport=lambda _s, _p: "ABSTAIN: Context lacks hovercraft wind-shear limits.",
+        )
+        conflict_trial = next(
+            t
+            for t in self.trials
+            if t.stress_mode == AdversarialStressMode.CONTRADICTORY_EVIDENCE_CONFLICT
+        )
+        out = llm_abstain.generate(
+            conflict_trial.perturbed_query, conflict_trial.context_chunks
+        )
+        self.assertTrue(out.abstained)
+        self.assertIn("hovercraft wind-shear", out.abstention_reason or "")
+
+        # Verify automatic fallback when no API key is configured
+        fallback_gen = LiveLLMVeriRAGGenerator(provider="auto")
+        out_fb = fallback_gen.generate(
+            conflict_trial.perturbed_query, conflict_trial.context_chunks
+        )
+        self.assertFalse(out_fb.abstained)
+        self.assertEqual(out_fb.cited_doc_ids, ["DOC-SSD-2026-01"])
 
 
 if __name__ == "__main__":

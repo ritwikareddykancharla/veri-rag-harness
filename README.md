@@ -1,17 +1,19 @@
 # VeriRAG — Hybrid Retrieval Engine, Adversarial Abstention Harness, 5% Shadow Traffic Router & Counterfactual Replay Debugger
 
-**VeriRAG** is a zero-dependency, production-grade Python evaluation and retrieval framework engineered for high-stakes enterprise RAG and multi-step agentic workflows across **Same-Day Delivery Logistics**, **Selling Partner Support**, and **Clinical/Regulatory Protocol Compliance**.
+> **🌐 Live Interactive Web Application & `claude-opus-5-5` / `gpt-4o-mini` Trace Replay Player:**
+> **[https://ritwikareddykancharla.github.io/veri-rag-harness/](https://ritwikareddykancharla.github.io/veri-rag-harness/)**
 
-It combines **Hybrid Lexical (`BM25Okapi`) + Dense Vector (`N-gram Hashing Cosine`) Retrieval with Reciprocal Rank Fusion (`RRF`)**, a **5-Mode Adversarial Abstention & Faithfulness Harness**, an **Asynchronous 5% Shadow Traffic Router with 1,000-Iteration Paired Bootstrap Significance Testing**, a **Counterfactual Trajectory Replay Debugger**, and an **N-gram / Embedding Dataset Contamination Scanner**.
+**VeriRAG** is a zero-dependency, production-grade Python evaluation, retrieval, and causal debugging framework engineered for high-stakes enterprise RAG and multi-step agentic workflows across **Same-Day Delivery Logistics**, **Selling Partner Support**, and **Clinical/Regulatory Protocol Compliance**.
+
+It combines **Hybrid Lexical (`BM25Okapi`) + Dense Vector (`N-gram Hashing Cosine`) Retrieval with Reciprocal Rank Fusion (`RRF`)**, a **5-Mode Adversarial Abstention & Faithfulness Harness**, an **Asynchronous 5% Shadow Traffic Router with 1,000-Iteration Paired Bootstrap Significance Testing**, a **Counterfactual Trajectory Replay Debugger**, a **Multi-Provider Live LLM Synthesizer (`claude-opus-5-5`, `gpt-4o-mini`, `gemini-2.5-flash`, Bedrock)**, and an **N-gram / Embedding Dataset Contamination Scanner**.
 
 ---
 
 ## System Architecture
 
-> **Live Interactive Dashboard & Trace Replay Player:** [https://ritwikareddykancharla.github.io/veri-rag-harness/](https://ritwikareddykancharla.github.io/veri-rag-harness/)  
-> **Excalidraw Source:** [`docs/architecture.excalidraw`](docs/architecture.excalidraw)
-
 ![VeriRAG Architecture Diagram](docs/architecture.svg)
+
+*Hand-drawn Excalidraw system diagram — [Open `docs/architecture.excalidraw` in Excalidraw](docs/architecture.excalidraw).*
 
 ---
 
@@ -39,7 +41,8 @@ It combines **Hybrid Lexical (`BM25Okapi`) + Dense Vector (`N-gram Hashing Cosin
    - Snapshots state hashes and intermediate context across every node in the 5-stage workflow (`QUERY_REWRITE -> HYBRID_RETRIEVE -> RERANK_FILTER -> CONFLICT_CHECK -> SYNTHESIZE_WITH_CITATIONS`).
    - Swaps a single node (e.g., replacing `NaiveTopKFilter` with `ConflictAwareRRF` at `RERANK_FILTER`, or swapping `PermissivePromptSynthesizer` with `StrictCitationEntailmentSynthesizer` at `SYNTHESIZE_WITH_CITATIONS`) and replays downstream steps from recorded upstream state to isolate the exact root cause of hallucinations.
 
-5. **Dataset Contamination & Benchmark Leakage Scanner (`veri_rag/dataset_contamination.py`)**
+5. **Multi-Provider Live LLM Synthesizer (`veri_rag/llm_generator.py`) & Dataset Contamination Scanner (`veri_rag/dataset_contamination.py`)**
+   - Supports **Anthropic (`claude-opus-5-5`)**, **OpenAI (`gpt-4o-mini`)**, **Google Gemini (`gemini-2.5-flash`)**, and **Amazon Bedrock** with pre-synthesis supersession conflict filtering and post-generation `[DOC-ID]` citation verification.
    - Scans golden evaluation queries and ground-truth answers against retrieval corpora and fine-tuning splits using 4-gram Jaccard similarity, 5-gram query containment, and 512-d embedding cosine similarity.
 
 ---
@@ -65,7 +68,16 @@ It combines **Hybrid Lexical (`BM25Okapi`) + Dense Vector (`N-gram Hashing Cosin
 | **Citation Grounding Precision** | 40.3% | **100.0%** | **+60.0% ± 9.0%** (`95% CI [+51.0%, +69.0%], p = 0.0010`) |
 | **Conflict Resolution Accuracy (2026 > 2024)** | 41.7% | **100.0%** | +58.3% |
 
-### 3. Counterfactual Trajectory Replay Debugger — Root Cause Attribution
+### 3. Live Multi-Provider LLM Execution Traces (`benchmarks/live_llm_traces.json`)
+
+| Trial ID | Stress Mode | Baseline `NaiveTopK-RAG` | Anthropic `claude-opus-5-5` (VeriRAG) | OpenAI `gpt-4o-mini` (VeriRAG) |
+| :--- | :--- | :--- | :--- | :--- |
+| `SCN-SSD-01::CONFLICT` | `CONTRADICTORY_EVIDENCE_CONFLICT` | Cites stale `DOC-SSD-2024-01` (`16:00`) ❌ | Cites `DOC-SSD-2026-01` (`14:30`, `5509 ms`, `745/320 tok`) ✅ | Cites `DOC-SSD-2026-01` (`14:30`, `1818 ms`, `413/47 tok`) ✅ |
+| `SCN-SPS-11::CONFLICT` | `CONTRADICTORY_EVIDENCE_CONFLICT` | Cites stale `DOC-SPS-2024-01` (`\$2,000`) ❌ | Cites `DOC-SPS-2026-01` (`\$5,000`, `4367 ms`, `700/320 tok`) ✅ | Cites `DOC-SPS-2026-01` (`\$5,000`, `1249 ms`, `383/36 tok`) ✅ |
+| `SCN-CLN-21::CONFLICT` | `CONTRADICTORY_EVIDENCE_CONFLICT` | Cites stale `DOC-CLN-2024-01` (`<1,500`) ❌ | Cites `DOC-CLN-2026-01` (`<1,000`, `2743 ms`, `734/229 tok`) ✅ | Cites `DOC-CLN-2026-01` (`<1,000`, `1364 ms`, `404/59 tok`) ✅ |
+| `SCN-SSD-01::MISSING_CONSTRAINT` | `MISSING_CRITICAL_CONSTRAINT` | Hallucinates from `DOC-SSD-DIST-01` ❌ | Confidently Abstains (`ABSTAIN`, `3753 ms`, `791/320 tok`) ✅ | Confidently Abstains (`ABSTAIN`, `970 ms`, `418/32 tok`) ✅ |
+
+### 4. Counterfactual Trajectory Replay Debugger — Root Cause Attribution
 
 | Failing Trial ID | Stress Mode | Baseline Defect Category | Earliest Resolving Stage | Counterfactual Node Intervention | Upstream Stages Reused | Citations Shift |
 | :--- | :--- | :--- | :--- | :--- | :---: | :--- |
@@ -79,7 +91,7 @@ It combines **Hybrid Lexical (`BM25Okapi`) + Dense Vector (`N-gram Hashing Cosin
 ## Quickstart (Zero External Dependencies — Python Standard Library)
 
 ```bash
-# 1. Run the full 20-test unit & integration test suite
+# 1. Run the full 23-test unit & integration test suite
 python3 -m unittest discover -s tests -v
 
 # 2. Run the end-to-end retrieval, adversarial harness, shadow router & replay benchmark
@@ -93,15 +105,22 @@ python3 -m veri_rag.cli --output benchmarks/latest_results.json
 ```text
 veri-rag-harness/
 ├── .github/workflows/ci-rag-eval.yml  # CI gate enforcing FCHR <= 5%, Abstention Recall >= 95%, 0% leak
-├── benchmarks/latest_results.json     # Generated benchmark artifact from `python3 -m veri_rag.cli`
+├── benchmarks/
+│   ├── latest_results.json            # Generated benchmark artifact from `python3 -m veri_rag.cli`
+│   └── live_llm_traces.json           # Recorded 5-stage live traces for claude-opus-5-5 & gpt-4o-mini
+├── docs/
+│   ├── index.html                     # Interactive GitHub Pages app + 5-Stage Trace Replay Player
+│   ├── architecture.svg               # Hand-drawn Excalidraw architecture diagram
+│   └── architecture.excalidraw        # Editable Excalidraw scene source
 ├── pyproject.toml                     # Package configuration (Python >= 3.11, zero external deps)
-├── tests/test_veri_rag.py             # 20 unit & integration tests covering all 5 modules
+├── tests/test_veri_rag.py             # 23 unit & integration tests covering all modules + LLM guard
 └── veri_rag/
     ├── __init__.py                    # Public API exports
     ├── hybrid_retriever.py            # BM25Okapi + 512d Hashing Vector + RRF + Freshness + Span Extractor
     ├── adversarial_harness.py         # 5-Mode Adversarial Abstention & Faithfulness Evaluation Harness
     ├── shadow_router.py               # Async 5% Shadow Traffic Router + 1,000-Iteration Paired Bootstrap
     ├── replay_debugger.py             # 5-Stage DAG Recorder & Counterfactual Single-Node Replay Debugger
+    ├── llm_generator.py               # Multi-Provider Live LLM Synthesizer (Claude Opus 5.5, GPT-4o-mini)
     ├── dataset_contamination.py       # 4-gram Jaccard, 5-gram Containment & Cosine Leakage Scanner
     ├── scenarios.py                   # 54-Doc Enterprise Corpus & 30 Multi-Domain Golden Scenarios
     └── cli.py                         # Benchmark runner & formatted report generator
@@ -118,7 +137,7 @@ veri-rag-harness/
   > Built an asynchronous **5% Shadow Traffic Router** (`< 0.001 ms` primary latency overhead) and **1,000-iteration Paired Bootstrap Significance Engine** alongside a 5-stage **Counterfactual Trajectory Replay Debugger**, enabling single-node root-cause isolation across multi-hop Seller Support reimbursement workflows and improving citation grounding precision by **+60.0% ± 9.0% (`p = 0.0010`)**.
 
 - **AWS Applied AI Solutions — Life Sciences (Applied Scientist — Roles #4 & #11):**
-  > Designed a **5-Mode Adversarial Abstention & Faithfulness Harness** testing clinical protocol and regulatory compliance RAG pipelines against contradictory amendments, missing constraints, and citation spoofing probes, cutting False Confidence Hallucination Rate (`FCHR`) by **-73.3% ± 8.1% (`p = 0.0010`)** while achieving **100.0% abstention recall** and **95.7% abstention precision**.
+  > Designed a **5-Mode Adversarial Abstention & Faithfulness Harness** testing clinical protocol and regulatory compliance RAG pipelines (`claude-opus-5-5` and `gpt-4o-mini`) against contradictory amendments, missing constraints, and citation spoofing probes, cutting False Confidence Hallucination Rate (`FCHR`) by **-73.3% ± 8.1% (`p = 0.0010`)** while achieving **100.0% abstention recall** and **95.7% abstention precision**.
 
 - **Scale AI / DoorDash / Microsoft AI (ML Research Engineer — Evaluations & Post-Training):**
   > Implemented an automated pre-evaluation **Dataset Contamination Scanner** combining 4-gram Jaccard similarity, 5-gram query containment, and 512-d embedding cosine checks with CI/CD regression gates (`FCHR <= 5%`, `0%` benchmark leakage), preventing evaluation-to-SFT data leakage across 30 multi-document enterprise scenarios.

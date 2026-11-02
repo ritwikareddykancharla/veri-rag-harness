@@ -1,0 +1,799 @@
+{
+  "generated_with_live_apis": true,
+  "models": [
+    "claude-opus-5-5",
+    "gpt-4o-mini"
+  ],
+  "traces": [
+    {
+      "trial_id": "SCN-SSD-01::CONFLICT",
+      "scenario_id": "SCN-SSD-01",
+      "domain": "same_day_delivery",
+      "stress_mode": "CONTRADICTORY_EVIDENCE_CONFLICT",
+      "query": "What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?",
+      "expected_abstain": false,
+      "valid_supporting_doc_ids": [
+        "DOC-SSD-2026-01"
+      ],
+      "input_context_docs": [
+        {
+          "doc_id": "DOC-SSD-2024-01",
+          "title": "Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy (2024 Legacy)",
+          "effective_date": "2024-03-01",
+          "authority_tier": 3,
+          "superseded_by": "DOC-SSD-2026-01",
+          "text": "Under the 2024 Sub-Same-Day (SSD) sortation policy, urban fulfillment nodes maintain an evening wave order sortation cutoff at 16:00 local facility time. What is the evening wave sortation cutoff time for Sub-Same-Day urban nodes? The cutoff is 16:00 local time."
+        },
+        {
+          "doc_id": "DOC-SSD-2026-01",
+          "title": "Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy v4.2",
+          "effective_date": "2026-02-15",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "text": "Effective February 2026, all Sub-Same-Day (SSD) urban fulfillment nodes must enforce a strict evening wave order sortation cutoff at 14:30 local facility time. Orders inducted after 14:30 local time roll to the overnight 04:00 AM window. This 14:30 local cutoff supersedes the legacy 2024 cutoff schedule to guarantee 99.4% dock-to-door on-time departure."
+        }
+      ],
+      "hybrid_retrieval_scores": [
+        {
+          "doc_id": "DOC-SSD-2026-01",
+          "title": "Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy v4.2",
+          "effective_date": "2026-02-15",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 31.34872,
+          "vector_cosine": 0.41545,
+          "rrf_score": 0.045455,
+          "freshness_multiplier": 1.0593,
+          "final_hybrid_score": 0.118964,
+          "extracted_span": "Effective February 2026, all Sub-Same-Day (SSD) urban fulfillment nodes must enforce a strict evening wave order sortation cutoff at 14:30 local facility time."
+        },
+        {
+          "doc_id": "DOC-SSD-2024-01",
+          "title": "Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy (2024 Legacy)",
+          "effective_date": "2024-03-01",
+          "authority_tier": 3,
+          "superseded_by": "DOC-SSD-2026-01",
+          "bm25_score": 43.69021,
+          "vector_cosine": 0.49965,
+          "rrf_score": 0.047619,
+          "freshness_multiplier": 0.6373,
+          "final_hybrid_score": 0.089216,
+          "extracted_span": "Under the 2024 Sub-Same-Day (SSD) sortation policy, urban fulfillment nodes maintain an evening wave order sortation cutoff at 16:00 local facility time."
+        },
+        {
+          "doc_id": "DOC-SSD-DIST-05",
+          "title": "Fulfillment Center Mezzanine Conveyor Preventive Maintenance",
+          "effective_date": "2026-02-11",
+          "authority_tier": 2,
+          "superseded_by": null,
+          "bm25_score": 2.65094,
+          "vector_cosine": 0.05678,
+          "rrf_score": 0.038988,
+          "freshness_multiplier": 1.0032,
+          "final_hybrid_score": 0.045002,
+          "extracted_span": "High-speed shoe sorter belts require laser alignment inspection every 250 operating hours with a maximum belt tension variance of 3%."
+        },
+        {
+          "doc_id": "DOC-SPS-2026-01",
+          "title": "FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy v2026",
+          "effective_date": "2026-01-15",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 1.93953,
+          "vector_cosine": 0.07389,
+          "rrf_score": 0.037678,
+          "freshness_multiplier": 1.0465,
+          "final_hybrid_score": 0.044262,
+          "extracted_span": "Effective January 2026, when inventory is confirmed lost or damaged inside an FBA fulfillment center, automated Seller Support reimbursement is capped at $5,000 per single unit without independent third-party appraisal."
+        }
+      ],
+      "baseline_naive_trajectory": {
+        "defect_category": "STALE_POLICY_CONFLICT_HALLUCINATION",
+        "answer_text": "Based on [DOC-SSD-2024-01], Under the 2024 Sub-Same-Day (SSD) sortation policy, urban fulfillment nodes maintain an evening wave order sortation cutoff at 16:00 local facility time. What is the evening wave sortation cutoff time for Sub-Same-Day urban nodes? The cutoff is 16:00 local time.",
+        "cited_doc_ids": [
+          "DOC-SSD-2024-01"
+        ],
+        "abstained": false,
+        "stage_hashes": [
+          {
+            "stage": "QUERY_REWRITE",
+            "impl_name": "IdentityQueryPassthrough",
+            "input_state_hash": "bd1dc58b08665a68",
+            "output_state_hash": "bd1dc58b08665a68",
+            "active_doc_ids_after": []
+          },
+          {
+            "stage": "HYBRID_RETRIEVE",
+            "impl_name": "RecordedContextRetriever",
+            "input_state_hash": "bd1dc58b08665a68",
+            "output_state_hash": "64e4014b34acbf71",
+            "active_doc_ids_after": [
+              "DOC-SSD-2024-01",
+              "DOC-SSD-2026-01"
+            ]
+          },
+          {
+            "stage": "RERANK_FILTER",
+            "impl_name": "NaiveTopKFilter",
+            "input_state_hash": "64e4014b34acbf71",
+            "output_state_hash": "64e4014b34acbf71",
+            "active_doc_ids_after": [
+              "DOC-SSD-2024-01",
+              "DOC-SSD-2026-01"
+            ]
+          },
+          {
+            "stage": "CONFLICT_CHECK",
+            "impl_name": "UncheckedConflictPassthrough",
+            "input_state_hash": "64e4014b34acbf71",
+            "output_state_hash": "64e4014b34acbf71",
+            "active_doc_ids_after": [
+              "DOC-SSD-2024-01",
+              "DOC-SSD-2026-01"
+            ]
+          },
+          {
+            "stage": "SYNTHESIZE_WITH_CITATIONS",
+            "impl_name": "PermissivePromptSynthesizer",
+            "input_state_hash": "64e4014b34acbf71",
+            "output_state_hash": "1c5eba67959ce8d6",
+            "active_doc_ids_after": [
+              "DOC-SSD-2024-01",
+              "DOC-SSD-2026-01"
+            ]
+          }
+        ]
+      },
+      "live_llm_runs": {
+        "anthropic_claude_opus_5_5": {
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "answer_text": "The current evening wave order sortation cutoff for Sub-Same-Day (SSD) urban fulfillment nodes is **14:30 local facility time**, effective February 2026 [DOC-SSD-2026-01].\n\n- **Late orders:** Orders inducted after 14:30 local time roll to the overnight 04:00 AM window [DOC-SSD-2026-01].\n- **Supersession:** This cutoff supersedes the legacy 2024 cutoff schedule [DOC-SSD-2026-01].\n- **Rationale:** It is designed to guar",
+          "abstained": false,
+          "abstention_reason": null,
+          "cited_doc_ids": [
+            "DOC-SSD-2026-01"
+          ],
+          "conflict_detected": true,
+          "superseded_docs_dropped": [
+            "DOC-SSD-2024-01"
+          ],
+          "false_confidence_hallucination": false,
+          "latency_ms": 5509.26,
+          "cost_usd": 0.011725,
+          "input_tokens": 745,
+          "output_tokens": 320,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-SSD-2026-01]\nTITLE: Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy v4.2\nDOMAIN: same_day_delivery | REGION: US-EAST | EFFECTIVE_DATE: 2026-02-15 | AUTHORITY_TIER: 1\nCONTENT: Effective February 2026, all Sub-Same-Day (SSD) urban fulfillment nodes must enforce a strict evening wave order sortation cutoff at 14:30 local facility time. Orders inducted after 14:30 local time roll to the overnight 04:00 AM window. This 14:30 local cutoff supersedes the legacy 2024 cutoff schedule to guarantee 99.4% dock-to-door on-time departure.\n\nNOTE: Superseded/untrusted documents automatically excluded prior to synthesis: DOC-SSD-2024-01\n\nUSER QUERY: What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "The current evening wave order sortation cutoff for Sub-Same-Day (SSD) urban fulfillment nodes is **14:30 local facility time**, effective February 2026 [DOC-SSD-2026-01].\n\n- **Late orders:** Orders inducted after 14:30 local time roll to the overnight 04:00 AM window [DOC-SSD-2026-01].\n- **Supersession:** This cutoff supersedes the legacy 2024 cutoff schedule [DOC-SSD-2026-01].\n- **Rationale:** It is designed to guar"
+        },
+        "openai_gpt_4o_mini": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "answer_text": "The current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes is 14:30 local facility time, effective February 15, 2026 [DOC-SSD-2026-01].",
+          "abstained": false,
+          "abstention_reason": null,
+          "cited_doc_ids": [
+            "DOC-SSD-2026-01"
+          ],
+          "conflict_detected": true,
+          "superseded_docs_dropped": [
+            "DOC-SSD-2024-01"
+          ],
+          "false_confidence_hallucination": false,
+          "latency_ms": 1818.35,
+          "cost_usd": 9e-05,
+          "input_tokens": 413,
+          "output_tokens": 47,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-SSD-2026-01]\nTITLE: Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy v4.2\nDOMAIN: same_day_delivery | REGION: US-EAST | EFFECTIVE_DATE: 2026-02-15 | AUTHORITY_TIER: 1\nCONTENT: Effective February 2026, all Sub-Same-Day (SSD) urban fulfillment nodes must enforce a strict evening wave order sortation cutoff at 14:30 local facility time. Orders inducted after 14:30 local time roll to the overnight 04:00 AM window. This 14:30 local cutoff supersedes the legacy 2024 cutoff schedule to guarantee 99.4% dock-to-door on-time departure.\n\nNOTE: Superseded/untrusted documents automatically excluded prior to synthesis: DOC-SSD-2024-01\n\nUSER QUERY: What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "The current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes is 14:30 local facility time, effective February 15, 2026 [DOC-SSD-2026-01]."
+        }
+      },
+      "counterfactual_replay": {
+        "intervened_stage": "RERANK_FILTER",
+        "original_impl_name": "NaiveTopKFilter",
+        "replacement_impl_name": "ConflictAwareRRF",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE"
+        ],
+        "reexecuted_downstream_stages": [
+          "RERANK_FILTER",
+          "CONFLICT_CHECK",
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [RERANK_FILTER]: Swapping `NaiveTopKFilter` -> `ConflictAwareRRF` (reusing 2 upstream stages) eliminated `STALE_POLICY_CONFLICT_HALLUCINATION` and restored `FAITHFUL` output (citations: ['DOC-SSD-2024-01'] -> ['DOC-SSD-2026-01'])."
+      }
+    },
+    {
+      "trial_id": "SCN-SPS-11::CONFLICT",
+      "scenario_id": "SCN-SPS-11",
+      "domain": "seller_support",
+      "stress_mode": "CONTRADICTORY_EVIDENCE_CONFLICT",
+      "query": "What is the automated Seller Support reimbursement valuation cap per single unit for FBA lost-in-warehouse inventory without independent appraisal?",
+      "expected_abstain": false,
+      "valid_supporting_doc_ids": [
+        "DOC-SPS-2026-01"
+      ],
+      "input_context_docs": [
+        {
+          "doc_id": "DOC-SPS-2024-01",
+          "title": "FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy (2024 Legacy)",
+          "effective_date": "2024-02-01",
+          "authority_tier": 3,
+          "superseded_by": "DOC-SPS-2026-01",
+          "text": "Under the 2024 FBA reimbursement policy, automated Seller Support reimbursement for lost-in-warehouse inventory is capped at $2,000 per single unit without appraisal."
+        },
+        {
+          "doc_id": "DOC-SPS-2026-01",
+          "title": "FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy v2026",
+          "effective_date": "2026-01-15",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "text": "Effective January 2026, when inventory is confirmed lost or damaged inside an FBA fulfillment center, automated Seller Support reimbursement is capped at $5,000 per single unit without independent third-party appraisal. Items valued above $5,000 require a certified commercial invoice and underwriting review within 30 days."
+        }
+      ],
+      "hybrid_retrieval_scores": [
+        {
+          "doc_id": "DOC-SPS-2026-01",
+          "title": "FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy v2026",
+          "effective_date": "2026-01-15",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 36.21107,
+          "vector_cosine": 0.43416,
+          "rrf_score": 0.045455,
+          "freshness_multiplier": 1.0465,
+          "final_hybrid_score": 0.127898,
+          "extracted_span": "Effective January 2026, when inventory is confirmed lost or damaged inside an FBA fulfillment center, automated Seller Support reimbursement is capped at $5,000 per single unit without independent third-party appraisal."
+        },
+        {
+          "doc_id": "DOC-SPS-2024-01",
+          "title": "FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy (2024 Legacy)",
+          "effective_date": "2024-02-01",
+          "authority_tier": 3,
+          "superseded_by": "DOC-SPS-2026-01",
+          "bm25_score": 44.49922,
+          "vector_cosine": 0.52134,
+          "rrf_score": 0.047619,
+          "freshness_multiplier": 0.6352,
+          "final_hybrid_score": 0.090094,
+          "extracted_span": "Under the 2024 FBA reimbursement policy, automated Seller Support reimbursement for lost-in-warehouse inventory is capped at $2,000 per single unit without appraisal."
+        },
+        {
+          "doc_id": "DOC-SPS-DIST-01",
+          "title": "FBA Monthly Long-Term Aged Inventory Surcharge Tier Table",
+          "effective_date": "2026-01-05",
+          "authority_tier": 2,
+          "superseded_by": null,
+          "bm25_score": 13.40966,
+          "vector_cosine": 0.05197,
+          "rrf_score": 0.039984,
+          "freshness_multiplier": 0.9897,
+          "final_hybrid_score": 0.066627,
+          "extracted_span": "15 per unit."
+        },
+        {
+          "doc_id": "DOC-SPS-DIST-06",
+          "title": "Apparel Size Chart & Return Reason Analytics Dashboard",
+          "effective_date": "2026-03-04",
+          "authority_tier": 2,
+          "superseded_by": null,
+          "bm25_score": 4.75247,
+          "vector_cosine": 0.06049,
+          "rrf_score": 0.039583,
+          "freshness_multiplier": 1.0111,
+          "final_hybrid_score": 0.050245,
+          "extracted_span": "Apparel listings with more than 12% fit-related returns receive an automated size chart standardization notification in Seller Central."
+        }
+      ],
+      "baseline_naive_trajectory": {
+        "defect_category": "STALE_POLICY_CONFLICT_HALLUCINATION",
+        "answer_text": "Based on [DOC-SPS-2024-01], Under the 2024 FBA reimbursement policy, automated Seller Support reimbursement for lost-in-warehouse inventory is capped at $2,000 per single unit without appraisal.",
+        "cited_doc_ids": [
+          "DOC-SPS-2024-01"
+        ],
+        "abstained": false,
+        "stage_hashes": [
+          {
+            "stage": "QUERY_REWRITE",
+            "impl_name": "IdentityQueryPassthrough",
+            "input_state_hash": "702648fd6c3add58",
+            "output_state_hash": "702648fd6c3add58",
+            "active_doc_ids_after": []
+          },
+          {
+            "stage": "HYBRID_RETRIEVE",
+            "impl_name": "RecordedContextRetriever",
+            "input_state_hash": "702648fd6c3add58",
+            "output_state_hash": "2053e79a2dd9a52f",
+            "active_doc_ids_after": [
+              "DOC-SPS-2024-01",
+              "DOC-SPS-2026-01"
+            ]
+          },
+          {
+            "stage": "RERANK_FILTER",
+            "impl_name": "NaiveTopKFilter",
+            "input_state_hash": "2053e79a2dd9a52f",
+            "output_state_hash": "2053e79a2dd9a52f",
+            "active_doc_ids_after": [
+              "DOC-SPS-2024-01",
+              "DOC-SPS-2026-01"
+            ]
+          },
+          {
+            "stage": "CONFLICT_CHECK",
+            "impl_name": "UncheckedConflictPassthrough",
+            "input_state_hash": "2053e79a2dd9a52f",
+            "output_state_hash": "2053e79a2dd9a52f",
+            "active_doc_ids_after": [
+              "DOC-SPS-2024-01",
+              "DOC-SPS-2026-01"
+            ]
+          },
+          {
+            "stage": "SYNTHESIZE_WITH_CITATIONS",
+            "impl_name": "PermissivePromptSynthesizer",
+            "input_state_hash": "2053e79a2dd9a52f",
+            "output_state_hash": "981b9090b26607ae",
+            "active_doc_ids_after": [
+              "DOC-SPS-2024-01",
+              "DOC-SPS-2026-01"
+            ]
+          }
+        ]
+      },
+      "live_llm_runs": {
+        "anthropic_claude_opus_5_5": {
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "answer_text": "The automated Seller Support reimbursement cap for FBA inventory confirmed lost or damaged inside a fulfillment center is **$5,000 per single unit** without independent third-party appraisal [DOC-SPS-2026-01].\n\n- **Above the cap:** Items valued above $5,000 require a certified commercial invoice and underwriting review within 30 days [DOC-SPS-2026-01].\n- **Scope:** This policy is Tier-1, applies to the US-EAST region, and took effect 2026-01-15 [DOC-SPS-2026-",
+          "abstained": false,
+          "abstention_reason": null,
+          "cited_doc_ids": [
+            "DOC-SPS-2026-01"
+          ],
+          "conflict_detected": true,
+          "superseded_docs_dropped": [
+            "DOC-SPS-2024-01"
+          ],
+          "false_confidence_hallucination": false,
+          "latency_ms": 4367.13,
+          "cost_usd": 0.0115,
+          "input_tokens": 700,
+          "output_tokens": 320,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-SPS-2026-01]\nTITLE: FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy v2026\nDOMAIN: seller_support | REGION: US-EAST | EFFECTIVE_DATE: 2026-01-15 | AUTHORITY_TIER: 1\nCONTENT: Effective January 2026, when inventory is confirmed lost or damaged inside an FBA fulfillment center, automated Seller Support reimbursement is capped at $5,000 per single unit without independent third-party appraisal. Items valued above $5,000 require a certified commercial invoice and underwriting review within 30 days.\n\nNOTE: Superseded/untrusted documents automatically excluded prior to synthesis: DOC-SPS-2024-01\n\nUSER QUERY: What is the automated Seller Support reimbursement valuation cap per single unit for FBA lost-in-warehouse inventory without independent appraisal?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "The automated Seller Support reimbursement cap for FBA inventory confirmed lost or damaged inside a fulfillment center is **$5,000 per single unit** without independent third-party appraisal [DOC-SPS-2026-01].\n\n- **Above the cap:** Items valued above $5,000 require a certified commercial invoice and underwriting review within 30 days [DOC-SPS-2026-01].\n- **Scope:** This policy is Tier-1, applies to the US-EAST region, and took effect 2026-01-15 [DOC-SPS-2026-"
+        },
+        "openai_gpt_4o_mini": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "answer_text": "The automated Seller Support reimbursement valuation cap per single unit for FBA lost-in-warehouse inventory without independent appraisal is $5,000 [DOC-SPS-2026-01].",
+          "abstained": false,
+          "abstention_reason": null,
+          "cited_doc_ids": [
+            "DOC-SPS-2026-01"
+          ],
+          "conflict_detected": true,
+          "superseded_docs_dropped": [
+            "DOC-SPS-2024-01"
+          ],
+          "false_confidence_hallucination": false,
+          "latency_ms": 1248.62,
+          "cost_usd": 7.9e-05,
+          "input_tokens": 383,
+          "output_tokens": 36,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-SPS-2026-01]\nTITLE: FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy v2026\nDOMAIN: seller_support | REGION: US-EAST | EFFECTIVE_DATE: 2026-01-15 | AUTHORITY_TIER: 1\nCONTENT: Effective January 2026, when inventory is confirmed lost or damaged inside an FBA fulfillment center, automated Seller Support reimbursement is capped at $5,000 per single unit without independent third-party appraisal. Items valued above $5,000 require a certified commercial invoice and underwriting review within 30 days.\n\nNOTE: Superseded/untrusted documents automatically excluded prior to synthesis: DOC-SPS-2024-01\n\nUSER QUERY: What is the automated Seller Support reimbursement valuation cap per single unit for FBA lost-in-warehouse inventory without independent appraisal?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "The automated Seller Support reimbursement valuation cap per single unit for FBA lost-in-warehouse inventory without independent appraisal is $5,000 [DOC-SPS-2026-01]."
+        }
+      },
+      "counterfactual_replay": {
+        "intervened_stage": "RERANK_FILTER",
+        "original_impl_name": "NaiveTopKFilter",
+        "replacement_impl_name": "ConflictAwareRRF",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE"
+        ],
+        "reexecuted_downstream_stages": [
+          "RERANK_FILTER",
+          "CONFLICT_CHECK",
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [RERANK_FILTER]: Swapping `NaiveTopKFilter` -> `ConflictAwareRRF` (reusing 2 upstream stages) eliminated `STALE_POLICY_CONFLICT_HALLUCINATION` and restored `FAITHFUL` output (citations: ['DOC-SPS-2024-01'] -> ['DOC-SPS-2026-01'])."
+      }
+    },
+    {
+      "trial_id": "SCN-CLN-21::CONFLICT",
+      "scenario_id": "SCN-CLN-21",
+      "domain": "clinical_protocol",
+      "stress_mode": "CONTRADICTORY_EVIDENCE_CONFLICT",
+      "query": "In Oncology Phase III trial ONC-309, below what Absolute Neutrophil Count (ANC) threshold must cycle day-1 dosing be held?",
+      "expected_abstain": false,
+      "valid_supporting_doc_ids": [
+        "DOC-CLN-2026-01"
+      ],
+      "input_context_docs": [
+        {
+          "doc_id": "DOC-CLN-2024-01",
+          "title": "Oncology Phase III Protocol ONC-309 Original v1: ANC Dosing Hold (2024)",
+          "effective_date": "2024-01-20",
+          "authority_tier": 3,
+          "superseded_by": "DOC-CLN-2026-01",
+          "text": "Under the 2024 Original Protocol v1 for trial ONC-309, cycle day-1 dosing is held whenever Absolute Neutrophil Count (ANC) falls below 1,500 cells/mm3."
+        },
+        {
+          "doc_id": "DOC-CLN-2026-01",
+          "title": "Oncology Phase III Protocol ONC-309 Amendment 4: ANC Dosing Hold",
+          "effective_date": "2026-03-05",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "text": "Per 2026 Protocol Amendment 4 for trial ONC-309, investigative cycle day-1 dosing must be immediately held whenever a patient's Absolute Neutrophil Count (ANC) falls below 1,000 cells/mm3 (Grade 3 neutropenia). Dosing may resume only after ANC recovers to >= 1,500 cells/mm3."
+        }
+      ],
+      "hybrid_retrieval_scores": [
+        {
+          "doc_id": "DOC-CLN-2026-01",
+          "title": "Oncology Phase III Protocol ONC-309 Amendment 4: ANC Dosing Hold",
+          "effective_date": "2026-03-05",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 39.89974,
+          "vector_cosine": 0.4644,
+          "rrf_score": 0.046429,
+          "freshness_multiplier": 1.0669,
+          "final_hybrid_score": 0.139622,
+          "extracted_span": "Per 2026 Protocol Amendment 4 for trial ONC-309, investigative cycle day-1 dosing must be immediately held whenever a patient's Absolute Neutrophil Count (ANC) falls below 1,000 cells/mm3 (Grade 3 neutropenia)."
+        },
+        {
+          "doc_id": "DOC-CLN-2024-01",
+          "title": "Oncology Phase III Protocol ONC-309 Original v1: ANC Dosing Hold (2024)",
+          "effective_date": "2024-01-20",
+          "authority_tier": 3,
+          "superseded_by": "DOC-CLN-2026-01",
+          "bm25_score": 44.87595,
+          "vector_cosine": 0.46374,
+          "rrf_score": 0.046645,
+          "freshness_multiplier": 0.6344,
+          "final_hybrid_score": 0.08947,
+          "extracted_span": "Under the 2024 Original Protocol v1 for trial ONC-309, cycle day-1 dosing is held whenever Absolute Neutrophil Count (ANC) falls below 1,500 cells/mm3."
+        },
+        {
+          "doc_id": "DOC-CLN-2026-03",
+          "title": "Cardiac Safety Monitoring: QTcF Prolongation Stopping Rule",
+          "effective_date": "2026-02-18",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 5.85084,
+          "vector_cosine": 0.06238,
+          "rrf_score": 0.039984,
+          "freshness_multiplier": 1.0605,
+          "final_hybrid_score": 0.055476,
+          "extracted_span": "Subjects enrolled in cardiovascular or oncology cohorts must permanently discontinue study drug if triplicate 12-lead ECG confirms a Fridericia-corrected QT interval (QTcF) exceeding 500 ms or an absolute increase of > 60 ms from pre-dose baseline."
+        },
+        {
+          "doc_id": "DOC-SSD-2026-02",
+          "title": "Perishable Cold-Chain Thermal Excursion & Spoilage Protocol",
+          "effective_date": "2026-03-10",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 2.66219,
+          "vector_cosine": 0.06552,
+          "rrf_score": 0.037821,
+          "freshness_multiplier": 1.069,
+          "final_hybrid_score": 0.046822,
+          "extracted_span": "For Same-Day grocery and chilled biologics dispatch, insulated totes must maintain internal temperatures below 4."
+        }
+      ],
+      "baseline_naive_trajectory": {
+        "defect_category": "STALE_POLICY_CONFLICT_HALLUCINATION",
+        "answer_text": "Based on [DOC-CLN-2024-01], Under the 2024 Original Protocol v1 for trial ONC-309, cycle day-1 dosing is held whenever Absolute Neutrophil Count (ANC) falls below 1,500 cells/mm3.",
+        "cited_doc_ids": [
+          "DOC-CLN-2024-01"
+        ],
+        "abstained": false,
+        "stage_hashes": [
+          {
+            "stage": "QUERY_REWRITE",
+            "impl_name": "IdentityQueryPassthrough",
+            "input_state_hash": "65a8b8cfb11f1359",
+            "output_state_hash": "65a8b8cfb11f1359",
+            "active_doc_ids_after": []
+          },
+          {
+            "stage": "HYBRID_RETRIEVE",
+            "impl_name": "RecordedContextRetriever",
+            "input_state_hash": "65a8b8cfb11f1359",
+            "output_state_hash": "e1ec49b1b5724428",
+            "active_doc_ids_after": [
+              "DOC-CLN-2024-01",
+              "DOC-CLN-2026-01"
+            ]
+          },
+          {
+            "stage": "RERANK_FILTER",
+            "impl_name": "NaiveTopKFilter",
+            "input_state_hash": "e1ec49b1b5724428",
+            "output_state_hash": "e1ec49b1b5724428",
+            "active_doc_ids_after": [
+              "DOC-CLN-2024-01",
+              "DOC-CLN-2026-01"
+            ]
+          },
+          {
+            "stage": "CONFLICT_CHECK",
+            "impl_name": "UncheckedConflictPassthrough",
+            "input_state_hash": "e1ec49b1b5724428",
+            "output_state_hash": "e1ec49b1b5724428",
+            "active_doc_ids_after": [
+              "DOC-CLN-2024-01",
+              "DOC-CLN-2026-01"
+            ]
+          },
+          {
+            "stage": "SYNTHESIZE_WITH_CITATIONS",
+            "impl_name": "PermissivePromptSynthesizer",
+            "input_state_hash": "e1ec49b1b5724428",
+            "output_state_hash": "676c3161b868888c",
+            "active_doc_ids_after": [
+              "DOC-CLN-2024-01",
+              "DOC-CLN-2026-01"
+            ]
+          }
+        ]
+      },
+      "live_llm_runs": {
+        "anthropic_claude_opus_5_5": {
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "answer_text": "Under Protocol Amendment 4 for trial ONC-309, cycle day-1 dosing must be held immediately whenever a patient's ANC falls **below 1,000 cells/mm\u00b3** (Grade 3 neutropenia) [DOC-CLN-2026-01]. Dosing may resume only after ANC recovers to **\u2265 1,500 cells/mm\u00b3** [DOC-CLN-2026-01].\n\nThis guidance comes from the Tier-1 global amendment effective 2026-03-05 [DOC-CLN-2026-01]. Earlier versions were superseded and excluded.",
+          "abstained": false,
+          "abstention_reason": null,
+          "cited_doc_ids": [
+            "DOC-CLN-2026-01"
+          ],
+          "conflict_detected": true,
+          "superseded_docs_dropped": [
+            "DOC-CLN-2024-01"
+          ],
+          "false_confidence_hallucination": true,
+          "latency_ms": 2743.39,
+          "cost_usd": 0.009395,
+          "input_tokens": 734,
+          "output_tokens": 229,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-CLN-2026-01]\nTITLE: Oncology Phase III Protocol ONC-309 Amendment 4: ANC Dosing Hold\nDOMAIN: clinical_protocol | REGION: GLOBAL | EFFECTIVE_DATE: 2026-03-05 | AUTHORITY_TIER: 1\nCONTENT: Per 2026 Protocol Amendment 4 for trial ONC-309, investigative cycle day-1 dosing must be immediately held whenever a patient's Absolute Neutrophil Count (ANC) falls below 1,000 cells/mm3 (Grade 3 neutropenia). Dosing may resume only after ANC recovers to >= 1,500 cells/mm3.\n\nNOTE: Superseded/untrusted documents automatically excluded prior to synthesis: DOC-CLN-2024-01\n\nUSER QUERY: In Oncology Phase III trial ONC-309, below what Absolute Neutrophil Count (ANC) threshold must cycle day-1 dosing be held?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "Under Protocol Amendment 4 for trial ONC-309, cycle day-1 dosing must be held immediately whenever a patient's ANC falls **below 1,000 cells/mm\u00b3** (Grade 3 neutropenia) [DOC-CLN-2026-01]. Dosing may resume only after ANC recovers to **\u2265 1,500 cells/mm\u00b3** [DOC-CLN-2026-01].\n\nThis guidance comes from the Tier-1 global amendment effective 2026-03-05 [DOC-CLN-2026-01]. Earlier versions were superseded and excluded."
+        },
+        "openai_gpt_4o_mini": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "answer_text": "In the Oncology Phase III trial ONC-309, cycle day-1 dosing must be held whenever a patient's Absolute Neutrophil Count (ANC) falls below 1,000 cells/mm3 (Grade 3 neutropenia) [DOC-CLN-2026-01].",
+          "abstained": false,
+          "abstention_reason": null,
+          "cited_doc_ids": [
+            "DOC-CLN-2026-01"
+          ],
+          "conflict_detected": true,
+          "superseded_docs_dropped": [
+            "DOC-CLN-2024-01"
+          ],
+          "false_confidence_hallucination": false,
+          "latency_ms": 1363.78,
+          "cost_usd": 9.6e-05,
+          "input_tokens": 404,
+          "output_tokens": 59,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-CLN-2026-01]\nTITLE: Oncology Phase III Protocol ONC-309 Amendment 4: ANC Dosing Hold\nDOMAIN: clinical_protocol | REGION: GLOBAL | EFFECTIVE_DATE: 2026-03-05 | AUTHORITY_TIER: 1\nCONTENT: Per 2026 Protocol Amendment 4 for trial ONC-309, investigative cycle day-1 dosing must be immediately held whenever a patient's Absolute Neutrophil Count (ANC) falls below 1,000 cells/mm3 (Grade 3 neutropenia). Dosing may resume only after ANC recovers to >= 1,500 cells/mm3.\n\nNOTE: Superseded/untrusted documents automatically excluded prior to synthesis: DOC-CLN-2024-01\n\nUSER QUERY: In Oncology Phase III trial ONC-309, below what Absolute Neutrophil Count (ANC) threshold must cycle day-1 dosing be held?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "In the Oncology Phase III trial ONC-309, cycle day-1 dosing must be held whenever a patient's Absolute Neutrophil Count (ANC) falls below 1,000 cells/mm3 (Grade 3 neutropenia) [DOC-CLN-2026-01]."
+        }
+      },
+      "counterfactual_replay": {
+        "intervened_stage": "RERANK_FILTER",
+        "original_impl_name": "NaiveTopKFilter",
+        "replacement_impl_name": "ConflictAwareRRF",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE"
+        ],
+        "reexecuted_downstream_stages": [
+          "RERANK_FILTER",
+          "CONFLICT_CHECK",
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [RERANK_FILTER]: Swapping `NaiveTopKFilter` -> `ConflictAwareRRF` (reusing 2 upstream stages) eliminated `STALE_POLICY_CONFLICT_HALLUCINATION` and restored `FAITHFUL` output (citations: ['DOC-CLN-2024-01'] -> ['DOC-CLN-2026-01'])."
+      }
+    },
+    {
+      "trial_id": "SCN-SSD-01::MISSING_CONSTRAINT",
+      "scenario_id": "SCN-SSD-01",
+      "domain": "same_day_delivery",
+      "stress_mode": "MISSING_CRITICAL_CONSTRAINT",
+      "query": "What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?",
+      "expected_abstain": true,
+      "valid_supporting_doc_ids": [],
+      "input_context_docs": [
+        {
+          "doc_id": "DOC-SSD-DIST-01",
+          "title": "Standard Freight Linehaul Dock Scheduling & Pallet Cutoff",
+          "effective_date": "2026-01-10",
+          "authority_tier": 2,
+          "superseded_by": null,
+          "text": "Full-truckload (FTL) regional cross-dock palletized transfers close dock doors at 21:00 UTC for 3-to-5 day ground economy shipping lanes."
+        },
+        {
+          "doc_id": "DOC-SSD-DIST-05",
+          "title": "Fulfillment Center Mezzanine Conveyor Preventive Maintenance",
+          "effective_date": "2026-02-11",
+          "authority_tier": 2,
+          "superseded_by": null,
+          "text": "High-speed shoe sorter belts require laser alignment inspection every 250 operating hours with a maximum belt tension variance of 3%."
+        }
+      ],
+      "hybrid_retrieval_scores": [
+        {
+          "doc_id": "DOC-SSD-2026-01",
+          "title": "Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy v4.2",
+          "effective_date": "2026-02-15",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 31.34872,
+          "vector_cosine": 0.41545,
+          "rrf_score": 0.045455,
+          "freshness_multiplier": 1.0593,
+          "final_hybrid_score": 0.118964,
+          "extracted_span": "Effective February 2026, all Sub-Same-Day (SSD) urban fulfillment nodes must enforce a strict evening wave order sortation cutoff at 14:30 local facility time."
+        },
+        {
+          "doc_id": "DOC-SSD-2024-01",
+          "title": "Sub-Same-Day (SSD) Sortation Cutoff & Wave Dispatch Policy (2024 Legacy)",
+          "effective_date": "2024-03-01",
+          "authority_tier": 3,
+          "superseded_by": "DOC-SSD-2026-01",
+          "bm25_score": 43.69021,
+          "vector_cosine": 0.49965,
+          "rrf_score": 0.047619,
+          "freshness_multiplier": 0.6373,
+          "final_hybrid_score": 0.089216,
+          "extracted_span": "Under the 2024 Sub-Same-Day (SSD) sortation policy, urban fulfillment nodes maintain an evening wave order sortation cutoff at 16:00 local facility time."
+        },
+        {
+          "doc_id": "DOC-SSD-DIST-05",
+          "title": "Fulfillment Center Mezzanine Conveyor Preventive Maintenance",
+          "effective_date": "2026-02-11",
+          "authority_tier": 2,
+          "superseded_by": null,
+          "bm25_score": 2.65094,
+          "vector_cosine": 0.05678,
+          "rrf_score": 0.038988,
+          "freshness_multiplier": 1.0032,
+          "final_hybrid_score": 0.045002,
+          "extracted_span": "High-speed shoe sorter belts require laser alignment inspection every 250 operating hours with a maximum belt tension variance of 3%."
+        },
+        {
+          "doc_id": "DOC-SPS-2026-01",
+          "title": "FBA Lost-in-Warehouse Reimbursement Valuation Cap Policy v2026",
+          "effective_date": "2026-01-15",
+          "authority_tier": 1,
+          "superseded_by": null,
+          "bm25_score": 1.93953,
+          "vector_cosine": 0.07389,
+          "rrf_score": 0.037678,
+          "freshness_multiplier": 1.0465,
+          "final_hybrid_score": 0.044262,
+          "extracted_span": "Effective January 2026, when inventory is confirmed lost or damaged inside an FBA fulfillment center, automated Seller Support reimbursement is capped at $5,000 per single unit without independent third-party appraisal."
+        }
+      ],
+      "baseline_naive_trajectory": {
+        "defect_category": "FALSE_CONFIDENCE_ON_MISSING_OR_OOD_CONSTRAINT",
+        "answer_text": "Based on [DOC-SSD-DIST-01], Full-truckload (FTL) regional cross-dock palletized transfers close dock doors at 21:00 UTC for 3-to-5 day ground economy shipping lanes.",
+        "cited_doc_ids": [
+          "DOC-SSD-DIST-01"
+        ],
+        "abstained": false,
+        "stage_hashes": [
+          {
+            "stage": "QUERY_REWRITE",
+            "impl_name": "IdentityQueryPassthrough",
+            "input_state_hash": "bd1dc58b08665a68",
+            "output_state_hash": "bd1dc58b08665a68",
+            "active_doc_ids_after": []
+          },
+          {
+            "stage": "HYBRID_RETRIEVE",
+            "impl_name": "RecordedContextRetriever",
+            "input_state_hash": "bd1dc58b08665a68",
+            "output_state_hash": "2d9cd11a51217407",
+            "active_doc_ids_after": [
+              "DOC-SSD-DIST-01",
+              "DOC-SSD-DIST-05"
+            ]
+          },
+          {
+            "stage": "RERANK_FILTER",
+            "impl_name": "NaiveTopKFilter",
+            "input_state_hash": "2d9cd11a51217407",
+            "output_state_hash": "2d9cd11a51217407",
+            "active_doc_ids_after": [
+              "DOC-SSD-DIST-01",
+              "DOC-SSD-DIST-05"
+            ]
+          },
+          {
+            "stage": "CONFLICT_CHECK",
+            "impl_name": "UncheckedConflictPassthrough",
+            "input_state_hash": "2d9cd11a51217407",
+            "output_state_hash": "2d9cd11a51217407",
+            "active_doc_ids_after": [
+              "DOC-SSD-DIST-01",
+              "DOC-SSD-DIST-05"
+            ]
+          },
+          {
+            "stage": "SYNTHESIZE_WITH_CITATIONS",
+            "impl_name": "PermissivePromptSynthesizer",
+            "input_state_hash": "2d9cd11a51217407",
+            "output_state_hash": "1568ac3560407e2e",
+            "active_doc_ids_after": [
+              "DOC-SSD-DIST-01",
+              "DOC-SSD-DIST-05"
+            ]
+          }
+        ]
+      },
+      "live_llm_runs": {
+        "anthropic_claude_opus_5_5": {
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "answer_text": "ABSTAIN: The provided context does not state an evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes.\n\n- **[DOC-SSD-DIST-01]** sets a 21:00 UTC dock door closure, but it covers full-truckload regional cross-dock pallet transfers for 3-to-5 day ground economy lanes in US-EAST. It is not an SSD urban node sortation cutoff.\n- **[DOC-SSD-DIST-05]** covers only shoe sorter belt maintenance (laser alignment every 250 operating hours, maximum 3% belt tension variance). It contains no cuto",
+          "abstained": true,
+          "abstention_reason": "The provided context does not state an evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes.\n\n- **[DOC-SSD-DIST-01]** sets a 21:00 UTC dock door closure, but it covers full-truckload regional cross-dock pallet transfers for 3-to-5 day ground economy lanes in US-EAST. It is not an SSD urban node sortation cutoff.\n- **[DOC-SSD-DIST-05]** covers only shoe sorter belt maintenance (laser alignment every 250 operating hours, maximum 3% belt tension variance). It contains no cuto",
+          "cited_doc_ids": [],
+          "conflict_detected": false,
+          "superseded_docs_dropped": [],
+          "false_confidence_hallucination": false,
+          "latency_ms": 3753.14,
+          "cost_usd": 0.011955,
+          "input_tokens": 791,
+          "output_tokens": 320,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-SSD-DIST-05]\nTITLE: Fulfillment Center Mezzanine Conveyor Preventive Maintenance\nDOMAIN: same_day_delivery | REGION: GLOBAL | EFFECTIVE_DATE: 2026-02-11 | AUTHORITY_TIER: 2\nCONTENT: High-speed shoe sorter belts require laser alignment inspection every 250 operating hours with a maximum belt tension variance of 3%.\n\n--- CHUNK 2 ---\nDOC_ID: [DOC-SSD-DIST-01]\nTITLE: Standard Freight Linehaul Dock Scheduling & Pallet Cutoff\nDOMAIN: same_day_delivery | REGION: US-EAST | EFFECTIVE_DATE: 2026-01-10 | AUTHORITY_TIER: 2\nCONTENT: Full-truckload (FTL) regional cross-dock palletized transfers close dock doors at 21:00 UTC for 3-to-5 day ground economy shipping lanes.\n\nUSER QUERY: What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "ABSTAIN: The provided context does not state an evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes.\n\n- **[DOC-SSD-DIST-01]** sets a 21:00 UTC dock door closure, but it covers full-truckload regional cross-dock pallet transfers for 3-to-5 day ground economy lanes in US-EAST. It is not an SSD urban node sortation cutoff.\n- **[DOC-SSD-DIST-05]** covers only shoe sorter belt maintenance (laser alignment every 250 operating hours, maximum 3% belt tension variance). It contains no cuto"
+        },
+        "openai_gpt_4o_mini": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "answer_text": "ABSTAIN: The context chunks do not contain information regarding the evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes.",
+          "abstained": true,
+          "abstention_reason": "The context chunks do not contain information regarding the evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes.",
+          "cited_doc_ids": [],
+          "conflict_detected": false,
+          "superseded_docs_dropped": [],
+          "false_confidence_hallucination": false,
+          "latency_ms": 969.77,
+          "cost_usd": 8.2e-05,
+          "input_tokens": 418,
+          "output_tokens": 32,
+          "prompt_sent": "VERIFIED CONTEXT CHUNKS:\n--- CHUNK 1 ---\nDOC_ID: [DOC-SSD-DIST-05]\nTITLE: Fulfillment Center Mezzanine Conveyor Preventive Maintenance\nDOMAIN: same_day_delivery | REGION: GLOBAL | EFFECTIVE_DATE: 2026-02-11 | AUTHORITY_TIER: 2\nCONTENT: High-speed shoe sorter belts require laser alignment inspection every 250 operating hours with a maximum belt tension variance of 3%.\n\n--- CHUNK 2 ---\nDOC_ID: [DOC-SSD-DIST-01]\nTITLE: Standard Freight Linehaul Dock Scheduling & Pallet Cutoff\nDOMAIN: same_day_delivery | REGION: US-EAST | EFFECTIVE_DATE: 2026-01-10 | AUTHORITY_TIER: 2\nCONTENT: Full-truckload (FTL) regional cross-dock palletized transfers close dock doors at 21:00 UTC for 3-to-5 day ground economy shipping lanes.\n\nUSER QUERY: What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?\n\nProvide a concise, grounded response with inline [DOC-ID] citations, or output 'ABSTAIN: <reason>' if the evidence is insufficient or out-of-scope.",
+          "raw_llm_response": "ABSTAIN: The context chunks do not contain information regarding the evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes."
+        }
+      },
+      "counterfactual_replay": {
+        "intervened_stage": "SYNTHESIZE_WITH_CITATIONS",
+        "original_impl_name": "PermissivePromptSynthesizer",
+        "replacement_impl_name": "StrictCitationEntailmentSynthesizer",
+        "reused_upstream_stages": [
+          "QUERY_REWRITE",
+          "HYBRID_RETRIEVE",
+          "RERANK_FILTER",
+          "CONFLICT_CHECK"
+        ],
+        "reexecuted_downstream_stages": [
+          "SYNTHESIZE_WITH_CITATIONS"
+        ],
+        "defect_resolved": true,
+        "causal_attribution_verdict": "ROOT CAUSE ISOLATED AT [SYNTHESIZE_WITH_CITATIONS]: Swapping `PermissivePromptSynthesizer` -> `StrictCitationEntailmentSynthesizer` (reusing 4 upstream stages) eliminated `FALSE_CONFIDENCE_ON_MISSING_OR_OOD_CONSTRAINT` and restored `FAITHFUL` output (citations: ['DOC-SSD-DIST-01'] -> [])."
+      }
+    }
+  ]
+}

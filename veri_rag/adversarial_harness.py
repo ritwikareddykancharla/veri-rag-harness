@@ -561,17 +561,17 @@ class AdversarialAbstentionHarness:
         trial: PerturbedTrial, output: GenerationOutput
     ) -> TrialEvaluationResult:
         """Evaluates a pipeline's GenerationOutput against a PerturbedTrial's ground truth."""
-        ans_lower = output.answer_text.lower()
+        ans_lower = output.answer_text.lower().replace("³", "3").replace("²", "2")
         cited_set = list(output.cited_doc_ids)
         valid_docs = set(trial.valid_supporting_doc_ids)
 
         # Check citations grounded in valid supporting docs and containing required facts
         citations_emitted = len(cited_set)
         has_all_required_facts = all(
-            fact.lower() in ans_lower for fact in trial.required_facts
+            fact.lower().replace("³", "3") in ans_lower for fact in trial.required_facts
         )
         has_forbidden_stale = any(
-            stale.lower() in ans_lower for stale in trial.forbidden_stale_facts
+            stale.lower().replace("³", "3") in ans_lower for stale in trial.forbidden_stale_facts
         )
 
         citations_grounded = 0
