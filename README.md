@@ -8,43 +8,10 @@ It combines **Hybrid Lexical (`BM25Okapi`) + Dense Vector (`N-gram Hashing Cosin
 
 ## System Architecture
 
-```mermaid
-flowchart TD
-    Q["Incoming Enterprise Query + Metadata (Region, Domain, Effective Date)"] --> C["Dataset Contamination Scanner (4-gram Jaccard + 5-gram Containment + 512d Cosine)"]
-    Q --> R["Shadow Traffic Router (Synchronous Primary + 5% Async Candidate Mirror)"]
+> **Live Interactive Dashboard & Trace Replay Player:** [https://ritwikareddykancharla.github.io/veri-rag-harness/](https://ritwikareddykancharla.github.io/veri-rag-harness/)  
+> **Excalidraw Source:** [`docs/architecture.excalidraw`](docs/architecture.excalidraw)
 
-    subgraph Retrieval["1. Hybrid Retrieval Engine (hybrid_retriever.py)"]
-        MF["Metadata Filter (Region, Authority Tier, Effective Date)"]
-        BM25["Lexical BM25Okapi Index (k1=1.5, b=0.75)"]
-        VEC["Dense 512d Signed Feature-Hashing Vector Index"]
-        RRF["Reciprocal Rank Fusion (RRF) + Version Freshness & Supersession Weighting"]
-        SPAN["Verbatim Citation Span Extractor (Character Offset Provenance)"]
-        MF --> BM25 & VEC --> RRF --> SPAN
-    end
-
-    subgraph DAG["2. 5-Stage Multi-Hop Agentic RAG Workflow (replay_debugger.py)"]
-        S1["Stage 1: QUERY_REWRITE"] --> S2["Stage 2: HYBRID_RETRIEVE"]
-        S2 --> S3["Stage 3: RERANK_FILTER (NaiveTopK vs. ConflictAwareRRF)"]
-        S3 --> S4["Stage 4: CONFLICT_CHECK (SupersessionConflictResolver)"]
-        S4 --> S5["Stage 5: SYNTHESIZE_WITH_CITATIONS (Abstention Gate + Span Entailment)"]
-    end
-
-    subgraph Harness["3. 5-Mode Adversarial Abstention & Faithfulness Harness (adversarial_harness.py)"]
-        M1["Mode 1: IRRELEVANT_DISTRACTOR_INJECTION"]
-        M2["Mode 2: CONTRADICTORY_EVIDENCE_CONFLICT (2024 Legacy vs. 2026 Policy)"]
-        M3["Mode 3: MISSING_CRITICAL_CONSTRAINT (Abstention Probe)"]
-        M4["Mode 4: CITATION_SPOOFING_PROBE"]
-        M5["Mode 5: OUT_OF_DISTRIBUTION_BOUNDARY"]
-    end
-
-    subgraph Stats["4. Statistical Comparison & Causal Debugging"]
-        BOOT["1,000-Iteration Paired Bootstrap CI & p-value Engine"]
-        REPLAY["Counterfactual Node-Swap Replay Debugger (Upstream Snapshot Reuse)"]
-    end
-
-    R --> Retrieval --> DAG
-    Harness --> DAG --> Stats
-```
+![VeriRAG Architecture Diagram](docs/architecture.svg)
 
 ---
 

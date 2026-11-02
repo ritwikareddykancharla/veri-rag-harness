@@ -1,0 +1,631 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "id": "zone-101",
+      "type": "rectangle",
+      "x": 30,
+      "y": 90,
+      "width": 360,
+      "height": 510,
+      "strokeColor": "#1864ab",
+      "backgroundColor": "#f8f9fa",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 101
+    },
+    {
+      "id": "zone-102",
+      "type": "rectangle",
+      "x": 425,
+      "y": 90,
+      "width": 345,
+      "height": 510,
+      "strokeColor": "#e67700",
+      "backgroundColor": "#fff9db",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 102
+    },
+    {
+      "id": "zone-103",
+      "type": "rectangle",
+      "x": 805,
+      "y": 90,
+      "width": 345,
+      "height": 510,
+      "strokeColor": "#2b8a3e",
+      "backgroundColor": "#f3f0ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 103
+    },
+    {
+      "id": "box-104",
+      "type": "rectangle",
+      "x": 55,
+      "y": 140,
+      "width": 310,
+      "height": 75,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 104
+    },
+    {
+      "id": "text-104",
+      "type": "text",
+      "x": 65,
+      "y": 152,
+      "width": 290,
+      "height": 55,
+      "text": "1. Query Rewrite & Metadata Filter\nRegion / Effective Date / Authority Tier\n(Same-Day SLA, Seller, Clinical Docs)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 604
+    },
+    {
+      "id": "box-105",
+      "type": "rectangle",
+      "x": 55,
+      "y": 245,
+      "width": 148,
+      "height": 95,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffec99",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 105
+    },
+    {
+      "id": "text-105",
+      "type": "text",
+      "x": 65,
+      "y": 257,
+      "width": 128,
+      "height": 75,
+      "text": "BM25Okapi Index\nExact Policy IDs\n& Thresholds\n(k1=1.5, b=0.75)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 605
+    },
+    {
+      "id": "box-106",
+      "type": "rectangle",
+      "x": 217,
+      "y": 245,
+      "width": 148,
+      "height": 95,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 106
+    },
+    {
+      "id": "text-106",
+      "type": "text",
+      "x": 227,
+      "y": 257,
+      "width": 128,
+      "height": 75,
+      "text": "512-d Vector Index\nSigned N-Gram\nCosine Search\n(Semantic Recall)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 606
+    },
+    {
+      "id": "box-107",
+      "type": "rectangle",
+      "x": 55,
+      "y": 370,
+      "width": 310,
+      "height": 90,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 107
+    },
+    {
+      "id": "text-107",
+      "type": "text",
+      "x": 65,
+      "y": 382,
+      "width": 290,
+      "height": 70,
+      "text": "2. Reciprocal Rank Fusion (RRF)\nCombines Lexical + Dense Rankings\n100% Top-1 Hit Rate (MRR@3 = 1.00)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 607
+    },
+    {
+      "id": "box-108",
+      "type": "rectangle",
+      "x": 55,
+      "y": 490,
+      "width": 310,
+      "height": 85,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 108
+    },
+    {
+      "id": "text-108",
+      "type": "text",
+      "x": 65,
+      "y": 502,
+      "width": 290,
+      "height": 65,
+      "text": "3. Version Conflict Resolver\nSupersedes Stale 2024 Docs with 2026\n100% Conflict Resolution Accuracy",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 608
+    },
+    {
+      "id": "box-109",
+      "type": "rectangle",
+      "x": 450,
+      "y": 140,
+      "width": 295,
+      "height": 115,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 109
+    },
+    {
+      "id": "text-109",
+      "type": "text",
+      "x": 460,
+      "y": 152,
+      "width": 275,
+      "height": 95,
+      "text": "5-Mode Adversarial Perturbation\n1. Irrelevant Distractor Injection\n2. 2024 vs 2026 Contradiction\n3. Missing Critical Constraint\n4. Citation Spoofing \u2022 5. OOD Probe",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 609
+    },
+    {
+      "id": "box-110",
+      "type": "rectangle",
+      "x": 450,
+      "y": 290,
+      "width": 295,
+      "height": 125,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 110
+    },
+    {
+      "id": "text-110",
+      "type": "text",
+      "x": 460,
+      "y": 302,
+      "width": 275,
+      "height": 105,
+      "text": "4. Grounded Synthesizer / Abstainer\n\u2022 claude-opus-5-5 / gpt-4o-mini\n\u2022 Verbatim [DOC-ID] Span Citations\n\u2022 Confidently Abstains When Missing\n\u2022 Cuts FCHR: 73.3% \u2192 0.0%",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 610
+    },
+    {
+      "id": "box-111",
+      "type": "rectangle",
+      "x": 450,
+      "y": 450,
+      "width": 295,
+      "height": 120,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e9ecef",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 111
+    },
+    {
+      "id": "text-111",
+      "type": "text",
+      "x": 460,
+      "y": 462,
+      "width": 275,
+      "height": 100,
+      "text": "Dataset Contamination Scanner\n\u2022 4-Gram Jaccard & 5-Gram Containment\n\u2022 512-d Embedding Cosine Leak Check\n\u2022 Prevents Eval-Set Memorization",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 611
+    },
+    {
+      "id": "box-112",
+      "type": "rectangle",
+      "x": 830,
+      "y": 140,
+      "width": 295,
+      "height": 130,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 112
+    },
+    {
+      "id": "text-112",
+      "type": "text",
+      "x": 840,
+      "y": 152,
+      "width": 275,
+      "height": 110,
+      "text": "5% Async Shadow Traffic Router\n\u2022 Non-Blocking ThreadPool Mirroring\n\u2022 Compares Naive vs VeriRAG Live\n\u2022 1,000-Iter Paired Bootstrap CI\n\u2022 -73.3% \u00b1 8.1% FCHR (p = 0.001)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 612
+    },
+    {
+      "id": "box-113",
+      "type": "rectangle",
+      "x": 830,
+      "y": 305,
+      "width": 295,
+      "height": 150,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 113
+    },
+    {
+      "id": "text-113",
+      "type": "text",
+      "x": 840,
+      "y": 317,
+      "width": 275,
+      "height": 130,
+      "text": "Counterfactual Replay Debugger\nRecords 5-Stage Trajectory Snapshots:\nREWRITE \u2192 RETRIEVE \u2192 RERANK \u2192\nCONFLICT_CHECK \u2192 SYNTHESIZE\nSwap Any Single Node & Instant Replay",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 613
+    },
+    {
+      "id": "box-114",
+      "type": "rectangle",
+      "x": 830,
+      "y": 485,
+      "width": 295,
+      "height": 85,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffec99",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "seed": 114
+    },
+    {
+      "id": "text-114",
+      "type": "text",
+      "x": 840,
+      "y": 497,
+      "width": 275,
+      "height": 65,
+      "text": "GitHub Actions CI Release Gate\nBlocks PR if FCHR > 2% or Recall Drops",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "seed": 614
+    },
+    {
+      "id": "arrow-115",
+      "type": "arrow",
+      "x": 130,
+      "y": 215,
+      "width": 0,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 115
+    },
+    {
+      "id": "arrow-116",
+      "type": "arrow",
+      "x": 290,
+      "y": 215,
+      "width": 0,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 116
+    },
+    {
+      "id": "arrow-117",
+      "type": "arrow",
+      "x": 130,
+      "y": 340,
+      "width": 50,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          50,
+          30
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 117
+    },
+    {
+      "id": "arrow-118",
+      "type": "arrow",
+      "x": 290,
+      "y": 340,
+      "width": 50,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -50,
+          30
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 118
+    },
+    {
+      "id": "arrow-119",
+      "type": "arrow",
+      "x": 210,
+      "y": 460,
+      "width": 0,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 119
+    },
+    {
+      "id": "arrow-120",
+      "type": "arrow",
+      "x": 365,
+      "y": 530,
+      "width": 85,
+      "height": 170,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          85,
+          -170
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 120
+    },
+    {
+      "id": "arrow-121",
+      "type": "arrow",
+      "x": 597,
+      "y": 255,
+      "width": 0,
+      "height": 35,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          35
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "seed": 121
+    },
+    {
+      "id": "arrow-122",
+      "type": "arrow",
+      "x": 745,
+      "y": 350,
+      "width": 85,
+      "height": 140,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          85,
+          -140
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 122
+    },
+    {
+      "id": "arrow-123",
+      "type": "arrow",
+      "x": 745,
+      "y": 380,
+      "width": 85,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          85,
+          0
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 123
+    },
+    {
+      "id": "arrow-124",
+      "type": "arrow",
+      "x": 977,
+      "y": 455,
+      "width": 0,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "seed": 124
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff",
+    "gridSize": 20
+  },
+  "files": {}
+}
