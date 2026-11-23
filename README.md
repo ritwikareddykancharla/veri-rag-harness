@@ -1,5 +1,8 @@
 # VeriRAG — Hybrid Retrieval Engine, Adversarial Abstention Harness, 5% Shadow Traffic Router & Counterfactual Replay Debugger
 
+> **☁️ Live AWS Deployment (`us-west-2` Lambda Function URL):** [https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/](https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/)  
+> **Health Check:** `https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/api/health` · **Live Execution API:** `curl -s -X POST https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`
+
 > **🌐 Live Interactive Web Application & `claude-opus-5-5` / `gpt-4o-mini` Trace Replay Player:**
 > **[https://ritwikareddykancharla.github.io/veri-rag-harness/](https://ritwikareddykancharla.github.io/veri-rag-harness/)**
 
