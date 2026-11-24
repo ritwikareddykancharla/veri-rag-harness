@@ -17,15 +17,13 @@
 
 ---
 
-## How It Works
+## System Architecture
 
-```mermaid
-flowchart LR
-    Query["Policy Question + Region/Date Filter"] --> Search["BM25 + Dense Vector Search\n(Reciprocal Rank Fusion)"]
-    Search --> Rank["Effective-Date & Tier Reranker\n(2026 Active > 2024 Archived)"]
-    Rank --> Verify["Span-Level Number/Date & Citation Check\n(Answer or Abstain)"]
-    Verify --> Eval["Async 5% Shadow Comparison\n& Stage-by-Stage Replay"]
-```
+> **Excalidraw Source:** [`docs/architecture.excalidraw`](docs/architecture.excalidraw)
+
+![VeriRAG Architecture Diagram](docs/architecture.svg)
+
+## How It Works
 
 1. **Hybrid `BM25` + Vector Search with Effective-Date Ranking (`veri_rag/hybrid_retriever.py`)**  
    Fuses `BM25OkapiIndex` lexical scores with a 512-dimensional feature-hashed n-gram vector index (`HashingVectorIndex`) using Reciprocal Rank Fusion (`RRF`). Applies metadata filters (`region` with `GLOBAL` fallback, `domain`, `min_effective_date`, `max_authority_tier`, `exclude_superseded`) and weights results by document effective date and policy tier so active 2026 rules consistently rank above archived 2024 versions.
