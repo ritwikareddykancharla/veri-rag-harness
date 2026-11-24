@@ -1,130 +1,69 @@
-# VeriRAG — Hybrid Retrieval Engine, Adversarial Abstention Harness, 5% Shadow Traffic Router & Counterfactual Replay Debugger
+# VeriRAG — Version-Aware Policy Search & Citation Verifier
 
-> **☁️ Live AWS Deployment (`us-west-2` Lambda Function URL):** [https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/](https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/)  
-> **Health Check:** `https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/api/health` · **Live Execution API:** `curl -s -X POST https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`
+> **Live AWS Endpoint (`us-west-2` Lambda Function URL):** [https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/](https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/)  
+> **Health Check:** `https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/api/health`  
+> **Live API Call:** `curl -s -X POST https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`  
+> **Interactive Trace Player:** [https://ritwikareddykancharla.github.io/veri-rag-harness/](https://ritwikareddykancharla.github.io/veri-rag-harness/)
 
-> **🌐 Live Interactive Web Application & `claude-opus-5-5` / `gpt-4o-mini` Trace Replay Player:**
-> **[https://ritwikareddykancharla.github.io/veri-rag-harness/](https://ritwikareddykancharla.github.io/veri-rag-harness/)**
-
-**VeriRAG** is a zero-dependency, production-grade Python evaluation, retrieval, and causal debugging framework engineered for high-stakes enterprise RAG and multi-step agentic workflows across **Same-Day Delivery Logistics**, **Selling Partner Support**, and **Clinical/Regulatory Protocol Compliance**.
-
-It combines **Hybrid Lexical (`BM25Okapi`) + Dense Vector (`N-gram Hashing Cosine`) Retrieval with Reciprocal Rank Fusion (`RRF`)**, a **5-Mode Adversarial Abstention & Faithfulness Harness**, an **Asynchronous 5% Shadow Traffic Router with 1,000-Iteration Paired Bootstrap Significance Testing**, a **Counterfactual Trajectory Replay Debugger**, a **Multi-Provider Live LLM Synthesizer (`claude-opus-5-5`, `gpt-4o-mini`, `gemini-2.5-flash`, Bedrock)**, and an **N-gram / Embedding Dataset Contamination Scanner**.
+**VeriRAG** is a zero-dependency Python retrieval and answer-verification library for policy-heavy RAG workloads (logistics operations, seller support, and compliance documentation). It combines `BM25` keyword search and dense vector search with document effective-date and authority-tier ranking so current policies outrank outdated revisions, and verifies every cited number, date, and document ID before returning an answer—abstaining cleanly when retrieved passages lack supporting evidence.
 
 ---
 
-## System Architecture
+## What Problem This Solves
 
-![VeriRAG Architecture Diagram](docs/architecture.svg)
-
-*Hand-drawn Excalidraw system diagram — [Open `docs/architecture.excalidraw` in Excalidraw](docs/architecture.excalidraw).*
-
----
-
-## Key Engineering Capabilities
-
-1. **Hybrid Lexical + Dense Vector Retriever with RRF & Version Freshness (`veri_rag/hybrid_retriever.py`)**
-   - Combines `BM25OkapiIndex` with a 512-dimensional signed feature-hashing `HashingVectorIndex` (word unigrams, bigrams, and character 4-grams) via **Reciprocal Rank Fusion (RRF)**.
-   - Enforces declarative `MetadataFilter` rules (`region` with `GLOBAL` fallback, `domain`, `min_effective_date`, `max_authority_tier`, `exclude_superseded`) and applies exponential document freshness + authority-tier weighting so active 2026 Tier-1 policies outrank superseded 2024 Tier-3 policies.
-   - Extracts character-offset verified `CitationSpan` quotes from retrieved chunks.
-
-2. **5-Mode Adversarial Abstention & Faithfulness Evaluation Harness (`veri_rag/adversarial_harness.py`)**
-   - Systematically perturbs retrieval contexts across **105 adversarial trials** spanning **30 golden enterprise scenarios** in 5 stress modes:
-     1. `IRRELEVANT_DISTRACTOR_INJECTION`: Injects topically close distractor policies at rank 1.
-     2. `CONTRADICTORY_EVIDENCE_CONFLICT`: Pits stale 2024 policies against superseding 2026 policies.
-     3. `MISSING_CRITICAL_CONSTRAINT`: Strips the ground-truth policy chunk to verify confident abstention over hallucination.
-     4. `CITATION_SPOOFING_PROBE`: Injects unverified decoy document headers to test span-level citation grounding.
-     5. `OUT_OF_DISTRIBUTION_BOUNDARY`: Perturbs queries with out-of-scope jurisdictions/conditions.
-   - Measures `abstention_precision`, `abstention_recall`, `false_confidence_hallucination_rate` (`FCHR`), `citation_grounding_precision`, and `conflict_resolution_accuracy`.
-
-3. **5% Shadow Traffic Router & Paired Bootstrap Significance Engine (`veri_rag/shadow_router.py`)**
-   - Executes the primary RAG pipeline synchronously while mirroring a configurable fraction (`5%` in production, `100%` in full benchmark mode) of live queries to a candidate pipeline on an asynchronous `ThreadPoolExecutor` (`< 0.001 ms` primary caller overhead).
-   - Runs **1,000-iteration paired bootstrap resampling** to compute 95% confidence intervals and two-sided $p$-values across FCHR, Citation Grounding Precision, Latency, and Cost.
-
-4. **Counterfactual Trajectory Replay Debugger (`veri_rag/replay_debugger.py`)**
-   - Snapshots state hashes and intermediate context across every node in the 5-stage workflow (`QUERY_REWRITE -> HYBRID_RETRIEVE -> RERANK_FILTER -> CONFLICT_CHECK -> SYNTHESIZE_WITH_CITATIONS`).
-   - Swaps a single node (e.g., replacing `NaiveTopKFilter` with `ConflictAwareRRF` at `RERANK_FILTER`, or swapping `PermissivePromptSynthesizer` with `StrictCitationEntailmentSynthesizer` at `SYNTHESIZE_WITH_CITATIONS`) and replays downstream steps from recorded upstream state to isolate the exact root cause of hallucinations.
-
-5. **Multi-Provider Live LLM Synthesizer (`veri_rag/llm_generator.py`) & Dataset Contamination Scanner (`veri_rag/dataset_contamination.py`)**
-   - Supports **Anthropic (`claude-opus-5-5`)**, **OpenAI (`gpt-4o-mini`)**, **Google Gemini (`gemini-2.5-flash`)**, and **Amazon Bedrock** with pre-synthesis supersession conflict filtering and post-generation `[DOC-ID]` citation verification.
-   - Scans golden evaluation queries and ground-truth answers against retrieval corpora and fine-tuning splits using 4-gram Jaccard similarity, 5-gram query containment, and 512-d embedding cosine similarity.
+- **Standard keyword and vector search return outdated policy revisions:** An archived 2024 refund or delivery cutoff policy shares nearly identical wording with the updated 2026 policy, causing naive Top-K RAG to rank the stale rule first half the time. Combining `BM25` + vector Reciprocal Rank Fusion (`RRF`) with document effective-date and authority-tier ranking lifts Top-1 hit rate from **75.0% to 100.0%** (**+25.0%**, `MRR@3 = 1.00`) across conflicting 2024 vs. 2026 policies.
+- **LLMs guess numbers and dates when the relevant policy passage is missing:** When a query asks about an out-of-scope region or a missing constraint, permissive RAG prompts extrapolate from nearby distractor documents instead of saying "insufficient evidence." Adding span-level number, date, and `[DOC-ID]` citation verification cuts unsupported answers from **73.3% to 0.0%** (**-73.3%**, $p = 0.001$) and raises citation precision by **+60.0%**.
+- **Debugging multi-stage RAG regressions requires isolating retrieval vs. generation failures:** Recording intermediate inputs and outputs across each pipeline stage lets engineers swap a single stage (such as reranking or answer verification) and replay recorded queries offline—or mirror **5%** of live traffic asynchronously (`< 0.001 ms` caller overhead)—before promoting changes.
 
 ---
 
-## Reproducible Benchmark Results (`python3 -m veri_rag.cli`)
+## How It Works
 
-### 1. Hybrid Retrieval Benchmark (54 Enterprise Documents, 30 Golden Scenarios, Top-K = 3)
-
-| Retrieval Mode | Recall@3 | Top-1 Hit Rate | MRR@3 | nDCG@3 | 2026 vs. 2024 Fresh Conflict Win Rate |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| `lexical_only` (BM25Okapi) | 100.0% | 75.0% | 0.8750 | 0.9077 | 50.0% |
-| `vector_only` (512d Hashing Cosine) | 100.0% | 66.7% | 0.8264 | 0.8715 | 41.7% |
-| `hybrid_rrf_no_freshness` | 100.0% | 75.0% | 0.8750 | 0.9077 | 50.0% |
-| **`hybrid_rrf` (RRF + Freshness/Tier)** | **100.0%** | **100.0%** | **1.0000** | **1.0000** | **100.0%** |
-
-### 2. 5-Mode Adversarial Abstention & Faithfulness Harness (105 Perturbed Trials)
-
-| Evaluation Metric | `NaiveTopK-RAG` (Baseline) | `VeriRAG-Guarded` (Candidate) | Paired Bootstrap Delta (1,000 Iterations) |
-| :--- | :---: | :---: | :---: |
-| **Abstention Precision** | 0.0% | **95.7%** | +95.7% |
-| **Abstention Recall** | 0.0% | **100.0%** | +100.0% |
-| **False Confidence Hallucination Rate (FCHR)** | 73.3% | **0.0%** | **-73.3% ± 8.1%** (`95% CI [-81.0%, -64.8%], p = 0.0010`) |
-| **Citation Grounding Precision** | 40.3% | **100.0%** | **+60.0% ± 9.0%** (`95% CI [+51.0%, +69.0%], p = 0.0010`) |
-| **Conflict Resolution Accuracy (2026 > 2024)** | 41.7% | **100.0%** | +58.3% |
-
-### 3. Live Multi-Provider LLM Execution Traces (`benchmarks/live_llm_traces.json`)
-
-| Trial ID | Stress Mode | Baseline `NaiveTopK-RAG` | Anthropic `claude-opus-5-5` (VeriRAG) | OpenAI `gpt-4o-mini` (VeriRAG) |
-| :--- | :--- | :--- | :--- | :--- |
-| `SCN-SSD-01::CONFLICT` | `CONTRADICTORY_EVIDENCE_CONFLICT` | Cites stale `DOC-SSD-2024-01` (`16:00`) ❌ | Cites `DOC-SSD-2026-01` (`14:30`, `5509 ms`, `745/320 tok`) ✅ | Cites `DOC-SSD-2026-01` (`14:30`, `1818 ms`, `413/47 tok`) ✅ |
-| `SCN-SPS-11::CONFLICT` | `CONTRADICTORY_EVIDENCE_CONFLICT` | Cites stale `DOC-SPS-2024-01` (`\$2,000`) ❌ | Cites `DOC-SPS-2026-01` (`\$5,000`, `4367 ms`, `700/320 tok`) ✅ | Cites `DOC-SPS-2026-01` (`\$5,000`, `1249 ms`, `383/36 tok`) ✅ |
-| `SCN-CLN-21::CONFLICT` | `CONTRADICTORY_EVIDENCE_CONFLICT` | Cites stale `DOC-CLN-2024-01` (`<1,500`) ❌ | Cites `DOC-CLN-2026-01` (`<1,000`, `2743 ms`, `734/229 tok`) ✅ | Cites `DOC-CLN-2026-01` (`<1,000`, `1364 ms`, `404/59 tok`) ✅ |
-| `SCN-SSD-01::MISSING_CONSTRAINT` | `MISSING_CRITICAL_CONSTRAINT` | Hallucinates from `DOC-SSD-DIST-01` ❌ | Confidently Abstains (`ABSTAIN`, `3753 ms`, `791/320 tok`) ✅ | Confidently Abstains (`ABSTAIN`, `970 ms`, `418/32 tok`) ✅ |
-
-### 4. Counterfactual Trajectory Replay Debugger — Root Cause Attribution
-
-| Failing Trial ID | Stress Mode | Baseline Defect Category | Earliest Resolving Stage | Counterfactual Node Intervention | Upstream Stages Reused | Citations Shift |
-| :--- | :--- | :--- | :--- | :--- | :---: | :--- |
-| `SCN-SSD-01::CONFLICT` | `CONTRADICTORY_EVIDENCE_CONFLICT` | `STALE_POLICY_CONFLICT_HALLUCINATION` | `RERANK_FILTER` | `NaiveTopKFilter` $\rightarrow$ `ConflictAwareRRF` | 2 (`QUERY_REWRITE`, `HYBRID_RETRIEVE`) | `['DOC-SSD-2024-01']` $\rightarrow$ `['DOC-SSD-2026-01']` |
-| `SCN-SPS-17::DISTRACTOR` | `IRRELEVANT_DISTRACTOR_INJECTION` | `UNGROUNDED_DISTRACTOR_HALLUCINATION` | `RERANK_FILTER` | `NaiveTopKFilter` $\rightarrow$ `ConflictAwareRRF` | 2 (`QUERY_REWRITE`, `HYBRID_RETRIEVE`) | `['DOC-SPS-DIST-04']` $\rightarrow$ `['DOC-SPS-2026-07']` |
-| `SCN-SSD-01::MISSING_CONSTRAINT` | `MISSING_CRITICAL_CONSTRAINT` | `FALSE_CONFIDENCE_ON_MISSING_OR_OOD_CONSTRAINT` | `SYNTHESIZE_WITH_CITATIONS` | `PermissivePromptSynthesizer` $\rightarrow$ `StrictCitationEntailmentSynthesizer` | 4 (`QUERY_REWRITE` .. `CONFLICT_CHECK`) | `['DOC-SSD-DIST-01']` $\rightarrow$ `[]` (`ABSTAIN`) |
-| `SCN-SSD-01::CITATION_SPOOF` | `CITATION_SPOOFING_PROBE` | `SPOOFED_CITATION_HALLUCINATION` | `RERANK_FILTER` | `NaiveTopKFilter` $\rightarrow$ `ConflictAwareRRF` | 2 (`QUERY_REWRITE`, `HYBRID_RETRIEVE`) | `['DOC-SSD-2026-01', 'DOC-SPOOF-01']` $\rightarrow$ `['DOC-SSD-2026-01']` |
-
----
-
-## Quickstart (Zero External Dependencies — Python Standard Library)
-
-```bash
-# 1. Run the full 23-test unit & integration test suite
-python3 -m unittest discover -s tests -v
-
-# 2. Run the end-to-end retrieval, adversarial harness, shadow router & replay benchmark
-python3 -m veri_rag.cli --output benchmarks/latest_results.json
+```mermaid
+flowchart LR
+    Query["Policy Question + Region/Date Filter"] --> Search["BM25 + Dense Vector Search\n(Reciprocal Rank Fusion)"]
+    Search --> Rank["Effective-Date & Tier Reranker\n(2026 Active > 2024 Archived)"]
+    Rank --> Verify["Span-Level Number/Date & Citation Check\n(Answer or Abstain)"]
+    Verify --> Eval["Async 5% Shadow Comparison\n& Stage-by-Stage Replay"]
 ```
 
+1. **Hybrid `BM25` + Vector Search with Effective-Date Ranking (`veri_rag/hybrid_retriever.py`)**  
+   Fuses `BM25OkapiIndex` lexical scores with a 512-dimensional feature-hashed n-gram vector index (`HashingVectorIndex`) using Reciprocal Rank Fusion (`RRF`). Applies metadata filters (`region` with `GLOBAL` fallback, `domain`, `min_effective_date`, `max_authority_tier`, `exclude_superseded`) and weights results by document effective date and policy tier so active 2026 rules consistently rank above archived 2024 versions.
+
+2. **Span-Level Citation Verifier & Stress-Test Suite (`veri_rag/adversarial_harness.py`, `veri_rag/llm_generator.py`)**  
+   Checks generated answers against character-offset `CitationSpan` quotes from retrieved passages, verifying that cited `[DOC-ID]` headers exist in the filtered context and that quantitative claims (cutoffs, dollar thresholds, limits) appear in active passages—abstaining (`ABSTAIN`) whenever evidence is missing or out of scope. Tested across 105 perturbed cases spanning 30 enterprise scenarios (`veri_rag/scenarios.py`): distractor injection, 2024 vs. 2026 version conflicts, missing constraints, spoofed citation headers, and out-of-jurisdiction queries.
+
+3. **Async 5% Shadow Traffic Runner & Paired Bootstrap Check (`veri_rag/shadow_router.py`)**  
+   Runs the primary pipeline synchronously while mirroring a configurable share (`5%` default) of requests to a candidate pipeline on a background `ThreadPoolExecutor` (`< 0.001 ms` added latency on the caller path), computing 1,000-iteration paired bootstrap 95% confidence intervals and $p$-values.
+
+4. **Stage-by-Stage Pipeline Replay & Leakage Check (`veri_rag/replay_debugger.py`, `veri_rag/dataset_contamination.py`)**  
+   Snapshots intermediate outputs across all 5 pipeline stages (`QUERY_REWRITE -> HYBRID_RETRIEVE -> RERANK_FILTER -> CONFLICT_CHECK -> SYNTHESIZE_WITH_CITATIONS`) so a single stage can be swapped and replayed to pinpoint whether a bad answer came from retrieval, reranking, or synthesis. Includes an n-gram Jaccard and cosine-similarity check to catch train-test benchmark overlap (`0.0%` leakage).
+
 ---
 
-## Repository Structure
+## Benchmark Results
 
-```text
-veri-rag-harness/
-├── .github/workflows/ci-rag-eval.yml  # CI gate enforcing FCHR <= 5%, Abstention Recall >= 95%, 0% leak
-├── benchmarks/
-│   ├── latest_results.json            # Generated benchmark artifact from `python3 -m veri_rag.cli`
-│   └── live_llm_traces.json           # Recorded 5-stage live traces for claude-opus-5-5 & gpt-4o-mini
-├── docs/
-│   ├── index.html                     # Interactive GitHub Pages app + 5-Stage Trace Replay Player
-│   ├── architecture.svg               # Hand-drawn Excalidraw architecture diagram
-│   └── architecture.excalidraw        # Editable Excalidraw scene source
-├── pyproject.toml                     # Package configuration (Python >= 3.11, zero external deps)
-├── tests/test_veri_rag.py             # 23 unit & integration tests covering all modules + LLM guard
-└── veri_rag/
-    ├── __init__.py                    # Public API exports
-    ├── hybrid_retriever.py            # BM25Okapi + 512d Hashing Vector + RRF + Freshness + Span Extractor
-    ├── adversarial_harness.py         # 5-Mode Adversarial Abstention & Faithfulness Evaluation Harness
-    ├── shadow_router.py               # Async 5% Shadow Traffic Router + 1,000-Iteration Paired Bootstrap
-    ├── replay_debugger.py             # 5-Stage DAG Recorder & Counterfactual Single-Node Replay Debugger
-    ├── llm_generator.py               # Multi-Provider Live LLM Synthesizer (Claude Opus 5.5, GPT-4o-mini)
-    ├── dataset_contamination.py       # 4-gram Jaccard, 5-gram Containment & Cosine Leakage Scanner
-    ├── scenarios.py                   # 54-Doc Enterprise Corpus & 30 Multi-Domain Golden Scenarios
-    └── cli.py                         # Benchmark runner & formatted report generator
+Reproducible via `python3 -m veri_rag.cli --output benchmarks/latest_results.json` (54 policy documents, 30 golden scenarios, 105 stress-test cases):
+
+| Metric | Baseline (`BM25` / Naive Top-K RAG) | VeriRAG (Date-Ranked RRF + Span Verifier) | Delta / Significance |
+| :--- | :---: | :---: | :---: |
+| **Top-1 Retrieval Hit Rate (Conflicting Policies)** | 75.0% (`MRR@3 = 0.88`) | **100.0%** (`MRR@3 = 1.00`, `nDCG@3 = 1.00`) | **+25.0%** |
+| **2026 vs. 2024 Policy Conflict Accuracy** | 41.7% – 50.0% | **100.0%** | **+50.0% to +58.3%** |
+| **Unsupported Answer Rate (105 Perturbed Trials)** | 73.3% | **0.0%** | **-73.3%** (`95% CI [-81.0%, -64.8%]`, $p = 0.001$) |
+| **Citation Precision** | 40.3% | **100.0%** | **+60.0%** (`95% CI [+51.0%, +69.0%]`, $p = 0.001$) |
+| **Abstention Recall / Precision on Missing Evidence** | 0.0% / 0.0% | **100.0% recall** / **95.7% precision** | Cleanly abstains when evidence is absent |
+| **Async 5% Shadow Traffic Caller Overhead** | — | **`< 0.001 ms`** | Background `ThreadPoolExecutor` |
+
+---
+
+## Quickstart
+
+Requires Python 3.11+ with zero external package dependencies:
+
+```bash
+# 1. Run all 23 unit and integration tests
+python3 -m unittest discover -s tests -v
+
+# 2. Reproduce retrieval, verification, and shadow-comparison benchmarks
+python3 -m veri_rag.cli --output benchmarks/latest_results.json
 ```
