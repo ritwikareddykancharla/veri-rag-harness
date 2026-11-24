@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "veri-rag-harness"
 version = "1.0.0"
-description = "VeriRAG: Hybrid Retrieval Engine, Adversarial Abstention Harness, 5% Shadow Traffic Router & Counterfactual Replay Debugger"
+description = "Version-aware policy search and span-level citation verifier"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}

@@ -5,7 +5,7 @@
 > **Live API Call:** `curl -s -X POST https://nwvc4rg33y6pemzkb5wcllatu40qgnza.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`  
 > **Interactive Trace Player:** [https://ritwikareddykancharla.github.io/veri-rag-harness/](https://ritwikareddykancharla.github.io/veri-rag-harness/)
 
-**VeriRAG** is a zero-dependency Python retrieval and answer-verification library for policy-heavy RAG workloads (logistics operations, seller support, and compliance documentation). It combines `BM25` keyword search and dense vector search with document effective-date and authority-tier ranking so current policies outrank outdated revisions, and verifies every cited number, date, and document ID before returning an answer—abstaining cleanly when retrieved passages lack supporting evidence.
+**VeriRAG** answers questions over versioned operational, seller-support, and compliance policies without returning outdated revisions or invented numbers: it ranks active policies above superseded documents (`75% -> 100%` Top-1 hit rate) and verifies every cited number, date, and document ID against source passages before replying—abstaining cleanly when retrieved spans lack evidence.
 
 ---
 
