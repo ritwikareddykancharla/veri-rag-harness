@@ -333,7 +333,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
         Suppose an operations lead asks an internal assistant for today's Same-Day Delivery evening sortation cutoff, or a seller support specialist asks for the lost-inventory reimbursement cap. In any lived-in enterprise knowledge base, older 2024 manuals sit right beside concise 2026 policy updates. Standard retrieval pipelines break in four predictable ways: wordier 2024 documents match more query terms and outrank active 2026 amendments (<code>50.0%</code> BM25 conflict win rate); missing thresholds cause standard prompts to guess from nearby distractor paragraphs (<code>73.3%</code> false-confidence hallucination rate, <code>0.0%</code> abstention recall); shipping retriever or prompt changes without paired testing hides regressions; and debugging a bad citation in a five-step pipeline normally requires re-running every stage from scratch.
       </p>
       <p>
-        <b>VeriRAG</b> addresses each layer directly in Python. Hybrid <code>BM25Okapi</code> + <code>512d</code> feature-hashing vector retrieval weighted by effective date and authority tier reaches <b><code>100.0%</code> top-1 hit rate</b> and <b><code>100.0%</code> 2026-vs-2024 conflict win rate</b>. Pre-synthesis supersession pruning and coverage checks cut false-confidence hallucinations by <b><code>-73.3% ± 8.1%</code></b> (<code>100.0%</code> refusal recall, <code>95.7%</code> precision, <code>100.0%</code> citation grounding). A background <code>5%</code> shadow router verifies upgrades across <code>1,000</code> paired bootstrap resamples at <b><code>&lt; 0.001 ms</code></b> caller overhead, and <code>SHA-256</code> stage checkpoints let engineers swap and replay individual pipeline nodes in <code>0 ms</code>.
+        <b>VeriRAG</b> enforces each check deterministically. Hybrid <code>BM25Okapi</code> + <code>512d</code> feature-hashing vector retrieval weighted by effective date and authority tier reaches <b><code>100.0%</code> top-1 hit rate</b> and <b><code>100.0%</code> 2026-vs-2024 conflict win rate</b>. Pre-synthesis supersession pruning and coverage checks cut false-confidence hallucinations by <b><code>-73.3% ± 8.1%</code></b> (<code>100.0%</code> refusal recall, <code>95.7%</code> precision, <code>100.0%</code> citation grounding). A background <code>5%</code> shadow router verifies upgrades across <code>1,000</code> paired bootstrap resamples at <b><code>&lt; 0.001 ms</code></b> caller overhead, and <code>SHA-256</code> stage checkpoints let engineers swap and replay individual pipeline nodes in <code>0 ms</code>.
       </p>
     </div>
 
@@ -398,7 +398,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     <span class="sec-kicker">02 · Architecture</span>
     <div class="sec-head">
       <h2>Architecture</h2>
-      <p>Click any of the 11 components in the diagram (or the numbered pills below) to inspect its role, implementation details, Python module path, and measured results.</p>
+      <p>Click any of the 11 components in the diagram (or the numbered pills below) to inspect its role, implementation details, module path, and measured results.</p>
     </div>
 
     <div class="arch-toolbar">
@@ -633,7 +633,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     <span class="sec-kicker">03 · Implementation</span>
     <div class="sec-head">
       <h2>Implementation</h2>
-      <p>Five modular Python components in <code>veri_rag/</code> combining multi-step shopping bundle planning, hybrid ranking, adversarial coverage gates, paired bootstrap testing, and SHA-256 stage snapshots.</p>
+      <p>Five modular backend components in <code>veri_rag/</code> combining multi-step shopping bundle planning, hybrid ranking, adversarial coverage gates, paired bootstrap testing, and SHA-256 stage snapshots.</p>
     </div>
 
     <div class="impl-grid">
@@ -2305,11 +2305,11 @@ const ARCH_NODE_DETAILS = {
   },
   "edge-lambda": {
     plane: "Plane ① · AWS Serverless Edge Delivery",
-    title: "AWS Lambda Python 3.12 + Amazon Bedrock Nova Synthesizer",
+    title: "AWS Lambda + Amazon Bedrock Nova Synthesizer",
     module: "veri_rag/web_api.py + llm_generator.py",
     plain: "Runs Hybrid RRF retrieval, conflict pruning, quantitative claim verification, and live Amazon Bedrock Nova synthesis on demand.",
-    hood: "Serverless Python 3.12 handler invoking Amazon Bedrock (us.amazon.nova-lite-v1:0) only on conflict-pruned, coverage-verified chunks.",
-    metric: "Python 3.12 Serverless · 0 EC2 / 0 RDS"
+    hood: "Serverless AWS Lambda handler invoking Amazon Bedrock (us.amazon.nova-lite-v1:0) only on conflict-pruned, coverage-verified chunks.",
+    metric: "AWS Lambda Serverless · 0 EC2 / 0 RDS"
   },
   "contam-scanner": {
     plane: "Plane ② · Corpus Governance & Hybrid Index",

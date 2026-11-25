@@ -59,7 +59,7 @@
   <!-- Node 03B: VeriRAG Core Engine -->
   <rect x="500" y="204" width="300" height="290" fill="#ffffff" stroke="#0e1a2b" stroke-width="1.5"/>
   <text x="516" y="227" font-family="'Martian Mono', monospace" font-size="9.5" fill="#6b21a8" letter-spacing="1">03B · VERIRAG HARNESS (US-WEST-2)</text>
-  <text x="516" y="248" font-size="16" font-weight="800" fill="#0e1a2b">verirag-api-origin (Python 3.12)</text>
+  <text x="516" y="248" font-size="16" font-weight="800" fill="#0e1a2b">verirag-api-origin (AWS Lambda)</text>
 
   <rect x="516" y="264" width="268" height="64" fill="#f2f5fa" stroke="#35527e" stroke-width="1.2"/>
   <text x="528" y="283" font-family="'Martian Mono', monospace" font-size="10" font-weight="500" fill="#35527e">1. EFFECTIVE-DATE HYBRID RRF RETRIEVER</text>
