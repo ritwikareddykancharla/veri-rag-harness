@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VeriRAG — Hybrid Retrieval, Adversarial Abstention, 5% Shadow Router & Counterfactual Replay Debugger</title>
 <meta name="description" content="Interactive engineering sandbox & live claude-opus-5-5 / gpt-4o-mini trace replay player for VeriRAG: Hybrid BM25+Vector RRF Retrieval, 2026-vs-2024 Policy Conflict Resolution, 5-Mode Adversarial Abstention Harness, and Counterfactual Trajectory Replay.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@400;700&family=Martian+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;600;700;800;900&display=swap">
 <style>
 :root{
   --paper:#f2f5fa; --card:#ffffff; --ink:#0e1a2b; --body:#33425a; --soft:#6b7a92; --rule:#cfd8e6;
@@ -29,9 +29,10 @@
   --ok:#4cd695; --ok-soft:rgba(76,214,149,.13); --warn:#f4b860; --warn-soft:rgba(244,184,96,.13);
 }
 
+html{scroll-behavior:smooth}
 *{box-sizing:border-box}
 body{
-  margin:0;color:var(--ink);font:400 16px/1.6 var(--display);-webkit-font-smoothing:antialiased;
+  margin:0;color:var(--ink);font:400 16.5px/1.68 var(--display);-webkit-font-smoothing:antialiased;
   background:radial-gradient(circle,var(--dot) 1px,transparent 1.2px) 0 0/22px 22px,var(--paper);
   transition:background-color .3s ease,color .3s ease;
 }
@@ -87,17 +88,58 @@ h1{margin:0;font-size:clamp(2rem,3.4vw,2.85rem);line-height:1.06;letter-spacing:
 
 .brutal-card{background:var(--card);border:1px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:22px}
 .brutal-card.accent{box-shadow:6px 6px 0 var(--accent)}
+.btn.accent{background:var(--accent);color:var(--on-accent);border-color:var(--ink)}
+.btn.sm{padding:7px 11px;font-size:10.5px}
 
-/* 30-Second Walkthrough Grid + Excalidraw Frame */
-.walk-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:24px}
-.walk-step{background:var(--card);border:1px solid var(--ink);padding:16px;box-shadow:4px 4px 0 var(--rule);display:flex;flex-direction:column;gap:8px}
+/* Sticky Jump-to-Section TOC & Interactive Architecture Styles */
+.toc-bar{position:sticky;top:var(--topbar-h,68px);z-index:19;background:var(--paper);border-bottom:2px solid var(--ink);padding:8px 0;box-shadow:0 3px 0 rgba(14,26,43,.06)}
+.toc-inner{display:flex;align-items:center;gap:7px;overflow-x:auto;white-space:nowrap;scrollbar-width:thin;padding-bottom:2px}
+.toc-label{font:600 10.5px var(--mono);text-transform:uppercase;color:var(--soft);margin-right:4px}
+.toc-link{font:600 11px var(--mono);padding:6px 11px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);text-decoration:none;box-shadow:2px 2px 0 var(--ink);transition:transform .12s,background .12s,color .12s}
+.toc-link:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--accent)}
+.toc-link.active{background:#b01c30 !important;color:#ffffff !important;border-color:var(--ink)}
+.sec{padding:56px 0 0;scroll-margin-top:128px}
+
+.sec-kicker{display:inline-flex;align-items:center;gap:6px;font:600 10.5px var(--mono);text-transform:uppercase;padding:4px 10px;background:#b01c30;color:#ffffff;border:1.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink);margin-bottom:8px}
+.plain-callout{background:var(--card);border:1.5px solid var(--ink);border-left:6px solid #b01c30;box-shadow:6px 6px 0 var(--accent);padding:20px 22px;margin-bottom:22px;font-size:.98rem;line-height:1.72}
+.plain-callout p+p{margin-top:10px}
+.worked-example{background:var(--card);border:1.5px solid var(--ink);box-shadow:6px 6px 0 var(--accent);padding:22px;margin-top:22px}
+.worked-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.worked-step{background:var(--paper);border:1px solid var(--ink);padding:14px 16px;font-size:.92rem;line-height:1.68}
+
+.walk-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.walk-step{background:var(--card);border:1.5px solid var(--ink);padding:18px;box-shadow:5px 5px 0 var(--accent);display:flex;flex-direction:column;gap:9px}
 .walk-step .num{font:600 10.5px var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
-.walk-step h3{margin:0;font-size:1rem;font-weight:800;letter-spacing:-.02em}
-.walk-step p{font:400 .95rem/1.48 var(--read);color:var(--body)}
-.walk-step code{font:500 10.5px var(--mono);color:var(--cobalt);background:var(--cobalt-soft);padding:2px 5px;align-self:flex-start;margin-top:auto}
-.arch-frame{background:#ffffff;border:2px solid var(--ink);box-shadow:8px 8px 0 var(--accent);padding:14px}
-.arch-frame img{display:block;width:100%;height:auto}
-.arch-caption{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding-top:10px;border-top:1px dashed var(--rule);margin-top:10px;font:400 11.5px var(--mono);color:#33425a}
+.walk-step h3{margin:0;font-size:1.06rem;font-weight:800;letter-spacing:-.02em}
+.walk-step p{font:400 .96rem/1.58 var(--read);color:var(--body)}
+.walk-step code{font:500 10.5px var(--mono);color:var(--cobalt);background:var(--cobalt-soft);padding:2px 6px;align-self:flex-start;margin-top:auto}
+
+.arch-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 15px;background:var(--paper);border:1.5px solid var(--ink);border-bottom:none}
+.arch-viewport{background-color:#ffffff;background-image:radial-gradient(rgba(14,26,43,.14) 1px,transparent 1px);background-size:18px 18px;border:2px solid #18181B;box-shadow:6px 6px 0 var(--accent);overflow-x:auto;padding:14px}
+.arch-svg{display:block;width:100%;min-width:980px;height:auto;transition:width .22s ease,min-width .22s ease}
+.arch-svg.zoom-125{width:125%;min-width:1225px}
+.ex-hand{font-family:"Caveat","Kalam",cursive}
+.ex-mono{font-family:var(--mono)}
+.ex-node{cursor:pointer;transition:filter .15s ease}
+.ex-node:hover{filter:drop-shadow(3px 3px 0px #b01c30)}
+.ex-node.selected .ex-stroke-main{stroke:#b01c30 !important;stroke-width:3.2px !important}
+.arch-inspector{margin-top:16px;background:var(--card);border:1.5px solid var(--ink);box-shadow:6px 6px 0 var(--accent);padding:18px 20px}
+.arch-node-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.arch-node-pill{font:600 10.5px var(--mono);padding:5px 10px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.arch-node-pill.active{background:#b01c30;color:#ffffff}
+
+.impl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.impl-card{background:var(--card);border:1.5px solid var(--ink);box-shadow:6px 6px 0 var(--accent);display:flex;flex-direction:column}
+.impl-head{background:#0e1a2b;color:#f2f5fa;padding:11px 16px;border-bottom:1.5px solid var(--ink);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font:600 11px var(--mono)}
+.impl-body{padding:18px 20px;display:flex;flex-direction:column;gap:12px;font-size:.93rem;line-height:1.68}
+.layer-plain{background:var(--accent-soft);border:1px solid var(--ink);padding:12px 14px;font-size:.91rem;line-height:1.66}
+.layer-hood{background:var(--paper);border:1px solid var(--ink);padding:12px 14px;font-size:.87rem;line-height:1.64}
+.sandbox-guide{background:var(--paper);border:1.5px solid var(--ink);border-left:6px solid #b01c30;padding:13px 16px;margin-bottom:16px;font-size:.92rem;line-height:1.66}
+.plain-callout code,.worked-step code,.layer-plain code,.layer-hood code,.sandbox-guide code{font:500 .88em var(--mono);background:var(--cobalt-soft);color:var(--ink);padding:1px 5px;border-radius:2px}
+.grid-2-ins{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid-3-trade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:20px}
+tr.winner-row td{background:var(--ok-soft);font-weight:600}
+@media (max-width:960px){.worked-steps,.impl-grid,.grid-2-ins,.grid-3-trade{grid-template-columns:1fr}}
 
 /* Trace Replay Player */
 .player-shell{background:var(--card);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--accent);padding:22px}
@@ -179,16 +221,19 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
 </head>
 <body>
 
-<header class="site">
+<header class="site" id="topHeader">
   <div class="bar">
     <a class="brand" href="#top">
       <span class="mark">VR</span>
       <span>VeriRAG Harness</span>
     </a>
     <nav aria-label="Primary">
-      <a href="#walkthrough">Architecture</a>
-      <a href="#replay-player">🎬 Live LLM Trace Player</a>
-      <a href="#sandbox">3 Live Sandboxes</a>
+      <a href="#problem-statement">Problem</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#implementation">Implementation</a>
+      <a href="#design-tradeoffs">Trade-Offs</a>
+      <a href="#replay-player">Trace Scrubber</a>
+      <a href="#sandbox">Interactive Studio</a>
       <a href="#benchmarks">Benchmarks</a>
       <a href="https://github.com/ritwikareddykancharla/veri-rag-harness" target="_blank" rel="noopener">GitHub Repo ↗</a>
     </nav>
@@ -198,6 +243,19 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     </button>
   </div>
 </header>
+
+<nav class="toc-bar" id="stickyToc" aria-label="Jump to Section Table of Contents">
+  <div class="wrap toc-inner">
+    <span class="toc-label">Jump To:</span>
+    <a class="toc-link active" href="#problem-statement" data-toc-sec="problem-statement">§01 · Problem Statement</a>
+    <a class="toc-link" href="#architecture" data-toc-sec="architecture">§02 · System Architecture</a>
+    <a class="toc-link" href="#implementation" data-toc-sec="implementation">§03 · Implementation</a>
+    <a class="toc-link" href="#design-tradeoffs" data-toc-sec="design-tradeoffs">§04 · Design Trade-Offs</a>
+    <a class="toc-link" href="#replay-player" data-toc-sec="replay-player">§05 · Live Trace Scrubber</a>
+    <a class="toc-link" href="#sandbox" data-toc-sec="sandbox">§06 · Interactive Studio</a>
+    <a class="toc-link" href="#benchmarks" data-toc-sec="benchmarks">§07 · Benchmarks</a>
+  </div>
+</nav>
 
 <main id="top" class="wrap">
   <!-- HERO -->
@@ -237,62 +295,494 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     </div>
   </section>
 
-  <!-- 30-SECOND WALKTHROUGH & EXCALIDRAW ARCHITECTURE -->
-  <section id="walkthrough" class="sec">
+  <!-- §01 · PROBLEM STATEMENT -->
+  <section id="problem-statement" class="sec">
+    <div id="walkthrough"></div>
+    <span class="sec-kicker">§01 · Problem Statement</span>
     <div class="sec-head">
-      <h2>How It Works (30-Second Visual Walkthrough)</h2>
-      <p>Plain-English breakdown of the five core subsystems inside <code>veri_rag/</code> and the hand-drawn Excalidraw architecture diagram.</p>
+      <h2>Why Standard Vector RAG Hallucinates on Conflicting &amp; Incomplete Policies</h2>
+      <p>Four production failure modes across fulfillment SLAs, marketplace seller reimbursements, conversational shopping specs, and clinical protocols—and how VeriRAG eliminates them.</p>
+    </div>
+
+    <div class="plain-callout">
+      <div style="font:600 11px var(--mono);color:#b01c30;text-transform:uppercase;margin-bottom:6px">💡 In Plain English — What Problem Does VeriRAG Solve?</div>
+      <p>
+        Imagine an operations lead or customer-support agent asking an internal AI assistant: <i>"What is today's Same-Day Delivery evening sortation cutoff?"</i> or <i>"What is the FBA lost-inventory reimbursement cap?"</i> In real enterprise knowledge bases, old 2024 manuals sit right next to updated 2026 policy amendments. Standard Top-K RAG fails silently in four painful ways:
+        <b>(1) Stale Policy Collisions:</b> older 2024 documents are often wordier and match more keywords than concise 2026 amendments, so naive search ranks the outdated <code>16:00</code> or <code>$2,000</code> rule #1 (<code>50.0%</code> BM25 conflict win rate);
+        <b>(2) False-Confidence Hallucinations:</b> when the governing threshold is missing from retrieved chunks or out of scope, standard prompts guess from nearby distractor paragraphs (<code>73.3%</code> False Confidence Hallucination Rate, <code>0.0%</code> abstention recall);
+        <b>(3) Blind Production Rollouts:</b> swapping a retriever or prompt in production without paired statistical testing hides regressions until customers complain; and
+        <b>(4) Opaque Multi-Hop Debugging:</b> when a 5-stage RAG pipeline emits a bad citation, engineers cannot tell whether retrieval, reranking, conflict filtering, or prompt synthesis caused the bug without re-running every stage from scratch.
+      </p>
+      <p>
+        <b>VeriRAG</b> fixes all four in a zero-dependency Python runtime: <b>Hybrid <code>BM25Okapi</code> + <code>512d</code> Feature-Hashing Vector RRF with Freshness &amp; Authority Weighting</b> hits <b><code>100.0%</code> Top-1 &amp; <code>100.0%</code> 2026-vs-2024 Conflict Win Rate</b>; a <b>5-Mode Adversarial Abstention Harness</b> cuts False Confidence Hallucinations by <b><code>-73.3% ± 8.1%</code></b> (<code>100.0%</code> abstention recall, <code>95.7%</code> precision, <code>100.0%</code> citation grounding); an asynchronous <b>5% Shadow Traffic Router</b> proves significance via 1,000 paired bootstrap resamples at <b><code>&lt; 0.001 ms</code></b> caller overhead; and a <b>5-Stage Counterfactual Replay Debugger</b> swaps individual DAG nodes against <code>SHA-256</code> upstream snapshots in <code>0 ms</code>.
+      </p>
     </div>
 
     <div class="walk-grid">
       <article class="walk-step">
-        <span class="num">01 / Hybrid RRF</span>
-        <h3>Lexical + Vector Fusion</h3>
-        <p>Combines exact keyword matching (<code>BM25Okapi</code>) with 512-d n-gram feature hashing via Reciprocal Rank Fusion so neither acronyms nor paraphrases slip through.</p>
+        <span class="num">Failure Mode 01 · Stale Policies</span>
+        <h3>2024 Legacy Docs Outscore 2026 Amendments</h3>
+        <p>Unweighted <code>BM25Okapi</code> (<code>50.0%</code> conflict win) and pure <code>512d</code> cosine (<code>41.7%</code> conflict win) frequently rank superseded Tier-3 2024 docs above active Tier-1 2026 rules. VeriRAG multiplies RRF by recency decay, authority tier, and supersession penalties (<code>100.0%</code> win rate).</p>
         <code>hybrid_retriever.py</code>
       </article>
       <article class="walk-step">
-        <span class="num">02 / Freshness &amp; Tier</span>
-        <h3>2026 vs. 2024 Conflict Gate</h3>
-        <p>Weights chunks by <code>effective_date</code> and <code>authority_tier</code> (Tier 1 &gt; Tier 3) and drops documents tagged with <code>superseded_by</code> before synthesis.</p>
-        <code>_resolve_conflicts()</code>
-      </article>
-      <article class="walk-step">
-        <span class="num">03 / 5-Mode Stress</span>
-        <h3>Adversarial Abstention</h3>
-        <p>Perturbs contexts across 5 failure modes (missing constraints, 2024 conflicts, distractors, citation spoofing, OOD scope) to verify the agent confidently abstains.</p>
+        <span class="num">Failure Mode 02 · Guessing When Blind</span>
+        <h3>73.3% Hallucination on Missing Constraints</h3>
+        <p>When a critical threshold is stripped or an out-of-distribution boundary is queried, <code>NaiveTopK-RAG</code> hallucinates <code>73.3%</code> of the time (<code>0.0%</code> abstention). VeriRAG enforces pre-synthesis entity/constraint coverage (<code>&ge; 0.55</code>) and spoof pruning (<code>0.0%</code> FCHR).</p>
         <code>adversarial_harness.py</code>
       </article>
       <article class="walk-step">
-        <span class="num">04 / 5% Shadow Router</span>
-        <h3>Paired Bootstrap CI</h3>
-        <p>Mirrors 5% of live traffic asynchronously to a candidate pipeline with zero primary latency impact and runs 1,000 paired bootstrap iterations to prove significance.</p>
+        <span class="num">Failure Mode 03 · Unsafe Rollouts</span>
+        <h3>Zero-Overhead 5% Shadow Traffic &amp; Bootstrap CI</h3>
+        <p>Instead of shipping prompt or retriever changes blind, VeriRAG mirrors <code>5%</code> of live traffic asynchronously on a background worker pool (<code>&lt; 0.001 ms</code> caller latency impact) and runs <code>1,000</code> paired bootstrap resamples (<code>p = 0.0010</code>).</p>
         <code>shadow_router.py</code>
       </article>
       <article class="walk-step">
-        <span class="num">05 / Causal Replay</span>
-        <h3>Counterfactual Debugger</h3>
-        <p>Snapshots all 5 workflow nodes and lets engineers swap a single stage (e.g., <code>NaiveTopK</code> &rarr; <code>ConflictAwareRRF</code>) while reusing upstream state.</p>
+        <span class="num">Failure Mode 04 · Opaque Root Causes</span>
+        <h3>Counterfactual 5-Stage DAG Replay &amp; Audit</h3>
+        <p>Fingerprints all 5 workflow stages with <code>SHA-256</code> so engineers can swap a single node (<code>NaiveTopKFilter</code> &rarr; <code>ConflictAwareRRF</code>) while reusing recorded upstream state, paired with a <code>4</code>-gram Jaccard contamination audit (<code>0.0%</code> leak).</p>
         <code>replay_debugger.py</code>
       </article>
     </div>
 
-    <div class="arch-frame">
-      <img src="architecture.svg" alt="VeriRAG Hand-Drawn Excalidraw System Architecture Diagram">
-      <div class="arch-caption">
-        <span>Hand-drawn Excalidraw architecture diagram illustrating Hybrid RRF Retrieval, 5-Mode Adversarial Harness, 5% Shadow Router, and 5-Stage Replay DAG.</span>
-        <a href="architecture.excalidraw" download style="font-weight:600;color:#b01c30">Download architecture.excalidraw ↗</a>
+    <div class="worked-example">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <div>
+          <span class="badge danger" style="background:var(--accent-soft);color:var(--accent);border-color:var(--accent);margin-bottom:6px">Concrete End-to-End Worked Example</span>
+          <h3 style="margin:0;font-size:1.18rem;font-weight:800">Tracing Trial <code>SCN-SSD-01</code>: 2026 (<code>14:30</code>) vs. 2024 (<code>16:00</code>) Fulfillment Cutoff &amp; Stripped-Policy Abstention</h3>
+        </div>
+        <span class="badge ok">100% Top-1 · 0.0% FCHR · p = 0.0010</span>
+      </div>
+      <div class="worked-steps">
+        <div class="worked-step">
+          <b>Step 1 — Why Raw Retrieval Falls Into the 2024 Trap:</b><br>
+          An operator asks: <i>"What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?"</i> Legacy <code>DOC-SSD-2024-01</code> (<code>2024-03-01</code>, Tier 3, <code>16:00</code> cutoff) actually scores <i>higher</i> on raw BM25 (<code>43.69</code>) and raw 512d cosine (<code>0.500</code>) than active <code>DOC-SSD-2026-01</code> (<code>2026-02-15</code>, Tier 1, <code>14:30</code> cutoff, BM25 <code>31.35</code>, cosine <code>0.415</code>)—so naive RAG confidently quotes the wrong <code>16:00</code> cutoff!
+        </div>
+        <div class="worked-step">
+          <b>Step 2 — Hybrid RRF + Freshness &amp; Authority Multiplier Flips Rank #1:</b><br>
+          <code>HybridRRFRetriever</code> fuses lexical + 512d vector ranks (<code>rrf_k=20</code>) and applies <code>compute_freshness_multiplier()</code> (<code>exp(-0.30 &times; years_old) &times; tier_bonus &times; superseded_penalty</code>). Active 2026 Tier-1 policy receives a <code>1.0593&times;</code> boost (<code>final_score = 0.1190</code>) while superseded 2024 Tier-3 decays to <code>0.6373&times;</code> (<code>final_score = 0.0892</code>), promoting <code>DOC-SSD-2026-01</code> cleanly to Rank #1.
+        </div>
+        <div class="worked-step">
+          <b>Step 3 — Pre-Synthesis Supersession Pruning &amp; Abstention Gate:</b><br>
+          Stage 4 (<code>SupersessionConflictResolver</code>) inspects <code>superseded_by="DOC-SSD-2026-01"</code> and drops <code>DOC-SSD-2024-01</code> before prompt construction so the LLM never sees contradictory timestamps. Conversely, when <code>DOC-SSD-2026-01</code> is removed in stress mode <code>MISSING_CRITICAL_CONSTRAINT</code>, entity/constraint coverage falls below <code>0.55</code> and VeriRAG deterministically emits <code>ABSTAIN</code> instead of guessing from freight distractors.
+        </div>
+        <div class="worked-step">
+          <b>Step 4 — Grounded Multi-Model Synthesis, 5% Shadow Audit &amp; Replay:</b><br>
+          Live <code>claude-opus-5-5</code> (<code>5,509 ms</code>), <code>gpt-4o-mini</code>, and CloudFront Bedrock Nova (<code>us.amazon.nova-lite-v1:0</code>) synthesize <code>14:30 local facility time [DOC-SSD-2026-01]</code> with <code>100.0%</code> citation grounding precision. Meanwhile, <code>ShadowTrafficRouter</code> logs paired diffs in the background (<code>&lt; 0.001 ms</code> caller overhead) and <code>ReplayDebugger</code> hashes all 5 state transitions (<code>bd1dc58b... &rarr; f4490a12...</code>).
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================================================================== -->
-  <!-- 🎬 COUNTERFACTUAL AGENT TRACE REPLAY PLAYER (CLAUDE OPUS 5.5 VS GPT-4O-MINI) -->
-  <!-- ===================================================================== -->
+  <!-- §02 · SYSTEM ARCHITECTURE -->
+  <section id="architecture" class="sec">
+    <span class="sec-kicker">§02 · System Architecture</span>
+    <div class="sec-head">
+      <h2>Five-Plane Grounded RAG, Adversarial Abstention &amp; Causal Replay Architecture</h2>
+      <p>Click any of the 11 components in the diagram (or the numbered pills below) to inspect its plain-English role, internal math, Python module path, and measured benchmark result.</p>
+    </div>
+
+    <div class="arch-toolbar">
+      <div style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.04em">
+        SYSTEM ARCHITECTURE · CLICK ANY COMPONENT TO INSPECT
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span id="archZoomLabel" style="font:600 11px var(--mono);color:var(--soft);margin-right:4px">Zoom: 100%</span>
+        <button type="button" class="btn sm accent" id="zoom100Btn">100%</button>
+        <button type="button" class="btn sm" id="zoom125Btn">125%</button>
+        <button type="button" class="btn sm" id="zoomResetBtn">↺ Reset</button>
+        <button type="button" class="btn sm" id="downloadArchSvgBtn">⬇ Export SVG</button>
+      </div>
+    </div>
+
+    <div class="arch-viewport" id="archViewport">
+      <svg id="veriArchSvg" class="arch-svg" viewBox="0 0 1220 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VeriRAG Five-Plane System Architecture Diagram">
+        <!-- PLANE 1: AWS EDGE DELIVERY -->
+        <path d="M 22,18 Q 610,14 1196,20 Q 1200,96 1195,168 Q 608,172 24,167 Q 19,92 22,18 Z" fill="#F8FAFC" stroke="#52525B" stroke-width="1.6" stroke-dasharray="8 6"/>
+        <text x="36" y="42" class="ex-hand" font-size="21" font-weight="700" fill="#b01c30">① AWS Serverless Edge Delivery (CloudFront HTTPS E13PBXNHUDU296 + Private S3 OAC + Bedrock Nova API)</text>
+
+        <g class="ex-node" data-arch-node="edge-browser" tabindex="0">
+          <path d="M 38,56 Q 136,53 234,57 Q 238,98 233,140 Q 135,143 39,139 Q 35,97 38,56 Z" fill="#DBEAFE"/>
+          <path class="ex-stroke-main" d="M 38,56 Q 136,53 234,57 Q 238,98 233,140 Q 135,143 39,139 Q 35,97 38,56 Z" fill="none" stroke="#18181B" stroke-width="2.1"/>
+          <text x="136" y="84" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">User Browser</text>
+          <text x="136" y="106" text-anchor="middle" class="ex-mono" font-size="10" font-weight="600" fill="#1E3A8A">Trace Player &amp; 3 Sandboxes</text>
+          <text x="136" y="124" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#3F3F46">location.hash · Stateless UI</text>
+        </g>
+
+        <path d="M 237,98 Q 268,94 298,98" fill="none" stroke="#18181B" stroke-width="2.1" stroke-dasharray="6 4"/>
+        <path d="M 289,92 L 300,98 L 289,104" fill="none" stroke="#18181B" stroke-width="2.1"/>
+        <text x="268" y="87" text-anchor="middle" class="ex-hand" font-size="16" font-weight="700" fill="#18181B">HTTPS</text>
+
+        <g class="ex-node" data-arch-node="edge-cloudfront" tabindex="0">
+          <path d="M 304,56 Q 430,52 556,57 Q 560,98 555,140 Q 428,144 305,139 Q 301,97 304,56 Z" fill="#FEE2E2"/>
+          <path class="ex-stroke-main" d="M 304,56 Q 430,52 556,57 Q 560,98 555,140 Q 428,144 305,139 Q 301,97 304,56 Z" fill="none" stroke="#18181B" stroke-width="2.1"/>
+          <text x="430" y="84" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">Amazon CloudFront (HTTPS)</text>
+          <text x="430" y="106" text-anchor="middle" class="ex-mono" font-size="10" font-weight="600" fill="#991B1B">TLS 1.3 · E13PBXNHUDU296</text>
+          <text x="430" y="124" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#3F3F46">Routes /* static &amp; /api/*</text>
+        </g>
+
+        <path d="M 559,80 Q 596,68 634,68" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4"/>
+        <path d="M 625,62 L 636,68 L 625,74" fill="none" stroke="#18181B" stroke-width="2"/>
+        <text x="596" y="61" text-anchor="middle" class="ex-hand" font-size="15" font-weight="700" fill="#065F46">OAC GET</text>
+
+        <path d="M 559,116 Q 596,128 634,128" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4"/>
+        <path d="M 625,122 L 636,128 L 625,134" fill="none" stroke="#18181B" stroke-width="2"/>
+        <text x="596" y="145" text-anchor="middle" class="ex-hand" font-size="15" font-weight="700" fill="#991B1B">/api/verify</text>
+
+        <g class="ex-node" data-arch-node="edge-s3" tabindex="0">
+          <path d="M 640,40 Q 775,37 910,41 Q 913,67 909,92 Q 774,95 641,91 Q 637,66 640,40 Z" fill="#DCFCE7"/>
+          <path class="ex-stroke-main" d="M 640,40 Q 775,37 910,41 Q 913,67 909,92 Q 774,95 641,91 Q 637,66 640,40 Z" fill="none" stroke="#18181B" stroke-width="2"/>
+          <text x="775" y="63" text-anchor="middle" class="ex-hand" font-size="20" font-weight="700" fill="#18181B">Private S3 Bucket (OAC)</text>
+          <text x="775" y="81" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#065F46">web/index.html · BlockPublicAccess</text>
+        </g>
+
+        <g class="ex-node" data-arch-node="edge-lambda" tabindex="0">
+          <path d="M 640,102 Q 775,99 910,103 Q 913,130 909,156 Q 774,159 641,155 Q 637,129 640,102 Z" fill="#FFE8D6"/>
+          <path class="ex-stroke-main" d="M 640,102 Q 775,99 910,103 Q 913,130 909,156 Q 774,159 641,155 Q 637,129 640,102 Z" fill="none" stroke="#18181B" stroke-width="2"/>
+          <text x="775" y="125" text-anchor="middle" class="ex-hand" font-size="20" font-weight="700" fill="#18181B">AWS Lambda + Bedrock Nova</text>
+          <text x="775" y="144" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#9A3412">veri_rag/web_api.py · nova-lite-v1:0</text>
+        </g>
+
+        <!-- Sticky Note -->
+        <g transform="rotate(-1.6 1055 96)">
+          <path d="M 936,42 L 1178,42 L 1178,136 L 1160,152 L 936,152 Z" fill="#FEF3C7" stroke="#18181B" stroke-width="2"/>
+          <path d="M 1160,152 L 1160,136 L 1178,136" fill="#FDE68A" stroke="#18181B" stroke-width="1.6"/>
+          <text x="949" y="68" class="ex-hand" font-size="19" font-weight="700" fill="#92400E">📌 Verified RAG Metrics</text>
+          <text x="949" y="91" class="ex-hand" font-size="17" font-weight="600" fill="#18181B">• 100.0% Top-1 &amp; Conflict Win</text>
+          <text x="949" y="112" class="ex-hand" font-size="17" font-weight="600" fill="#18181B">• -73.3% ± 8.1% FCHR (p=0.001)</text>
+          <text x="949" y="133" class="ex-hand" font-size="17" font-weight="700" fill="#b01c30">• &lt; 0.001 ms 5% Shadow Overhead</text>
+        </g>
+
+        <path d="M 775,157 Q 770,180 612,196" fill="none" stroke="#18181B" stroke-width="2.1" stroke-dasharray="7 5"/>
+        <path d="M 621,190 L 610,197 L 622,202" fill="none" stroke="#18181B" stroke-width="2.1"/>
+        <text x="758" y="185" class="ex-hand" font-size="16" font-weight="700" fill="#18181B">Query + Governance Metadata</text>
+
+        <!-- PLANE 2: CONTAMINATION AUDIT, HYBRID RRF & FRESHNESS GATE -->
+        <path d="M 22,198 Q 610,194 1196,199 Q 1200,270 1195,340 Q 608,344 24,339 Q 19,268 22,198 Z" fill="#F8FAFC" stroke="#1E40AF" stroke-width="1.6" stroke-dasharray="8 6"/>
+        <text x="36" y="221" class="ex-hand" font-size="21" font-weight="700" fill="#1D4ED8">② Corpus Contamination Scanner, Hybrid BM25 + 512d Feature-Hashing Index &amp; Freshness/Authority Multiplier</text>
+
+        <g class="ex-node" data-arch-node="contam-scanner" tabindex="0">
+          <path d="M 42,235 Q 218,231 394,236 Q 398,281 393,326 Q 216,330 43,325 Q 39,280 42,235 Z" fill="#DCFCE7"/>
+          <path class="ex-stroke-main" d="M 42,235 Q 218,231 394,236 Q 398,281 393,326 Q 216,330 43,325 Q 39,280 42,235 Z" fill="none" stroke="#18181B" stroke-width="2.1"/>
+          <text x="218" y="263" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">Dataset Contamination Audit</text>
+          <text x="218" y="285" text-anchor="middle" class="ex-mono" font-size="9.6" font-weight="600" fill="#065F46">4-Gram Jaccard (0.28) + 512d Cosine</text>
+          <text x="218" y="304" text-anchor="middle" class="ex-mono" font-size="9.3" fill="#3F3F46">0.0% Active Corpus Leak (30 Scenarios)</text>
+        </g>
+
+        <path d="M 397,280 L 428,280" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="5 4"/>
+        <path d="M 421,274 L 430,280 L 421,286" fill="none" stroke="#18181B" stroke-width="2"/>
+
+        <g class="ex-node" data-arch-node="hybrid-rrf" tabindex="0">
+          <path d="M 432,235 Q 610,231 788,236 Q 792,281 787,326 Q 609,330 433,325 Q 429,280 432,235 Z" fill="#DBEAFE"/>
+          <path class="ex-stroke-main" d="M 432,235 Q 610,231 788,236 Q 792,281 787,326 Q 609,330 433,325 Q 429,280 432,235 Z" fill="none" stroke="#18181B" stroke-width="2.1"/>
+          <text x="610" y="263" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">Hybrid BM25 + 512d Vector RRF</text>
+          <text x="610" y="285" text-anchor="middle" class="ex-mono" font-size="9.6" font-weight="600" fill="#1E3A8A">BM25Okapi (k1=1.5) + MD5 Signed Hash</text>
+          <text x="610" y="304" text-anchor="middle" class="ex-mono" font-size="9.3" fill="#3F3F46">54 Docs · rrf_k=20 · 100.0% Recall@3</text>
+        </g>
+
+        <path d="M 791,280 L 821,280" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="5 4"/>
+        <path d="M 814,274 L 823,280 L 814,286" fill="none" stroke="#18181B" stroke-width="2"/>
+
+        <g class="ex-node" data-arch-node="freshness-gate" tabindex="0">
+          <path d="M 824,235 Q 1001,231 1178,236 Q 1182,281 1177,326 Q 1000,330 825,325 Q 821,280 824,235 Z" fill="#FEF3C7"/>
+          <path class="ex-stroke-main" d="M 824,235 Q 1001,231 1178,236 Q 1182,281 1177,326 Q 1000,330 825,325 Q 821,280 824,235 Z" fill="none" stroke="#18181B" stroke-width="2.1"/>
+          <text x="1001" y="263" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">Freshness &amp; Authority Multiplier</text>
+          <text x="1001" y="285" text-anchor="middle" class="ex-mono" font-size="9.6" font-weight="600" fill="#92400E">Tier 1 (1.12×) &gt; Tier 3 · Superseded 0.48×</text>
+          <text x="1001" y="304" text-anchor="middle" class="ex-mono" font-size="9.3" fill="#3F3F46">100.0% Top-1 &amp; 2026 Conflict Win Rate</text>
+        </g>
+
+        <path d="M 218,328 Q 230,368 260,420" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="238" y="366" class="ex-hand" font-size="15.5" font-weight="700" fill="#065F46">Verified Split</text>
+
+        <path d="M 610,328 Q 570,368 530,420" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="580" y="366" class="ex-hand" font-size="15.5" font-weight="700" fill="#1E40AF">Fused Top-K Chunks</text>
+
+        <path d="M 1001,328 Q 885,368 775,420" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="892" y="366" class="ex-hand" font-size="15.5" font-weight="700" fill="#92400E">2026 Tier-1 Ranked #1</text>
+
+        <!-- PLANE 3: 5-STAGE REPLAYABLE RAG EXECUTION GRAPH -->
+        <g class="ex-node selected" data-arch-node="rag-dag" tabindex="0">
+          <path d="M 22,384 Q 610,380 1196,385 Q 1200,458 1195,532 Q 608,536 24,531 Q 19,457 22,384 Z" fill="#FFF1F2"/>
+          <path class="ex-stroke-main" d="M 22,384 Q 610,380 1196,385 Q 1200,458 1195,532 Q 608,536 24,531 Q 19,457 22,384 Z" fill="none" stroke="#18181B" stroke-width="2.1"/>
+          <text x="36" y="408" class="ex-hand" font-size="21" font-weight="700" fill="#b01c30">③ 5-Stage Deterministic RAG Execution DAG (Every Stage Fingerprinted via 16-Hex SHA-256 State Hash)</text>
+
+          <path d="M 40,425 Q 142,422 244,426 Q 248,468 243,510 Q 141,513 41,509 Q 38,467 40,425 Z" fill="#FFE8D6" stroke="#18181B" stroke-width="1.9"/>
+          <text x="142" y="451" text-anchor="middle" class="ex-hand" font-size="17.5" font-weight="700" fill="#18181B">01 · QUERY_REWRITE</text>
+          <text x="142" y="473" text-anchor="middle" class="ex-mono" font-size="8.9" fill="#9A3412">DomainAcronymRewriter</text>
+          <text x="142" y="492" text-anchor="middle" class="ex-mono" font-size="8.6" fill="#3F3F46">SSD / ANC / FBA / SFP</text>
+
+          <path d="M 248,468 L 270,468" stroke="#18181B" stroke-width="2"/>
+          <path d="M 263,463 L 272,468 L 263,473" fill="none" stroke="#18181B" stroke-width="2"/>
+
+          <path d="M 274,425 Q 376,422 478,426 Q 482,468 477,510 Q 375,513 275,509 Q 272,467 274,425 Z" fill="#DBEAFE" stroke="#18181B" stroke-width="1.9"/>
+          <text x="376" y="451" text-anchor="middle" class="ex-hand" font-size="17.5" font-weight="700" fill="#18181B">02 · HYBRID_RETRIEVE</text>
+          <text x="376" y="473" text-anchor="middle" class="ex-mono" font-size="8.9" fill="#1E3A8A">BM25 + 512d Cosine RRF</text>
+          <text x="376" y="492" text-anchor="middle" class="ex-mono" font-size="8.6" fill="#3F3F46">Metadata + Span Extract</text>
+
+          <path d="M 482,468 L 504,468" stroke="#18181B" stroke-width="2"/>
+          <path d="M 497,463 L 506,468 L 497,473" fill="none" stroke="#18181B" stroke-width="2"/>
+
+          <path d="M 508,425 Q 610,422 712,426 Q 716,468 711,510 Q 609,513 509,509 Q 506,467 508,425 Z" fill="#FEF3C7" stroke="#18181B" stroke-width="1.9"/>
+          <text x="610" y="451" text-anchor="middle" class="ex-hand" font-size="17.5" font-weight="700" fill="#18181B">03 · RERANK_FILTER</text>
+          <text x="610" y="473" text-anchor="middle" class="ex-mono" font-size="8.9" fill="#92400E">ConflictAwareRRF</text>
+          <text x="610" y="492" text-anchor="middle" class="ex-mono" font-size="8.6" fill="#3F3F46">MRR@3 = 1.0000</text>
+
+          <path d="M 716,468 L 738,468" stroke="#18181B" stroke-width="2"/>
+          <path d="M 731,463 L 740,468 L 731,473" fill="none" stroke="#18181B" stroke-width="2"/>
+
+          <path d="M 742,425 Q 844,422 946,426 Q 950,468 945,510 Q 843,513 743,509 Q 740,467 742,425 Z" fill="#FEE2E2" stroke="#18181B" stroke-width="1.9"/>
+          <text x="844" y="451" text-anchor="middle" class="ex-hand" font-size="17.5" font-weight="700" fill="#18181B">04 · CONFLICT_CHECK</text>
+          <text x="844" y="473" text-anchor="middle" class="ex-mono" font-size="8.9" fill="#991B1B">SupersessionResolver</text>
+          <text x="844" y="492" text-anchor="middle" class="ex-mono" font-size="8.6" fill="#3F3F46">Drops 2024 &amp; Spoofs</text>
+
+          <path d="M 950,468 L 972,468" stroke="#18181B" stroke-width="2"/>
+          <path d="M 965,463 L 974,468 L 965,473" fill="none" stroke="#18181B" stroke-width="2"/>
+
+          <path d="M 976,425 Q 1078,422 1180,426 Q 1183,468 1179,510 Q 1077,513 977,509 Q 974,467 976,425 Z" fill="#DCFCE7" stroke="#18181B" stroke-width="1.9"/>
+          <text x="1078" y="451" text-anchor="middle" class="ex-hand" font-size="17" font-weight="700" fill="#18181B">05 · SYNTHESIZE</text>
+          <text x="1078" y="473" text-anchor="middle" class="ex-mono" font-size="8.8" fill="#065F46">Opus 5.5 / GPT-4o / Nova</text>
+          <text x="1078" y="492" text-anchor="middle" class="ex-mono" font-size="8.6" fill="#3F3F46">100.0% Grounded Cite</text>
+        </g>
+
+        <!-- Arrows to Plane 4 & 5 -->
+        <path d="M 844,512 Q 520,554 236,584" fill="none" stroke="#DC2626" stroke-width="2.1" stroke-dasharray="7 5"/>
+        <path d="M 244,577 L 234,585 L 246,589" fill="none" stroke="#DC2626" stroke-width="2.1"/>
+        <text x="415" y="558" class="ex-hand" font-size="16" font-weight="700" fill="#DC2626">5-Mode Stress Perturbations</text>
+
+        <path d="M 1078,512 Q 830,552 612,584" fill="none" stroke="#6D28D9" stroke-width="2.1" stroke-dasharray="7 5"/>
+        <path d="M 619,575 L 610,585 L 623,586" fill="none" stroke="#6D28D9" stroke-width="2.1"/>
+        <text x="748" y="562" class="ex-hand" font-size="16" font-weight="700" fill="#6D28D9">Async 5% Mirror (&lt;0.001 ms)</text>
+
+        <path d="M 610,512 Q 815,552 1002,584" fill="none" stroke="#065F46" stroke-width="2.1" stroke-dasharray="7 5"/>
+        <path d="M 994,576 L 1004,585 L 991,587" fill="none" stroke="#065F46" stroke-width="2.1"/>
+        <text x="920" y="558" class="ex-hand" font-size="16" font-weight="700" fill="#065F46">SHA-256 Node Swap</text>
+
+        <!-- PLANE 4 & 5: ADVERSARIAL HARNESS + 5% SHADOW ROUTER + REPLAY DEBUGGER -->
+        <g class="ex-node" data-arch-node="adv-harness" tabindex="0">
+          <path d="M 32,588 Q 214,583 396,589 Q 401,660 395,730 Q 212,735 34,729 Q 29,658 32,588 Z" fill="#FEE2E2"/>
+          <path class="ex-stroke-main" d="M 32,588 Q 214,583 396,589 Q 401,660 395,730 Q 212,735 34,729 Q 29,658 32,588 Z" fill="none" stroke="#18181B" stroke-width="2.2"/>
+          <text x="214" y="618" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#991B1B">④ 5-Mode Adversarial Harness</text>
+          <text x="214" y="643" text-anchor="middle" class="ex-mono" font-size="9.5" font-weight="700" fill="#18181B">105 Trials: Conflict · Missing · OOD · Spoof</text>
+          <text x="214" y="666" text-anchor="middle" class="ex-mono" font-size="9.2" fill="#7F1D1D">Abstention Recall 100.0% · Precision 95.7%</text>
+          <rect x="56" y="684" width="316" height="28" fill="#FFFFFF" stroke="#18181B" stroke-width="1.6"/>
+          <text x="214" y="702" text-anchor="middle" class="ex-mono" font-size="9.4" font-weight="700" fill="#DC2626">🛡️ FCHR: 73.3% → 0.0% (-73.3% ± 8.1%)</text>
+        </g>
+
+        <g class="ex-node" data-arch-node="shadow-router" tabindex="0">
+          <path d="M 428,588 Q 610,583 792,589 Q 797,660 791,730 Q 608,735 430,729 Q 425,658 428,588 Z" fill="#F3E8FF"/>
+          <path class="ex-stroke-main" d="M 428,588 Q 610,583 792,589 Q 797,660 791,730 Q 608,735 430,729 Q 425,658 428,588 Z" fill="none" stroke="#18181B" stroke-width="2.2"/>
+          <text x="610" y="618" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#5B21B6">⑤ Async 5% Shadow Traffic Router</text>
+          <text x="610" y="643" text-anchor="middle" class="ex-mono" font-size="9.5" font-weight="700" fill="#18181B">ThreadPoolExecutor · 1,000× Paired Bootstrap</text>
+          <text x="610" y="666" text-anchor="middle" class="ex-mono" font-size="9.2" fill="#4C1D95">400 Live Queries (22 Shadowed · p = 0.0010)</text>
+          <rect x="452" y="684" width="316" height="28" fill="#FFFFFF" stroke="#18181B" stroke-width="1.6"/>
+          <text x="610" y="702" text-anchor="middle" class="ex-mono" font-size="9.4" font-weight="700" fill="#6D28D9">⚡ &lt; 0.001 ms Primary Caller Overhead</text>
+        </g>
+
+        <g class="ex-node" data-arch-node="replay-debugger" tabindex="0">
+          <path d="M 826,588 Q 1010,583 1194,589 Q 1199,660 1193,730 Q 1008,735 828,729 Q 823,658 826,588 Z" fill="#FEF3C7"/>
+          <path class="ex-stroke-main" d="M 826,588 Q 1010,583 1194,589 Q 1199,660 1193,730 Q 1008,735 828,729 Q 823,658 826,588 Z" fill="none" stroke="#18181B" stroke-width="2.2"/>
+          <text x="1010" y="618" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#92400E">⑤ Counterfactual Replay Debugger</text>
+          <text x="1010" y="643" text-anchor="middle" class="ex-mono" font-size="9.5" font-weight="700" fill="#18181B">Swaps Stage 3 / 4 / 5 · Reuses Upstream SHA</text>
+          <text x="1010" y="666" text-anchor="middle" class="ex-mono" font-size="9.2" fill="#78350F">Isolates Exact Defect Stage in 0 ms Upstream</text>
+          <rect x="852" y="684" width="316" height="28" fill="#DCFCE7" stroke="#18181B" stroke-width="1.6"/>
+          <text x="1010" y="702" text-anchor="middle" class="ex-mono" font-size="9.4" font-weight="700" fill="#065F46">✓ 4 / 4 Causal Case Studies Isolated</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="arch-inspector" id="archInspector">
+      <div class="arch-node-pills" id="archNodePills">
+        <button type="button" class="arch-node-pill" data-arch-btn="edge-browser">1. User Browser</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="edge-cloudfront">2. CloudFront Edge</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="edge-s3">3. Private S3 (OAC)</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="edge-lambda">4. Bedrock Nova Lambda</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="contam-scanner">5. Contamination Scanner</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="hybrid-rrf">6. Hybrid BM25+512d RRF</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="freshness-gate">7. Freshness &amp; Tier Gate</button>
+        <button type="button" class="arch-node-pill active" data-arch-btn="rag-dag">8. 5-Stage RAG DAG</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="adv-harness">9. 5-Mode Stress Harness</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="shadow-router">10. 5% Shadow Router</button>
+        <button type="button" class="arch-node-pill" data-arch-btn="replay-debugger">11. Counterfactual Replay</button>
+      </div>
+      <div id="archInspectorDetail"></div>
+    </div>
+  </section>
+
+  <!-- §03 · IMPLEMENTATION -->
+  <section id="implementation" class="sec">
+    <span class="sec-kicker">§03 · Implementation</span>
+    <div class="sec-head">
+      <h2>Four Zero-Dependency Python Modules (<code>veri_rag/</code>)</h2>
+      <p>Every subsystem pairs plain-English intuition with exact retrieval equations, abstention thresholds, paired bootstrap statistics, and SHA-256 trajectory snapshots.</p>
+    </div>
+
+    <div class="impl-grid">
+      <div class="impl-card">
+        <div class="impl-head">
+          <span>MODULE 01 · HYBRID RRF &amp; FRESHNESS DECAY</span>
+          <span style="color:#fda4af">veri_rag/hybrid_retriever.py</span>
+        </div>
+        <div class="impl-body">
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">BM25Okapi + 512d Signed Feature-Hashing RRF &amp; Authority Scoring</h3>
+          <div class="layer-plain">
+            <b>Plain-English Intuition:</b> Keyword search catches exact SKU codes and acronyms (<code>FBA</code>, <code>ANC</code>, <code>UL-2056</code>) while vector search catches paraphrased questions—but neither knows whether a policy is from 2024 or 2026. VeriRAG fuses both rank lists and scales the score by how recent and authoritative each document is.
+          </div>
+          <div class="layer-hood">
+            <b>Under the Hood (Exact Math &amp; Code):</b> <code>SemanticChunker(max_chars=420, overlap_chars=60)</code> preserves sentence offsets; <code>BM25OkapiIndex(k1=1.5, b=0.75)</code> + <code>HashingVectorIndex(dim=512)</code> (unigrams <code>1.0</code>, bigrams <code>1.25</code>, char-4grams <code>0.35</code>, MD5 signed L2-normalized buckets) fuse via <code>rrf_s = 0.55/(20 + r_lex) + 0.45/(20 + r_vec)</code> multiplied by <code>compute_freshness_multiplier()</code> (<code>exp(-0.30 * years_old) * tier_bonus[1:1.12, 2:1.00, 3:0.72] * superseded[0.48]</code>). Achieves **<code>100.0%</code> Top-1 Hit, <code>1.0000</code> MRR@3, and <code>100.0%</code> Conflict Win Rate**.
+          </div>
+        </div>
+      </div>
+
+      <div class="impl-card">
+        <div class="impl-head">
+          <span>MODULE 02 · ADVERSARIAL ABSTENTION &amp; CONTAMINATION</span>
+          <span style="color:#fda4af">veri_rag/adversarial_harness.py + dataset_contamination.py</span>
+        </div>
+        <div class="impl-body">
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">5-Mode Stress Perturbations, Coverage Gate &amp; 4-Gram Leak Audit</h3>
+          <div class="layer-plain">
+            <b>Plain-English Intuition:</b> Before trusting an assistant in production, we deliberately sabotage its retrieved context in five realistic ways—hiding the rule it needs, injecting plausible distractors at Rank #1, planting fake <code>[DOC-SPOOF-01]</code> tags, or asking Antarctic/submersible edge cases—to prove it says *"I cannot verify this"* instead of bluffing.
+          </div>
+          <div class="layer-hood">
+            <b>Under the Hood (Thresholds &amp; Metrics):</b> Across <code>105</code> stress trials (<code>30</code> golden scenarios), <code>VeriRAGGenerator</code> strips <code>superseded_by</code> &amp; unverified spoof IDs, checks entity/constraint token coverage (<code>threshold = 0.55</code>), and validates emitted <code>[DOC-...]</code> tags. Cuts **FCHR from <code>73.3%</code> &rarr; <code>0.0%</code>**, lifts **Abstention Recall to <code>100.0%</code> (<code>95.7%</code> precision, <code>97.8%</code> F1)**, and verifies **<code>0.0%</code> benchmark contamination** (<code>4</code>-gram Jaccard <code>&lt; 0.28</code>, <code>512d</code> cosine <code>&lt; 0.86</code>).
+          </div>
+        </div>
+      </div>
+
+      <div class="impl-card">
+        <div class="impl-head">
+          <span>MODULE 03 · ASYNC 5% SHADOW ROUTER &amp; BOOTSTRAP CI</span>
+          <span style="color:#fda4af">veri_rag/shadow_router.py + web_api.py</span>
+        </div>
+        <div class="impl-body">
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">Zero-Blocking Traffic Mirroring &amp; 1,000× Paired Resampling</h3>
+          <div class="layer-plain">
+            <b>Plain-English Intuition:</b> When testing a candidate RAG pipeline on live customer traffic, you never want users waiting on two LLM calls. VeriRAG returns the primary response immediately and silently replays <code>5%</code> of queries on a background worker thread, computing 95% confidence intervals on the exact same queries.
+          </div>
+          <div class="layer-hood">
+            <b>Under the Hood (Concurrency &amp; Statistics):</b> <code>ShadowTrafficRouter(sample_rate=0.05, bootstrap_iterations=1000)</code> dispatches candidate runs to <code>ThreadPoolExecutor(max_workers=4)</code> with **<code>&lt; 0.001 ms</code> (<code>0.0 ms</code>) primary caller overhead**. On a <code>400</code>-query production stream (<code>22</code> shadowed = <code>5.5%</code>), paired bootstrap proves **<code>-86.4% ± 15.9%</code> FCHR reduction (<code>95% CI [-100.0%, -68.2%], p = 0.0010</code>)**, backed live by CloudFront <code>/api/verify</code> on Amazon Bedrock <code>us.amazon.nova-lite-v1:0</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="impl-card">
+        <div class="impl-head">
+          <span>MODULE 04 · COUNTERFACTUAL 5-STAGE REPLAY</span>
+          <span style="color:#fda4af">veri_rag/replay_debugger.py + llm_generator.py</span>
+        </div>
+        <div class="impl-body">
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">SHA-256 State Snapshots &amp; Single-Node Causal Intervention</h3>
+          <div class="layer-plain">
+            <b>Plain-English Intuition:</b> Think of the 5-stage RAG pipeline like a video timeline with save-points after every step. When a recorded customer trace hallucinates, an engineer can swap just Stage 3 (<code>RERANK_FILTER</code>) or Stage 4 (<code>CONFLICT_CHECK</code>), fast-forward from the saved Stage 2 snapshot in <code>0 ms</code>, and prove which stage caused the defect.
+          </div>
+          <div class="layer-hood">
+            <b>Under the Hood (DAG &amp; Live Models):</b> <code>_hash_state()</code> computes deterministic 16-hex <code>SHA-256</code> digests over <code>(rewritten_query, chunk_ids, conflict_detected, dropped_docs, abstained, cited_docs)</code> across <code>QUERY_REWRITE &rarr; HYBRID_RETRIEVE &rarr; RERANK_FILTER &rarr; CONFLICT_CHECK &rarr; SYNTHESIZE_WITH_CITATIONS</code>. Verified across <code>4/4</code> causal case studies and recorded live on **<code>claude-opus-5-5</code>** and **<code>gpt-4o-mini</code>**.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §04 · DESIGN TRADE-OFFS -->
+  <section id="design-tradeoffs" class="sec">
+    <span class="sec-kicker">§04 · Design Trade-Offs</span>
+    <div class="sec-head">
+      <h2>Architectural Comparison &amp; Engineering Trade-Offs</h2>
+      <p>Why VeriRAG chooses deterministic hybrid feature-hashing, pre-synthesis conflict pruning, and paired shadow bootstrap over naive vector search or prompt-only guardrails.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Capability / Evaluation Dimension</th>
+            <th>Naive Vector Top-K RAG</th>
+            <th>Unweighted Hybrid + Prompt-Only Rules</th>
+            <th>VeriRAG (Guarded Production Harness)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Top-1 Hit Rate (30 Golden Scenarios)</b></td>
+            <td>66.7% (<code>512d</code> cosine only)</td>
+            <td>75.0% (<code>hybrid_rrf_no_freshness</code>)</td>
+            <td><b>100.0% (<code>MRR@3 = 1.0000, nDCG@3 = 1.0000</code>)</b></td>
+          </tr>
+          <tr>
+            <td><b>2026 vs. 2024 Policy Conflict Win Rate</b></td>
+            <td>41.7% (verbose 2024 docs win)</td>
+            <td>50.0% (ties broken by raw term count)</td>
+            <td><b>100.0% (Freshness + Authority + Supersession Gate)</b></td>
+          </tr>
+          <tr>
+            <td><b>False Confidence Hallucination Rate (105 Trials)</b></td>
+            <td>73.3% (guesses on missing rules)</td>
+            <td>35%–50% (LLM ignores soft prompt warnings)</td>
+            <td><b>0.0% (<code>-73.3% ± 8.1%, p = 0.0010</code>)</b></td>
+          </tr>
+          <tr>
+            <td><b>Citation Grounding Precision</b></td>
+            <td>40.3% (cites stale/spoofed docs)</td>
+            <td>~68% (unverified bracket tags slip through)</td>
+            <td><b>100.0% (<code>+60.0% ± 9.0%, p = 0.0010</code>)</b></td>
+          </tr>
+          <tr class="winner-row">
+            <td><b>Live Rollout &amp; Root-Cause Debugging</b></td>
+            <td>Manual spot-checks · Full re-runs</td>
+            <td>Unpaired aggregate A/B averages</td>
+            <td><b>5% Async Shadow (<code>&lt;0.001 ms</code>) + 5-Stage SHA Replay</b></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-3-trade">
+      <article class="brutal-card accent">
+        <span class="badge cobalt" style="margin-bottom:8px">Trade-Off 01 · Embedding Architecture</span>
+        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">512d Signed Feature-Hashing + BM25 vs. External Embedding APIs</h3>
+        <div class="layer-plain" style="margin-bottom:10px">
+          <b>Plain English:</b> Calling a remote neural embedding API adds <code>40–120 ms</code> of network tail latency and API key fragility, whereas VeriRAG indexes and queries locally in sub-millisecond pure Python.
+        </div>
+        <div class="layer-hood">
+          <b>Engineering Trade-Off:</b> Signed MD5 feature hashing (<code>512d</code>) has slightly lower cross-lingual synonym recall than a 1,536-d transformer, which we offset via word-prefix stems (<code>p4</code>/<code>p5</code>), bigrams, and <code>DomainAcronymRewriter</code>—achieving <code>100.0%</code> Recall@3 with <code>$0</code> embedding cost.
+        </div>
+      </article>
+
+      <article class="brutal-card accent">
+        <span class="badge ok" style="margin-bottom:8px">Trade-Off 02 · Abstention Calibration</span>
+        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">Deterministic Pre-Synthesis Pruning vs. Prompt-Only Instructions</h3>
+        <div class="layer-plain" style="margin-bottom:10px">
+          <b>Plain English:</b> Telling an LLM *"ignore superseded documents and abstain if unsure"* inside a long system prompt still fails whenever a stale 2024 doc sits at Rank #1.
+        </div>
+        <div class="layer-hood">
+          <b>Engineering Trade-Off:</b> Hard-pruning <code>superseded_by</code> chunks and enforcing coverage <code>&ge; 0.55</code> before synthesis trades a tiny <code>4.3%</code> conservative over-abstention (<code>95.7%</code> precision) for **<code>100.0%</code> abstention recall and <code>0.0%</code> false-confidence hallucinations**.
+        </div>
+      </article>
+
+      <article class="brutal-card accent">
+        <span class="badge warn" style="margin-bottom:8px">Trade-Off 03 · Online Statistical Proof</span>
+        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">Paired 5% Shadow Bootstrap vs. Unpaired Split Traffic</h3>
+        <div class="layer-plain" style="margin-bottom:10px">
+          <b>Plain English:</b> Standard 50/50 A/B tests expose half of live users to an unproven candidate pipeline and suffer high variance when query difficulty fluctuates hour by hour.
+        </div>
+        <div class="layer-hood">
+          <b>Engineering Trade-Off:</b> Asynchronous <code>5%</code> shadow routing spends <code>+5%</code> background compute (<code>0</code> user exposure, <code>&lt; 0.001 ms</code> caller overhead) while evaluating *both* pipelines on identical queries—giving tight paired CIs (<code>±8.1%</code>, <code>p = 0.0010</code>) with 10× fewer samples.
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- §05 · LIVE TRACE SCRUBBER -->
   <section id="replay-player" class="sec">
+    <span class="sec-kicker">§05 · Live Trace Scrubber</span>
     <div class="sec-head">
       <h2>🎬 Counterfactual Agent Trace Replay Player (<code>claude-opus-5-5</code> vs. <code>gpt-4o-mini</code>)</h2>
       <p>Step through real recorded 5-stage production trajectories from <code>benchmarks/live_llm_traces.json</code>. Inspect exact BM25+Vector RRF scores, 2026-vs-2024 conflict drops, prompts sent, and verbatim responses from <b>Anthropic <code>claude-opus-5-5</code></b> and <b>OpenAI <code>gpt-4o-mini</code></b>.</p>
+    </div>
+
+    <div class="sandbox-guide">
+      <b>🧭 How to Use This Trace Scrubber (What to Click &amp; What Happens):</b>
+      Pick any of the 4 recorded enterprise scenarios (Same-Day Delivery <code>14:30</code> vs <code>16:00</code>, Seller FBA <code>$5,000</code> vs <code>$2,000</code>, Oncology ANC <code>&lt;1,000</code> vs <code>&lt;1,500</code>, or Stripped-Policy Abstention), choose a model view (<code>claude-opus-5-5 + gpt-4o-mini</code> side by side or <code>Baseline NaiveTopK-RAG</code>), and click <b>▶ Play</b> or any <b>STAGE 01..05</b> card to inspect how <code>SHA-256</code> state hashes, conflict drops, and verbatim LLM citations evolve at each hop.
     </div>
 
     <div class="player-shell">
@@ -360,8 +850,9 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     </div>
   </section>
 
-  <!-- INTERACTIVE SANDBOXES -->
+  <!-- §06 · INTERACTIVE STUDIO -->
   <section id="sandbox" class="sec">
+    <span class="sec-kicker">§06 · Interactive Studio</span>
     <div class="sec-head">
       <h2>3 Interactive Live Engineering Sandboxes</h2>
       <p>Explore all scenarios across <b>Amazon Same-Day Delivery SLA</b>, <b>Seller Support Reimbursements</b>, and <b>Clinical Protocol Compliance</b>—or test custom queries and counterfactual node swaps.</p>
@@ -381,6 +872,10 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
 
     <!-- TAB 1: HYBRID RRF SEARCH & 2026-VS-2024 CONFLICT EXPLORER -->
     <div class="tab-panel active" id="tab1" role="tabpanel" aria-labelledby="btn-tab1">
+      <div class="sandbox-guide">
+        <b>🧭 How to Use Tab 1 (Hybrid RRF &amp; Conflict Explorer):</b>
+        Select an enterprise policy scenario (or edit the query text directly), drag the <b>Freshness &amp; Authority Weight</b> slider between <code>0.00</code> (unweighted) and <code>0.60</code>, and click <b>Run Hybrid RRF ▸</b>. Watch the 4-column rank board compare <code>BM25 Only</code>, <code>512d Vector</code>, <code>Unweighted RRF</code>, and <code>VeriRAG Hybrid RRF</code>—and call <code>/api/verify</code> on live AWS Bedrock Nova when left blank!
+      </div>
       <div class="ctrl-grid">
         <div class="field">
           <label for="t1-scenario">Preset Enterprise Scenario (or type custom query below)</label>
@@ -412,6 +907,10 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
 
     <!-- TAB 2: 5-MODE ADVERSARIAL ABSTENTION STRESS TESTER -->
     <div class="tab-panel" id="tab2" role="tabpanel" aria-labelledby="btn-tab2">
+      <div class="sandbox-guide">
+        <b>🧭 How to Use Tab 2 (5-Mode Adversarial Stress &amp; Paired Bootstrap):</b>
+        Pick any golden scenario and switch between the 5 perturbation modes (<code>CONTRADICTORY_EVIDENCE_CONFLICT</code>, <code>MISSING_CRITICAL_CONSTRAINT</code>, <code>IRRELEVANT_DISTRACTOR_INJECTION</code>, <code>CITATION_SPOOFING_PROBE</code>, <code>OUT_OF_DISTRIBUTION_BOUNDARY</code>). Compare how <code>NaiveTopK-RAG</code> hallucinates while <code>VeriRAG-Guarded</code> either cites the active 2026 policy or cleanly abstains, then click <b>Re-Run 1,000x Bootstrap ↻</b> to resample the 95% confidence interval live.
+      </div>
       <div class="ctrl-grid">
         <div class="field">
           <label for="t2-scenario">Target Golden Scenario</label>
@@ -447,6 +946,10 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
 
     <!-- TAB 3: COUNTERFACTUAL 5-STAGE TRAJECTORY REPLAY DEBUGGER -->
     <div class="tab-panel" id="tab3" role="tabpanel" aria-labelledby="btn-tab3">
+      <div class="sandbox-guide">
+        <b>🧭 How to Use Tab 3 (Counterfactual 5-Stage Replay Debugger):</b>
+        Choose a recorded failing trajectory (<code>CONFLICT</code>, <code>DISTRACTOR</code>, <code>MISSING_CONSTRAINT</code>, or <code>CITATION_SPOOF</code>) and toggle Stages 3, 4, and 5 between their <code>Baseline</code> and <code>Counterfactual</code> implementations. Notice how upstream stages (<code>01</code> &amp; <code>02</code>) reuse recorded <code>SHA-256</code> snapshots (<code>0 ms</code>) while the causal attribution banner pinpoints the exact stage that resolves the defect!
+      </div>
       <div class="ctrl-grid">
         <div class="field">
           <label for="t3-trial">Recorded Failing Trajectory to Debug</label>
@@ -489,11 +992,22 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     </div>
   </section>
 
-  <!-- REPRODUCIBLE BENCHMARK TABLES -->
+  <!-- §07 · BENCHMARKS -->
   <section id="benchmarks" class="sec last">
+    <span class="sec-kicker">§07 · Benchmarks</span>
     <div class="sec-head">
       <h2>Verified Benchmark Tables (<code>python3 -m veri_rag.cli</code>)</h2>
       <p>Generated directly from <code>benchmarks/latest_results.json</code> across 54 enterprise documents, 30 golden multi-doc scenarios, and 105 adversarial stress trials.</p>
+    </div>
+
+    <div class="plain-callout">
+      <div style="font:600 11px var(--mono);color:#b01c30;text-transform:uppercase;margin-bottom:6px">📊 Plain-English Benchmark Guide — How to Read These Two Tables</div>
+      <p>
+        <b>Table 1 (Retrieval Modes):</b> Notice that all four modes find the right policy somewhere inside the Top 3 (<code>100.0%</code> Recall@3), so a superficial Recall@3 metric makes naive search look "solved." Look at the rightmost column (<b>2026 vs. 2024 Conflict Win Rate</b>): without freshness &amp; authority weighting, <code>BM25</code> and unweighted RRF flip a coin (<code>50.0%</code>), whereas <code>hybrid_rrf</code> puts the active 2026 Tier-1 policy at Rank #1 **<code>100.0%</code>** of the time (<code>MRR@3 = 1.0000</code>).
+      </p>
+      <p>
+        <b>Table 2 (5-Mode Adversarial Harness &amp; Paired Bootstrap):</b> Across <code>105</code> hostile trials, <code>NaiveTopK-RAG</code> never abstains (<code>0.0%</code> recall) and hallucinates with high confidence on **<code>73.3%</code>** of missing/OOD queries. <code>VeriRAG-Guarded</code> drives False Confidence Hallucinations down to **<code>0.0%</code>** (<code>95% CI [-81.0%, -64.8%], p = 0.0010</code>) and lifts citation precision from <code>40.3%</code> to **<code>100.0%</code>**.
+      </p>
     </div>
 
     <div class="table-wrap" style="margin-bottom:28px">
@@ -533,7 +1047,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
             <td>0.9077</td>
             <td>50.0%</td>
           </tr>
-          <tr>
+          <tr class="winner-row">
             <td><b><code>hybrid_rrf</code> (RRF + Version Freshness &amp; Authority Tier)</b></td>
             <td><b>100.0%</b></td>
             <td><b>100.0%</b></td>
@@ -568,7 +1082,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
             <td><b>100.0%</b></td>
             <td>+100.0%</td>
           </tr>
-          <tr>
+          <tr class="winner-row">
             <td><b>False Confidence Hallucination Rate (FCHR)</b></td>
             <td>73.3%</td>
             <td><b>0.0%</b></td>
@@ -1627,13 +2141,223 @@ document.getElementById("t3-stage3").addEventListener("change", renderTab3);
 document.getElementById("t3-stage4").addEventListener("change", renderTab3);
 document.getElementById("t3-stage5").addEventListener("change", renderTab3);
 renderTab3();
-</script>
-<script>
-fetch('/api/health').then(r => r.ok ? r.json() : null).then(d => {
-  if (d && d.status === 'ok') {
+
+// =============================================================================
+// Interactive System Architecture Inspector, Zoom & Sticky TOC Scroll-Spy
+// =============================================================================
+const ARCH_NODE_DETAILS = {
+  "edge-browser": {
+    plane: "Plane ① · AWS Serverless Edge Delivery",
+    title: "User Browser (5-Stage Trace Player & 3 Interactive Sandboxes)",
+    module: "web/index.html (Stateless Hash-Routed UI)",
+    plain: "Lets engineers scrub recorded claude-opus-5-5 vs gpt-4o-mini traces and test Hybrid RRF weights, 5-mode adversarial abstention, and counterfactual node swaps right in the browser.",
+    hood: "Zero external frontend dependencies; persists theme state strictly via location.hash with zero browser storage APIs.",
+    metric: "5-Stage Player + 3 Live Sandboxes"
+  },
+  "edge-cloudfront": {
+    plane: "Plane ① · AWS Serverless Edge Delivery",
+    title: "Amazon CloudFront Global HTTPS Distribution (E13PBXNHUDU296)",
+    module: "https://d14kv31n2lrkoa.cloudfront.net · TLS 1.3 + OAC",
+    plain: "Terminates TLS at the global edge, serves static assets from private S3, and proxies live /api/verify RAG evaluations to AWS Lambda on the same origin.",
+    hood: "SigV4 Origin Access Control (OAC) authenticates private S3 reads while routing /api/* calls cleanly with zero CORS preflight overhead.",
+    metric: "Distribution E13PBXNHUDU296 · HTTPS + OAC"
+  },
+  "edge-s3": {
+    plane: "Plane ① · AWS Serverless Edge Delivery",
+    title: "Private Amazon S3 Bucket (BlockPublicAccess)",
+    module: "s3://verirag-web-796330847946-us-west-2/index.html",
+    plain: "Stores the static web bundle privately so direct bucket URLs are blocked and traffic can only enter via CloudFront.",
+    hood: "All four S3 BlockPublicAccess flags enabled; bucket policy grants s3:GetObject exclusively to CloudFront distribution E13PBXNHUDU296.",
+    metric: "0 Public ACLs · $0 Idle Compute"
+  },
+  "edge-lambda": {
+    plane: "Plane ① · AWS Serverless Edge Delivery",
+    title: "AWS Lambda Python 3.12 + Amazon Bedrock Nova Synthesizer",
+    module: "veri_rag/web_api.py + llm_generator.py",
+    plain: "Runs Hybrid RRF retrieval, conflict pruning, quantitative claim verification, and live Amazon Bedrock Nova synthesis on demand.",
+    hood: "Serverless Python 3.12 handler invoking Amazon Bedrock (us.amazon.nova-lite-v1:0) only on conflict-pruned, coverage-verified chunks.",
+    metric: "Python 3.12 Serverless · 0 EC2 / 0 RDS"
+  },
+  "contam-scanner": {
+    plane: "Plane ② · Corpus Governance & Hybrid Index",
+    title: "Dataset Contamination & Memorization Scanner",
+    module: "veri_rag/dataset_contamination.py :: DatasetContaminationChecker",
+    plain: "Audits golden evaluation scenarios against retrieval corpora and SFT training splits so leaked test answers never inflate benchmark numbers.",
+    hood: "Flags overlaps exceeding 4-gram Jaccard >= 0.28, 5-gram query containment >= 0.50, or 512d cosine >= 0.86; verified 0.0% leak on the 30-scenario active corpus and caught leaked SFT split SCN-SPS-11 (3.33%).",
+    metric: "0.0% Active Leak Rate (26 Clean, 0 Leaked)"
+  },
+  "hybrid-rrf": {
+    plane: "Plane ② · Corpus Governance & Hybrid Index",
+    title: "Hybrid BM25Okapi + 512d Signed Feature-Hashing RRF Index",
+    module: "veri_rag/hybrid_retriever.py :: HybridRRFRetriever",
+    plain: "Combines exact keyword search (for policy IDs, SKUs, and medical acronyms) with 512-d n-gram vector similarity so paraphrases never miss.",
+    hood: "SemanticChunker(420, 60) + BM25OkapiIndex(k1=1.5, b=0.75) + HashingVectorIndex(dim=512, MD5 signed unigrams/bigrams/char-4grams) fused via rrf_k=20 (0.55 lex / 0.45 vec).",
+    metric: "100.0% Recall@3 Across 54 Enterprise Docs"
+  },
+  "freshness-gate": {
+    plane: "Plane ② · Corpus Governance & Hybrid Index",
+    title: "Effective-Date Freshness & Authority-Tier Multiplier",
+    module: "veri_rag/hybrid_retriever.py :: compute_freshness_multiplier()",
+    plain: "Boosts active 2026 Tier-1 policy amendments above wordier 2024 Tier-3 legacy manuals so outdated cutoffs never win Rank #1.",
+    hood: "Multiplies RRF score by (1 - w) + w * 1.25 * exp(-0.30 * years_old) * tier_bonus[1:1.12, 2:1.00, 3:0.72] * superseded_penalty[0.48]. Lifts 2026 Conflict Win Rate from 50.0% to 100.0%.",
+    metric: "100.0% Top-1 Hit & 100.0% Conflict Win"
+  },
+  "rag-dag": {
+    plane: "Plane ③ · 5-Stage Replayable Execution Graph",
+    title: "5-Stage Deterministic RAG Workflow DAG",
+    module: "veri_rag/replay_debugger.py :: STAGE_ORDER",
+    plain: "Executes Query Rewrite, Hybrid Retrieve, Rerank Filter, Conflict Check, and Cited Synthesis while saving a cryptographic checkpoint after every stage.",
+    hood: "Fingerprints each stage transition with a 16-hex SHA-256 digest (_hash_state) and verifies verbatim citations across claude-opus-5-5, gpt-4o-mini, and Bedrock Nova.",
+    metric: "MRR@3 = 1.0000 · 100.0% Citation Precision"
+  },
+  "adv-harness": {
+    plane: "Plane ④ · Adversarial Verification Plane",
+    title: "5-Mode Adversarial Abstention & Faithfulness Harness",
+    module: "veri_rag/adversarial_harness.py :: AdversarialAbstentionHarness",
+    plain: "Stress-tests the pipeline across 105 sabotaged trials (missing rules, 2024 conflicts, distractors, spoofed tags, OOD queries) to verify calibrated refusal.",
+    hood: "Enforces entity/constraint coverage >= 0.55 and spoof-tag stripping; cuts FCHR from 73.3% to 0.0% (-73.3% ± 8.1%, p = 0.0010) with 100.0% abstention recall and 95.7% precision.",
+    metric: "0.0% FCHR · 100.0% Recall / 95.7% Precision"
+  },
+  "shadow-router": {
+    plane: "Plane ⑤ · Online Shadow & Causal Attribution Plane",
+    title: "Asynchronous 5% Shadow Traffic Router & Paired Bootstrap Engine",
+    module: "veri_rag/shadow_router.py :: ShadowTrafficRouter",
+    plain: "Mirrors 5% of live traffic to a candidate RAG pipeline on background threads without slowing down user responses, proving upgrades statistically before rollout.",
+    hood: "ThreadPoolExecutor(max_workers=4) adds < 0.001 ms (0.0 ms) primary caller overhead; 400-query simulation (22 shadowed) proves -86.4% ± 15.9% FCHR delta (p = 0.0010).",
+    metric: "< 0.001 ms Caller Overhead · 1,000× Bootstrap"
+  },
+  "replay-debugger": {
+    plane: "Plane ⑤ · Online Shadow & Causal Attribution Plane",
+    title: "Counterfactual 5-Stage Trajectory Replay Debugger",
+    module: "veri_rag/replay_debugger.py :: ReplayDebugger",
+    plain: "Lets engineers swap a single stage in a recorded failing trace and replay only downstream stages to prove which component caused a hallucination.",
+    hood: "Reuses upstream NodeExecutionSnapshot dictionaries verified by SHA-256 in 0 ms and attributes root causes across 4/4 defect categories (Conflict, Distractor, Missing, Spoof).",
+    metric: "4 / 4 Causal Case Studies Isolated (0 ms Reuse)"
+  }
+};
+
+function escVr(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function selectArchNode(nodeId) {
+  const info = ARCH_NODE_DETAILS[nodeId] || ARCH_NODE_DETAILS["rag-dag"];
+  document.querySelectorAll("#veriArchSvg .ex-node").forEach(el => {
+    el.classList.toggle("selected", el.getAttribute("data-arch-node") === nodeId);
+  });
+  document.querySelectorAll("#archNodePills [data-arch-btn]").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-arch-btn") === nodeId);
+  });
+  const box = document.getElementById("archInspectorDetail");
+  if (box) {
+    box.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+        <div>
+          <span class="badge fail" style="margin-bottom:5px">${escVr(info.plane)}</span>
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">${escVr(info.title)}</h3>
+        </div>
+        <span class="badge ok">${escVr(info.metric)}</span>
+      </div>
+      <div style="font:500 11.5px var(--mono);color:var(--accent);margin-bottom:10px">Module / Resource: <code>${escVr(info.module)}</code></div>
+      <div class="grid-2-ins">
+        <div class="layer-plain"><b>Plain English:</b> ${escVr(info.plain)}</div>
+        <div class="layer-hood"><b>Under the Hood:</b> ${escVr(info.hood)}</div>
+      </div>
+    `;
+  }
+}
+
+document.querySelectorAll("#veriArchSvg .ex-node").forEach(el => {
+  el.addEventListener("click", () => selectArchNode(el.getAttribute("data-arch-node")));
+  el.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      selectArchNode(el.getAttribute("data-arch-node"));
+    }
+  });
+});
+document.querySelectorAll("#archNodePills [data-arch-btn]").forEach(btn => {
+  btn.addEventListener("click", () => selectArchNode(btn.getAttribute("data-arch-btn")));
+});
+
+const vrSvg = document.getElementById("veriArchSvg");
+const vrViewport = document.getElementById("archViewport");
+const zoom100Btn = document.getElementById("zoom100Btn");
+const zoom125Btn = document.getElementById("zoom125Btn");
+const zoomResetBtn = document.getElementById("zoomResetBtn");
+const archZoomLabel = document.getElementById("archZoomLabel");
+
+function setArchZoom(mode) {
+  if (!vrSvg) return;
+  const is125 = mode === "125";
+  vrSvg.classList.toggle("zoom-125", is125);
+  if (archZoomLabel) archZoomLabel.textContent = is125 ? "Zoom: 125%" : "Zoom: 100%";
+  if (zoom100Btn) zoom100Btn.className = is125 ? "btn sm" : "btn sm accent";
+  if (zoom125Btn) zoom125Btn.className = is125 ? "btn sm accent" : "btn sm";
+  if (mode === "reset" && vrViewport) {
+    vrViewport.scrollTo({ left: 0, behavior: "smooth" });
+    selectArchNode("rag-dag");
+  }
+}
+if (zoom100Btn) zoom100Btn.addEventListener("click", () => setArchZoom("100"));
+if (zoom125Btn) zoom125Btn.addEventListener("click", () => setArchZoom("125"));
+if (zoomResetBtn) zoomResetBtn.addEventListener("click", () => setArchZoom("reset"));
+
+const dlVrBtn = document.getElementById("downloadArchSvgBtn");
+if (dlVrBtn && vrSvg) {
+  dlVrBtn.addEventListener("click", () => {
+    const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + vrSvg.outerHTML;
+    const blob = new Blob([xml], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "verirag-system-architecture.svg";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+}
+
+const topHeaderEl = document.getElementById("topHeader");
+const stickyTocEl = document.getElementById("stickyToc");
+function syncTopbarHeight() {
+  if (!topHeaderEl) return;
+  document.documentElement.style.setProperty("--topbar-h", Math.ceil(topHeaderEl.getBoundingClientRect().height) + "px");
+}
+syncTopbarHeight();
+window.addEventListener("resize", syncTopbarHeight, { passive: true });
+if (window.ResizeObserver && topHeaderEl) {
+  new ResizeObserver(syncTopbarHeight).observe(topHeaderEl);
+}
+
+const SPY_IDS = ["problem-statement", "architecture", "implementation", "design-tradeoffs", "replay-player", "sandbox", "benchmarks"];
+function updateTocOnScroll() {
+  const topH = topHeaderEl ? topHeaderEl.getBoundingClientRect().height : 68;
+  const tocH = stickyTocEl ? stickyTocEl.getBoundingClientRect().height : 42;
+  const trigger = topH + tocH + 56;
+  let cur = SPY_IDS[0];
+  for (const id of SPY_IDS) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= trigger) cur = id;
+  }
+  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24) {
+    cur = SPY_IDS[SPY_IDS.length - 1];
+  }
+  document.querySelectorAll("[data-toc-sec]").forEach(link => {
+    link.classList.toggle("active", link.getAttribute("data-toc-sec") === cur);
+  });
+}
+window.addEventListener("scroll", updateTocOnScroll, { passive: true });
+
+selectArchNode("rag-dag");
+updateTocOnScroll();
+
+fetch("/api/health").then(r => r.ok ? r.json() : null).then(d => {
+  if (d && d.status === "ok") {
     window._veriCloudFrontLive = true;
-    const el = document.getElementById('cfVeriHealth');
-    if (el) el.textContent = `AWS CloudFront + Python ${d.python_version || '3.12'} + Bedrock (${d.bedrock_model || 'us.amazon.nova-lite-v1:0'}) Live`;
+    const el = document.getElementById("cfVeriHealth");
+    if (el) el.textContent = `AWS CloudFront + Python ${d.python_version || "3.12"} + Bedrock (${d.bedrock_model || "us.amazon.nova-lite-v1:0"}) Live`;
   }
 }).catch(() => {});
 </script>
