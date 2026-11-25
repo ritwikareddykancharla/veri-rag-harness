@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "veri-rag-harness"
-version = "1.0.0"
-description = "Version-aware policy search and span-level citation verifier"
+version = "2.0.0"
+description = "Version-aware policy search, span-level citation verifier, and Rufus multi-step shopping bundle planner"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}

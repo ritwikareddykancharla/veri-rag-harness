@@ -38,6 +38,15 @@ from veri_rag.replay_debugger import (
     WorkflowNode,
     WorkflowStage,
 )
+from veri_rag.rufus_planner import (
+    CatalogSKU,
+    RUFUS_STUDIO_PRESETS,
+    RufusAgenticPlanner,
+    ShoppingMissionScenario,
+    build_rufus_catalog,
+    build_rufus_mission_benchmark_scenarios,
+    evaluate_rufus_planner_benchmark,
+)
 from veri_rag.scenarios import (
     EvaluationScenario,
     build_enterprise_corpus,
@@ -50,13 +59,14 @@ from veri_rag.shadow_router import (
     ShadowTrafficRouter,
 )
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 __all__ = [
     "AdversarialAbstentionHarness",
     "AdversarialStressMode",
     "BM25OkapiIndex",
     "BootstrapMetricCI",
+    "CatalogSKU",
     "CitationSpan",
     "ContaminationScanReport",
     "CounterfactualReplayDebugger",
@@ -74,17 +84,23 @@ __all__ = [
     "NaiveRAGGenerator",
     "NodeExecutionSnapshot",
     "PerturbedTrial",
+    "RUFUS_STUDIO_PRESETS",
     "RecordedTrajectory",
     "RetrievedResult",
+    "RufusAgenticPlanner",
     "ScenarioContaminationResult",
     "SemanticChunker",
     "ShadowComparisonRecord",
     "ShadowRouterReport",
     "ShadowTrafficRouter",
+    "ShoppingMissionScenario",
     "TrialEvaluationResult",
     "VeriRAGGenerator",
     "WorkflowNode",
     "WorkflowStage",
     "build_enterprise_corpus",
     "build_golden_scenarios",
+    "build_rufus_catalog",
+    "build_rufus_mission_benchmark_scenarios",
+    "evaluate_rufus_planner_benchmark",
 ]

@@ -3,7 +3,8 @@
     "total_documents": 54,
     "total_chunks": 54,
     "golden_scenarios": 30,
-    "adversarial_trials": 105
+    "adversarial_trials": 105,
+    "rufus_shopping_missions": 24
   },
   "retrieval_benchmark": {
     "lexical_only": {
@@ -83,6 +84,51 @@
         "CITATION_SPOOFING_PROBE": 0.9583,
         "OUT_OF_DISTRIBUTION_BOUNDARY": 1.0
       }
+    }
+  },
+  "rufus_bundle_planner": {
+    "total_missions": 24,
+    "feasible_missions": 18,
+    "guardrail_refusal_missions": 6,
+    "models": {
+      "stage1_intent_router": "us.amazon.nova-micro-v1:0",
+      "stage3_bundle_synthesizer": "us.amazon.nova-lite-v1:0"
+    },
+    "baseline_naive_shop_rag": {
+      "pipeline_name": "NaiveSequentialShopRAG (Baseline)",
+      "composite_mission_success_rate": 0.5,
+      "physical_compatibility_rate": 0.7222,
+      "budget_and_sla_compliance_rate": 0.8333,
+      "spec_price_hallucination_rate": 0.5,
+      "safe_refusal_clarification_recall": 0.0,
+      "p50_tool_orchestration_ms": 21.74,
+      "cost_per_1k_missions_usd": 3.383
+    },
+    "candidate_rufus_planner_v2": {
+      "pipeline_name": "VeriRAG-RufusPlanner-v2 (Tiered Nova + Parallel DAG + Spec Gate)",
+      "composite_mission_success_rate": 1.0,
+      "physical_compatibility_rate": 1.0,
+      "budget_and_sla_compliance_rate": 1.0,
+      "spec_price_hallucination_rate": 0.0,
+      "safe_refusal_clarification_recall": 1.0,
+      "p50_tool_orchestration_ms": 4.52,
+      "p95_tool_orchestration_ms": 4.69,
+      "mean_parallel_speedup_x": 4.5,
+      "mean_schema_token_reduction_pct": 92.6,
+      "cost_per_1k_missions_usd": 0.0673,
+      "cost_reduction_vs_single_model_pct": 98.0
+    },
+    "composite_success_bootstrap": {
+      "metric_name": "Composite Shopping Mission Success Rate",
+      "mean_primary": 0.5,
+      "mean_candidate": 1.0,
+      "mean_delta": 0.5,
+      "ci_lower": 0.33333,
+      "ci_upper": 0.70833,
+      "half_width": 0.1875,
+      "p_value": 0.001,
+      "is_statistically_significant": true,
+      "formatted_summary": "Candidate increases Composite Shopping Mission Success Rate by +50.0% \u00b1 18.8% (95% CI [+33.3%, +70.8%], p = 0.0010)"
     }
   },
   "shadow_routing": {

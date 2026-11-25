@@ -42,6 +42,7 @@ from .hybrid_retriever import (
     tokenize,
 )
 from .llm_generator import SYSTEM_INSTRUCTION, LiveLLMVeriRAGGenerator
+from .rufus_planner import RUFUS_STUDIO_PRESETS, RufusAgenticPlanner
 from .scenarios import build_enterprise_corpus, build_golden_scenarios
 from .shadow_router import ShadowTrafficRouter
 
@@ -369,6 +370,7 @@ class VeriRAGStudioEngine:
         self.core_retriever = HybridRRFRetriever(self.core_corpus)
         self.harness = AdversarialAbstentionHarness(self.core_retriever, self.golden_scenarios)
         self.stress_trials = self.harness.build_stress_trials()
+        self.rufus_planner = RufusAgenticPlanner()
 
         if BENCHMARK_JSON_PATH.is_file():
             self.benchmark_cache = json.loads(BENCHMARK_JSON_PATH.read_text(encoding="utf-8"))
@@ -764,13 +766,24 @@ class VeriRAGStudioEngine:
             region="GLOBAL",
             use_live_bedrock=False,
         )
+        initial_rufus_plan = self.rufus_planner.plan_bundle(
+            query=RUFUS_STUDIO_PRESETS[0]["query"],
+            budget_usd=RUFUS_STUDIO_PRESETS[0]["budget_usd"],
+            zip_code=RUFUS_STUDIO_PRESETS[0]["zip_code"],
+            target_day=RUFUS_STUDIO_PRESETS[0]["target_day"],
+            use_live_bedrock=False,
+        )
         return {
             "service": "veri-rag-harness",
+            "version": "2.0.0",
             "bedrock_model": os.environ.get("VERIRAG_BEDROCK_MODEL", "us.amazon.nova-lite-v1:0"),
+            "nova_micro_model": os.environ.get("VERIRAG_NOVA_MICRO_MODEL", "us.amazon.nova-micro-v1:0"),
             "delivery": os.environ.get("VERIRAG_DELIVERY", "cloudfront-s3-oac"),
             "domains": list(STUDIO_DOMAINS),
+            "rufus_presets": list(RUFUS_STUDIO_PRESETS),
             "benchmark_summary": self.benchmark_cache,
             "initial_verification": initial_verdict,
+            "initial_rufus_plan": initial_rufus_plan,
         }
 
 
@@ -790,16 +803,48 @@ def route_api_request(
             return 200, {
                 "status": "ok",
                 "engine": "VeriRAG",
+                "version": "2.0.0",
                 "service": "veri-rag-harness",
                 "delivery": os.environ.get("VERIRAG_DELIVERY", "cloudfront-s3-oac + api-origin"),
                 "aws_region": os.environ.get("AWS_REGION", "us-west-2"),
                 "bedrock_model": os.environ.get("VERIRAG_BEDROCK_MODEL", "us.amazon.nova-lite-v1:0"),
+                "nova_micro_model": os.environ.get("VERIRAG_NOVA_MICRO_MODEL", "us.amazon.nova-micro-v1:0"),
                 "python_version": platform.python_version(),
                 "request_id": request_id,
                 "studio_documents": len(STUDIO.studio_docs),
+                "rufus_catalog_skus": len(STUDIO.rufus_planner.catalog),
                 "core_golden_scenarios": len(STUDIO.golden_scenarios),
                 "adversarial_stress_trials": len(STUDIO.stress_trials),
             }
+
+        if method == "GET" and clean_path == "/api/rufus/missions":
+            return 200, {
+                "presets": list(RUFUS_STUDIO_PRESETS),
+                "catalog_skus": len(STUDIO.rufus_planner.catalog),
+                "request_id": request_id,
+            }
+
+        if method in ("POST", "GET") and clean_path == "/api/rufus/plan":
+            params = body if method == "POST" else query
+            q_text = str(params.get("query") or RUFUS_STUDIO_PRESETS[0]["query"])
+            raw_budget = params.get("budget_usd")
+            budget_val = float(raw_budget) if raw_budget not in (None, "") else None
+            zip_val = str(params.get("zip_code") or "").strip() or None
+            day_val = str(params.get("target_day") or "").strip() or None
+            raw_live = params.get("use_live_bedrock", True)
+            if isinstance(raw_live, str):
+                use_bedrock = raw_live.lower() not in ("false", "0", "no")
+            else:
+                use_bedrock = bool(raw_live)
+            res = STUDIO.rufus_planner.plan_bundle(
+                query=q_text,
+                budget_usd=budget_val,
+                zip_code=zip_val,
+                target_day=day_val,
+                use_live_bedrock=use_bedrock,
+            )
+            res["request_id"] = request_id
+            return 200, res
 
         if method == "GET" and clean_path == "/api/bootstrap":
             payload = STUDIO.get_bootstrap_payload()

@@ -27,6 +27,7 @@ from veri_rag.adversarial_harness import (
 from veri_rag.dataset_contamination import DatasetContaminationChecker
 from veri_rag.hybrid_retriever import Document, HybridRRFRetriever
 from veri_rag.replay_debugger import CounterfactualReplayDebugger
+from veri_rag.rufus_planner import evaluate_rufus_planner_benchmark
 from veri_rag.scenarios import build_enterprise_corpus, build_golden_scenarios
 from veri_rag.shadow_router import ShadowTrafficRouter
 
@@ -171,6 +172,11 @@ def run_all_benchmarks(output_path: Path) -> dict[str, Any]:
     leaked_scan_report = checker.scan(scenarios, leaked_training_split)
 
     # -------------------------------------------------------------------------
+    # 6. Rufus Multi-Step Bundle & Constraint Planner Benchmark (24 Missions)
+    # -------------------------------------------------------------------------
+    rufus_planner_benchmark = evaluate_rufus_planner_benchmark()
+
+    # -------------------------------------------------------------------------
     # Assemble & Persist JSON Payload
     # -------------------------------------------------------------------------
     payload: dict[str, Any] = {
@@ -179,12 +185,14 @@ def run_all_benchmarks(output_path: Path) -> dict[str, Any]:
             "total_chunks": len(retriever.chunks),
             "golden_scenarios": len(scenarios),
             "adversarial_trials": len(trials),
+            "rufus_shopping_missions": rufus_planner_benchmark["total_missions"],
         },
         "retrieval_benchmark": retrieval_benchmarks,
         "adversarial_harness": {
             "baseline_naive_rag": asdict(baseline_summary),
             "candidate_veri_rag": asdict(candidate_summary),
         },
+        "rufus_bundle_planner": rufus_planner_benchmark,
         "shadow_routing": {
             "full_benchmark_100pct": {
                 "total_queries": full_shadow_report.total_queries_received,
@@ -311,6 +319,28 @@ def print_summary(payload: dict[str, Any], output_path: Path) -> None:
     print(
         f"  * Unfiltered Corpus + SFT Leak Split: {c_leak['contaminated_leak_count']}/{c_leak['total_scenarios']} leaked "
         f"-> Flagged scenarios: {c_leak['flagged_scenario_ids']}"
+    )
+
+    print("-" * 88)
+    print("6. RUFUS MULTI-STEP BUNDLE & CONSTRAINT PLANNER (24 Shopping Missions)")
+    rp = payload["rufus_bundle_planner"]
+    r_base = rp["baseline_naive_shop_rag"]
+    r_cand = rp["candidate_rufus_planner_v2"]
+    print(
+        f"  * Composite Mission Success: {r_base['composite_mission_success_rate'] * 100:.1f}% -> "
+        f"{r_cand['composite_mission_success_rate'] * 100:.1f}% "
+        f"({rp['composite_success_bootstrap']['formatted_summary']})"
+    )
+    print(
+        f"  * Physical Compatibility: {r_base['physical_compatibility_rate'] * 100:.1f}% -> "
+        f"{r_cand['physical_compatibility_rate'] * 100:.1f}% | "
+        f"Spec/Price Hallucinations: {r_base['spec_price_hallucination_rate'] * 100:.1f}% -> "
+        f"{r_cand['spec_price_hallucination_rate'] * 100:.1f}%"
+    )
+    print(
+        f"  * Parallel Tool Fan-Out: {r_cand['mean_parallel_speedup_x']:.2f}x speedup "
+        f"(p50={r_cand['p50_tool_orchestration_ms']:.2f} ms vs {r_base['p50_tool_orchestration_ms']:.2f} ms) | "
+        f"Tiered Nova Cost/1k: ${r_cand['cost_per_1k_missions_usd']:.4f} (-{r_cand['cost_reduction_vs_single_model_pct']:.1f}%)"
     )
     print("=" * 88)
     print(f"Saved full benchmark artifact to: {output_path}")

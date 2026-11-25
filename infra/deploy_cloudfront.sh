@@ -83,7 +83,7 @@ if aws lambda get-function --function-name "${FUNC_NAME}" --region "${REGION}" >
     --handler "veri_rag.web_api.lambda_handler" \
     --timeout 30 \
     --memory-size 512 \
-    --environment "Variables={VERIRAG_DELIVERY=cloudfront-s3-oac,VERIRAG_BEDROCK_MODEL=us.amazon.nova-lite-v1:0}" \
+    --environment "Variables={VERIRAG_DELIVERY=cloudfront-s3-oac,VERIRAG_BEDROCK_MODEL=us.amazon.nova-lite-v1:0,VERIRAG_NOVA_MICRO_MODEL=us.amazon.nova-micro-v1:0}" \
     --region "${REGION}" >/dev/null
   aws lambda wait function-updated --function-name "${FUNC_NAME}" --region "${REGION}"
 else
@@ -95,7 +95,7 @@ else
     --zip-file "fileb://${ZIP_PATH}" \
     --timeout 30 \
     --memory-size 512 \
-    --environment "Variables={VERIRAG_DELIVERY=cloudfront-s3-oac,VERIRAG_BEDROCK_MODEL=us.amazon.nova-lite-v1:0}" \
+    --environment "Variables={VERIRAG_DELIVERY=cloudfront-s3-oac,VERIRAG_BEDROCK_MODEL=us.amazon.nova-lite-v1:0,VERIRAG_NOVA_MICRO_MODEL=us.amazon.nova-micro-v1:0}" \
     --region "${REGION}" >/dev/null
   aws lambda wait function-active --function-name "${FUNC_NAME}" --region "${REGION}"
 fi

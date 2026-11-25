@@ -98,6 +98,35 @@ class TestVeriRAGWebApi(unittest.TestCase):
         self.assertGreater(b_sh["shadowed_queries_count"], 0)
         self.assertLess(b_sh["fchr_bootstrap"]["mean_delta"], 0.0)
 
+    def test_rufus_planner_endpoint(self) -> None:
+        with patch.dict(os.environ, {"VERIRAG_OFFLINE_LLM": "1"}):
+            r_missions = lambda_handler({"httpMethod": "GET", "rawPath": "/api/rufus/missions"})
+            self.assertEqual(r_missions["statusCode"], 200)
+            bm = json.loads(r_missions["body"])
+            self.assertEqual(len(bm["presets"]), 4)
+
+            r_plan = lambda_handler(
+                {
+                    "httpMethod": "POST",
+                    "rawPath": "/api/rufus/plan",
+                    "body": json.dumps(
+                        {
+                            "query": "Build a complete home-office USB-C desk setup under $450 delivered to Seattle 98109 by Friday.",
+                            "budget_usd": 450,
+                            "zip_code": "98109",
+                            "target_day": "Friday",
+                            "use_live_bedrock": False,
+                        }
+                    ),
+                }
+            )
+            self.assertEqual(r_plan["statusCode"], 200)
+            bp = json.loads(r_plan["body"])
+            self.assertTrue(bp["feasible"])
+            self.assertLessEqual(bp["total_price_usd"], 450.0)
+            self.assertTrue(bp["compatibility_report"]["compatible"])
+            self.assertEqual(len(bp["bundle_items"]), 5)
+
 
 if __name__ == "__main__":
     unittest.main()
