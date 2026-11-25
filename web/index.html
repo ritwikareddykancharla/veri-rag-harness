@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VeriRAG — Hybrid Retrieval, Adversarial Abstention, 5% Shadow Router & Counterfactual Replay Debugger</title>
-<meta name="description" content="Interactive engineering sandbox & live claude-opus-5-5 / gpt-4o-mini trace replay player for VeriRAG: Hybrid BM25+Vector RRF Retrieval, 2026-vs-2024 Policy Conflict Resolution, 5-Mode Adversarial Abstention Harness, and Counterfactual Trajectory Replay.">
+<title>VeriRAG: AI Search That Prefers Current Policies Over Outdated Docs and Admits When It Doesn't Know</title>
+<meta name="description" content="VeriRAG ranks active enterprise policies above outdated documents, refuses to guess when rules are missing, tests pipeline changes on shadow traffic, and replays multi-step traces to isolate bugs.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@400;700&family=Martian+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;600;700;800;900&display=swap">
 <style>
 :root{
@@ -67,17 +67,23 @@ p{margin:0}
 .badge.cobalt{background:var(--cobalt-soft);color:var(--cobalt);border-color:var(--cobalt)}
 
 /* Hero Section */
-.hero{padding:52px 0 48px;border-bottom:1px solid var(--rule)}
-.kicker{display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;font:500 11px var(--mono);color:var(--soft);text-transform:uppercase;letter-spacing:.12em}
-.kicker i{flex:none;width:9px;height:9px;background:var(--accent)}
-h1{margin:0;font-size:clamp(2rem,3.4vw,2.85rem);line-height:1.06;letter-spacing:-.04em;font-weight:800;max-width:24ch}
-.lede{margin:18px 0 0;max-width:68ch;font:400 1.24rem/1.55 var(--read);color:var(--body)}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:42px;border-top:2px solid var(--ink)}
-.stats div{display:flex;flex-direction:column;gap:6px;padding:18px 18px 4px;border-left:1px dashed var(--rule);min-width:0}
-.stats div:first-child{padding-left:0;border-left:0}
-.stats b{font-size:clamp(1.2rem,1.8vw,1.55rem);line-height:1.05;letter-spacing:-.03em;font-weight:800;font-variant-numeric:tabular-nums}
-.stats span{font:400 11px/1.45 var(--mono);color:var(--soft)}
+.hero{padding:44px 0 42px;border-bottom:1px solid var(--rule)}
+.hero-top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:600 11px var(--mono);padding:6px 12px;background:var(--accent-soft);color:var(--accent);border:1.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.runtime-pill{display:inline-flex;align-items:center;gap:8px;font:600 11px var(--mono);padding:6px 12px;background:var(--ok-soft);color:var(--ok);border:1.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+h1{margin:0;font-size:clamp(1.95rem,3.35vw,2.78rem);line-height:1.1;letter-spacing:-.035em;font-weight:800;max-width:30ch}
+.lede{margin:16px 0 0;max-width:68ch;font:400 1.22rem/1.58 var(--read);color:var(--body)}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:26px}
+.kpi-card{background:var(--card);border:1.5px solid var(--ink);border-top:5px solid var(--accent);box-shadow:4px 4px 0 var(--ink);padding:16px 18px;display:flex;flex-direction:column;gap:5px}
+.kpi-val{font:800 1.42rem/1.15 var(--mono);color:var(--ink)}
+.kpi-label{font:700 .92rem/1.35 var(--display);color:var(--ink)}
+.kpi-sub{font:400 .83rem/1.5 var(--display);color:var(--soft)}
+.pipeline-bar{margin-top:18px;background:#0e1a2b;color:#f2f5fa;border:1.5px solid var(--ink);box-shadow:4px 4px 0 var(--accent);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pipe-step{display:flex;align-items:center;gap:8px;font:600 .84rem var(--display)}
+.pipe-num{font:700 10.5px var(--mono);background:var(--accent);color:#fff;padding:2px 7px;border:1px solid #f2f5fa}
+.pipe-arrow{font:700 13px var(--mono);color:#fda4af}
 
 /* Section & Card Layout */
 .sec{padding:54px 0 0}
@@ -210,11 +216,11 @@ tr:last-child td{border-bottom:0}
 footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--mono);color:var(--soft);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
 @media (max-width: 960px){
-  .walk-grid,.stats,.dag-flow,.rank-grid,.scrubber{grid-template-columns:1fr 1fr}
+  .walk-grid,.kpi-strip,.dag-flow,.rank-grid,.scrubber{grid-template-columns:1fr 1fr}
   .ctrl-grid,.compare-grid,.sec-head,.player-top,.inspector-grid{grid-template-columns:1fr}
 }
 @media (max-width: 600px){
-  .walk-grid,.stats,.dag-flow,.rank-grid,.scrubber{grid-template-columns:1fr}
+  .walk-grid,.kpi-strip,.dag-flow,.rank-grid,.scrubber{grid-template-columns:1fr}
   .site nav{display:none}
 }
 </style>
@@ -225,15 +231,15 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
   <div class="bar">
     <a class="brand" href="#top">
       <span class="mark">VR</span>
-      <span>VeriRAG Harness</span>
+      <span>VeriRAG</span>
     </a>
     <nav aria-label="Primary">
       <a href="#problem-statement">Problem</a>
       <a href="#architecture">Architecture</a>
       <a href="#implementation">Implementation</a>
       <a href="#design-tradeoffs">Trade-Offs</a>
-      <a href="#replay-player">Trace Scrubber</a>
-      <a href="#sandbox">Interactive Studio</a>
+      <a href="#replay-player">Trace Replay</a>
+      <a href="#sandbox">Live Demo</a>
       <a href="#benchmarks">Benchmarks</a>
       <a href="https://github.com/ritwikareddykancharla/veri-rag-harness" target="_blank" rel="noopener">GitHub Repo ↗</a>
     </nav>
@@ -244,103 +250,111 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
   </div>
 </header>
 
-<nav class="toc-bar" id="stickyToc" aria-label="Jump to Section Table of Contents">
+<nav class="toc-bar" id="stickyToc" aria-label="Section Navigation">
   <div class="wrap toc-inner">
-    <span class="toc-label">Jump To:</span>
-    <a class="toc-link active" href="#problem-statement" data-toc-sec="problem-statement">§01 · Problem Statement</a>
-    <a class="toc-link" href="#architecture" data-toc-sec="architecture">§02 · System Architecture</a>
-    <a class="toc-link" href="#implementation" data-toc-sec="implementation">§03 · Implementation</a>
-    <a class="toc-link" href="#design-tradeoffs" data-toc-sec="design-tradeoffs">§04 · Design Trade-Offs</a>
-    <a class="toc-link" href="#replay-player" data-toc-sec="replay-player">§05 · Live Trace Scrubber</a>
-    <a class="toc-link" href="#sandbox" data-toc-sec="sandbox">§06 · Interactive Studio</a>
-    <a class="toc-link" href="#benchmarks" data-toc-sec="benchmarks">§07 · Benchmarks</a>
+    <span class="toc-label">Sections:</span>
+    <a class="toc-link active" href="#problem-statement" data-toc-sec="problem-statement">01 · Problem</a>
+    <a class="toc-link" href="#architecture" data-toc-sec="architecture">02 · Architecture</a>
+    <a class="toc-link" href="#implementation" data-toc-sec="implementation">03 · Implementation</a>
+    <a class="toc-link" href="#design-tradeoffs" data-toc-sec="design-tradeoffs">04 · Trade-Offs</a>
+    <a class="toc-link" href="#replay-player" data-toc-sec="replay-player">05 · Trace Replay</a>
+    <a class="toc-link" href="#sandbox" data-toc-sec="sandbox">06 · Live Demo</a>
+    <a class="toc-link" href="#benchmarks" data-toc-sec="benchmarks">07 · Benchmarks</a>
   </div>
 </nav>
 
 <main id="top" class="wrap">
   <!-- HERO -->
   <section class="hero">
-    <p class="kicker"><i></i>Production RAG Evaluation · <span id="cfVeriHealth">AWS CloudFront + S3 (OAC) + Bedrock Nova Live</span></p>
-    <h1>VeriRAG: Hybrid Retrieval, Adversarial Abstention &amp; Counterfactual Replay</h1>
+    <div class="hero-top-row">
+      <span class="eyebrow">Trusted Enterprise Search · Built for Amazon Rufus &amp; Search</span>
+      <span class="runtime-pill"><span class="pulse-dot"></span><span id="cfVeriHealth">Live on AWS · Powered by Amazon Bedrock</span></span>
+    </div>
+    <h1>VeriRAG: AI Search That Prefers Current Policies Over Outdated Docs and Admits When It Doesn't Know</h1>
     <p class="lede">
-      Enterprise AI assistants fail silently when legacy 2024 policies contradict active 2026 rules, or when critical operational thresholds are missing from retrieved context. <b>VeriRAG</b> pairs <b>Hybrid BM25 + 512d Hashing-Vector RRF Retrieval</b> with a <b>5-Mode Adversarial Abstention Harness</b>, an asynchronous <b>5% Shadow Traffic Router</b>, and a <b>5-Stage Counterfactual Trajectory Replay Debugger</b> verified on live <code>claude-opus-5-5</code> and <code>gpt-4o-mini</code> executions.
+      Internal search assistants fail quietly when older manuals outrank current policy updates, or when a missing rule causes the model to guess. VeriRAG prioritizes active policies over superseded documents, refuses to answer when evidence is incomplete, and replays multi-step traces to pinpoint failures.
     </p>
     <div class="actions">
-      <a class="btn primary" href="#replay-player">🎬 Launch Live LLM Trace Player ↓</a>
-      <a class="btn" href="#sandbox">Open 3 Interactive Sandboxes ↓</a>
-      <a class="btn" href="https://github.com/ritwikareddykancharla/veri-rag-harness" target="_blank" rel="noopener">View Python 3.14 Source on GitHub ↗</a>
+      <a class="btn primary" href="#sandbox">▶ Try the Live Demo ↓</a>
+      <a class="btn" href="#architecture">See How It Works ↓</a>
+      <a class="btn" href="#benchmarks">View Test Results ↓</a>
     </div>
 
-    <div class="stats" role="region" aria-label="Key benchmark metrics">
-      <div>
-        <b>100.0%</b>
-        <span>Hybrid RRF Top-1 Hit Rate &amp; 2026 vs. 2024 Conflict Win Rate (vs. 75.0% BM25)</span>
+    <div class="kpi-strip" role="region" aria-label="Key benchmark metrics">
+      <div class="kpi-card">
+        <span class="kpi-val">100.0%</span>
+        <span class="kpi-label">Current Policy Win Rate</span>
+        <span class="kpi-sub">Ranks active 2026 policies above outdated 2024 manuals (100.0% top-1 hit rate vs. 50.0% keyword search)</span>
       </div>
-      <div>
-        <b>-73.3% ± 8.1%</b>
-        <span>False Confidence Hallucination Rate Reduction (1,000-Iter Paired Bootstrap, p=0.001)</span>
+      <div class="kpi-card">
+        <span class="kpi-val">0.0%</span>
+        <span class="kpi-label">Confident Hallucinations</span>
+        <span class="kpi-sub">Cuts false-confidence answers from 73.3% to 0.0% across 105 adversarial tests (-73.3% ± 8.1%, p = 0.001)</span>
       </div>
-      <div>
-        <b>100.0% / 95.7%</b>
-        <span>Abstention Recall / Abstention Precision on Missing &amp; OOD Constraints</span>
+      <div class="kpi-card">
+        <span class="kpi-val">100.0%</span>
+        <span class="kpi-label">Safe Refusal Recall</span>
+        <span class="kpi-sub">Refuses to guess when governing rules are missing (95.7% precision, 100.0% citation accuracy)</span>
       </div>
-      <div>
-        <b>&lt; 0.001 ms</b>
-        <span>Primary Caller Overhead on Asynchronous 5% Shadow Traffic Router</span>
+      <div class="kpi-card">
+        <span class="kpi-val">&lt; 0.001 ms</span>
+        <span class="kpi-label">Shadow Test Overhead</span>
+        <span class="kpi-sub">Mirrors 5% of live traffic to candidate pipelines in the background without slowing down callers</span>
       </div>
-      <div>
-        <b>0.0% Leak</b>
-        <span>4-Gram Jaccard &amp; 512d Cosine Dataset Contamination on Active Corpus</span>
-      </div>
+    </div>
+
+    <div class="pipeline-bar" role="region" aria-label="VeriRAG Pipeline">
+      <div class="pipe-step"><span class="pipe-num">01</span> Search Keywords &amp; Vectors</div>
+      <span class="pipe-arrow">→</span>
+      <div class="pipe-step"><span class="pipe-num">02</span> Boost Current Policies</div>
+      <span class="pipe-arrow">→</span>
+      <div class="pipe-step"><span class="pipe-num">03</span> Drop Outdated Docs &amp; Abstain When Unsure</div>
+      <span class="pipe-arrow">→</span>
+      <div class="pipe-step"><span class="pipe-num">04</span> Cite Verified Sources</div>
     </div>
   </section>
 
-  <!-- §01 · PROBLEM STATEMENT -->
+  <!-- 01 · PROBLEM -->
   <section id="problem-statement" class="sec">
     <div id="walkthrough"></div>
-    <span class="sec-kicker">§01 · Problem Statement</span>
+    <span class="sec-kicker">01 · Problem</span>
     <div class="sec-head">
-      <h2>Why Standard Vector RAG Hallucinates on Conflicting &amp; Incomplete Policies</h2>
-      <p>Four production failure modes across fulfillment SLAs, marketplace seller reimbursements, conversational shopping specs, and clinical protocols—and how VeriRAG eliminates them.</p>
+      <h2>Problem</h2>
+      <p>Stale policy versions, missing governing thresholds, blind prompt changes, and multi-stage debugging across fulfillment cutoffs, seller reimbursements, product catalogs, and clinical protocols.</p>
     </div>
 
     <div class="plain-callout">
-      <div style="font:600 11px var(--mono);color:#b01c30;text-transform:uppercase;margin-bottom:6px">💡 In Plain English — What Problem Does VeriRAG Solve?</div>
       <p>
-        Imagine an operations lead or customer-support agent asking an internal AI assistant: <i>"What is today's Same-Day Delivery evening sortation cutoff?"</i> or <i>"What is the FBA lost-inventory reimbursement cap?"</i> In real enterprise knowledge bases, old 2024 manuals sit right next to updated 2026 policy amendments. Standard Top-K RAG fails silently in four painful ways:
-        <b>(1) Stale Policy Collisions:</b> older 2024 documents are often wordier and match more keywords than concise 2026 amendments, so naive search ranks the outdated <code>16:00</code> or <code>$2,000</code> rule #1 (<code>50.0%</code> BM25 conflict win rate);
-        <b>(2) False-Confidence Hallucinations:</b> when the governing threshold is missing from retrieved chunks or out of scope, standard prompts guess from nearby distractor paragraphs (<code>73.3%</code> False Confidence Hallucination Rate, <code>0.0%</code> abstention recall);
-        <b>(3) Blind Production Rollouts:</b> swapping a retriever or prompt in production without paired statistical testing hides regressions until customers complain; and
-        <b>(4) Opaque Multi-Hop Debugging:</b> when a 5-stage RAG pipeline emits a bad citation, engineers cannot tell whether retrieval, reranking, conflict filtering, or prompt synthesis caused the bug without re-running every stage from scratch.
+        Suppose an operations lead asks an internal assistant for today's Same-Day Delivery evening sortation cutoff, or a seller support specialist asks for the lost-inventory reimbursement cap. In any lived-in enterprise knowledge base, older 2024 manuals sit right beside concise 2026 policy updates. Standard retrieval pipelines break in four predictable ways: wordier 2024 documents match more query terms and outrank active 2026 amendments (<code>50.0%</code> BM25 conflict win rate); missing thresholds cause standard prompts to guess from nearby distractor paragraphs (<code>73.3%</code> false-confidence hallucination rate, <code>0.0%</code> abstention recall); shipping retriever or prompt changes without paired testing hides regressions; and debugging a bad citation in a five-step pipeline normally requires re-running every stage from scratch.
       </p>
       <p>
-        <b>VeriRAG</b> fixes all four in a zero-dependency Python runtime: <b>Hybrid <code>BM25Okapi</code> + <code>512d</code> Feature-Hashing Vector RRF with Freshness &amp; Authority Weighting</b> hits <b><code>100.0%</code> Top-1 &amp; <code>100.0%</code> 2026-vs-2024 Conflict Win Rate</b>; a <b>5-Mode Adversarial Abstention Harness</b> cuts False Confidence Hallucinations by <b><code>-73.3% ± 8.1%</code></b> (<code>100.0%</code> abstention recall, <code>95.7%</code> precision, <code>100.0%</code> citation grounding); an asynchronous <b>5% Shadow Traffic Router</b> proves significance via 1,000 paired bootstrap resamples at <b><code>&lt; 0.001 ms</code></b> caller overhead; and a <b>5-Stage Counterfactual Replay Debugger</b> swaps individual DAG nodes against <code>SHA-256</code> upstream snapshots in <code>0 ms</code>.
+        <b>VeriRAG</b> addresses each layer directly in Python. Hybrid <code>BM25Okapi</code> + <code>512d</code> feature-hashing vector retrieval weighted by effective date and authority tier reaches <b><code>100.0%</code> top-1 hit rate</b> and <b><code>100.0%</code> 2026-vs-2024 conflict win rate</b>. Pre-synthesis supersession pruning and coverage checks cut false-confidence hallucinations by <b><code>-73.3% ± 8.1%</code></b> (<code>100.0%</code> refusal recall, <code>95.7%</code> precision, <code>100.0%</code> citation grounding). A background <code>5%</code> shadow router verifies upgrades across <code>1,000</code> paired bootstrap resamples at <b><code>&lt; 0.001 ms</code></b> caller overhead, and <code>SHA-256</code> stage checkpoints let engineers swap and replay individual pipeline nodes in <code>0 ms</code>.
       </p>
     </div>
 
     <div class="walk-grid">
       <article class="walk-step">
-        <span class="num">Failure Mode 01 · Stale Policies</span>
-        <h3>2024 Legacy Docs Outscore 2026 Amendments</h3>
-        <p>Unweighted <code>BM25Okapi</code> (<code>50.0%</code> conflict win) and pure <code>512d</code> cosine (<code>41.7%</code> conflict win) frequently rank superseded Tier-3 2024 docs above active Tier-1 2026 rules. VeriRAG multiplies RRF by recency decay, authority tier, and supersession penalties (<code>100.0%</code> win rate).</p>
+        <span class="num">01 · Stale Policies</span>
+        <h3>2024 Manuals Outscore 2026 Updates</h3>
+        <p>Unweighted <code>BM25Okapi</code> (<code>50.0%</code> win rate) and pure <code>512d</code> cosine (<code>41.7%</code> win rate) often rank superseded Tier-3 2024 docs above active Tier-1 2026 rules. VeriRAG weights RRF scores by recency decay, authority tier, and supersession flags (<code>100.0%</code> win rate).</p>
         <code>hybrid_retriever.py</code>
       </article>
       <article class="walk-step">
-        <span class="num">Failure Mode 02 · Guessing When Blind</span>
-        <h3>73.3% Hallucination on Missing Constraints</h3>
-        <p>When a critical threshold is stripped or an out-of-distribution boundary is queried, <code>NaiveTopK-RAG</code> hallucinates <code>73.3%</code> of the time (<code>0.0%</code> abstention). VeriRAG enforces pre-synthesis entity/constraint coverage (<code>&ge; 0.55</code>) and spoof pruning (<code>0.0%</code> FCHR).</p>
+        <span class="num">02 · Missing Rules</span>
+        <h3>73.3% Hallucination Without a Refusal Gate</h3>
+        <p>When a governing threshold is absent or out of scope, <code>NaiveTopK-RAG</code> guesses <code>73.3%</code> of the time (<code>0.0%</code> abstention). VeriRAG checks entity and constraint coverage (<code>&ge; 0.55</code>) and strips spoofed tags before synthesis (<code>0.0%</code> FCHR).</p>
         <code>adversarial_harness.py</code>
       </article>
       <article class="walk-step">
-        <span class="num">Failure Mode 03 · Unsafe Rollouts</span>
-        <h3>Zero-Overhead 5% Shadow Traffic &amp; Bootstrap CI</h3>
-        <p>Instead of shipping prompt or retriever changes blind, VeriRAG mirrors <code>5%</code> of live traffic asynchronously on a background worker pool (<code>&lt; 0.001 ms</code> caller latency impact) and runs <code>1,000</code> paired bootstrap resamples (<code>p = 0.0010</code>).</p>
+        <span class="num">03 · Safe Rollouts</span>
+        <h3>Background 5% Shadow Traffic &amp; Bootstrap CI</h3>
+        <p>Rather than shipping retriever or prompt edits blind, VeriRAG mirrors <code>5%</code> of live traffic on a background worker pool (<code>&lt; 0.001 ms</code> caller overhead) and runs <code>1,000</code> paired bootstrap resamples (<code>p = 0.0010</code>).</p>
         <code>shadow_router.py</code>
       </article>
       <article class="walk-step">
-        <span class="num">Failure Mode 04 · Opaque Root Causes</span>
-        <h3>Counterfactual 5-Stage DAG Replay &amp; Audit</h3>
-        <p>Fingerprints all 5 workflow stages with <code>SHA-256</code> so engineers can swap a single node (<code>NaiveTopKFilter</code> &rarr; <code>ConflictAwareRRF</code>) while reusing recorded upstream state, paired with a <code>4</code>-gram Jaccard contamination audit (<code>0.0%</code> leak).</p>
+        <span class="num">04 · Root-Cause Replay</span>
+        <h3>Five-Stage Checkpoints &amp; Corpus Leak Audit</h3>
+        <p>Hashes every pipeline stage with <code>SHA-256</code> so engineers can swap a single node (<code>NaiveTopKFilter</code> &rarr; <code>ConflictAwareRRF</code>) while reusing recorded upstream state, paired with a <code>4</code>-gram Jaccard leak scanner (<code>0.0%</code> leak).</p>
         <code>replay_debugger.py</code>
       </article>
     </div>
@@ -348,38 +362,38 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     <div class="worked-example">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
         <div>
-          <span class="badge danger" style="background:var(--accent-soft);color:var(--accent);border-color:var(--accent);margin-bottom:6px">Concrete End-to-End Worked Example</span>
-          <h3 style="margin:0;font-size:1.18rem;font-weight:800">Tracing Trial <code>SCN-SSD-01</code>: 2026 (<code>14:30</code>) vs. 2024 (<code>16:00</code>) Fulfillment Cutoff &amp; Stripped-Policy Abstention</h3>
+          <span class="badge cobalt" style="margin-bottom:6px">Walkthrough · Trial SCN-SSD-01</span>
+          <h3 style="margin:0;font-size:1.18rem;font-weight:800">Resolving a 2026 (<code>14:30</code>) vs. 2024 (<code>16:00</code>) Fulfillment Cutoff Conflict</h3>
         </div>
         <span class="badge ok">100% Top-1 · 0.0% FCHR · p = 0.0010</span>
       </div>
       <div class="worked-steps">
         <div class="worked-step">
-          <b>Step 1 — Why Raw Retrieval Falls Into the 2024 Trap:</b><br>
-          An operator asks: <i>"What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?"</i> Legacy <code>DOC-SSD-2024-01</code> (<code>2024-03-01</code>, Tier 3, <code>16:00</code> cutoff) actually scores <i>higher</i> on raw BM25 (<code>43.69</code>) and raw 512d cosine (<code>0.500</code>) than active <code>DOC-SSD-2026-01</code> (<code>2026-02-15</code>, Tier 1, <code>14:30</code> cutoff, BM25 <code>31.35</code>, cosine <code>0.415</code>)—so naive RAG confidently quotes the wrong <code>16:00</code> cutoff!
+          <b>1. Raw Retrieval Ranks the 2024 Policy First:</b><br>
+          An operator asks: <i>"What is the current evening wave order sortation cutoff time for Sub-Same-Day (SSD) urban fulfillment nodes?"</i> Superseded <code>DOC-SSD-2024-01</code> (<code>2024-03-01</code>, Tier 3, <code>16:00</code> cutoff) scores higher on both raw BM25 (<code>43.69</code>) and 512d cosine (<code>0.500</code>) than active <code>DOC-SSD-2026-01</code> (<code>2026-02-15</code>, Tier 1, <code>14:30</code> cutoff, BM25 <code>31.35</code>, cosine <code>0.415</code>), causing standard search to cite the retired <code>16:00</code> cutoff.
         </div>
         <div class="worked-step">
-          <b>Step 2 — Hybrid RRF + Freshness &amp; Authority Multiplier Flips Rank #1:</b><br>
-          <code>HybridRRFRetriever</code> fuses lexical + 512d vector ranks (<code>rrf_k=20</code>) and applies <code>compute_freshness_multiplier()</code> (<code>exp(-0.30 &times; years_old) &times; tier_bonus &times; superseded_penalty</code>). Active 2026 Tier-1 policy receives a <code>1.0593&times;</code> boost (<code>final_score = 0.1190</code>) while superseded 2024 Tier-3 decays to <code>0.6373&times;</code> (<code>final_score = 0.0892</code>), promoting <code>DOC-SSD-2026-01</code> cleanly to Rank #1.
+          <b>2. Recency &amp; Authority Weighting Promotes the 2026 Rule:</b><br>
+          <code>HybridRRFRetriever</code> fuses lexical and 512d vector ranks (<code>rrf_k=20</code>) and applies <code>compute_freshness_multiplier()</code> (<code>exp(-0.30 &times; years_old) &times; tier_bonus &times; superseded_penalty</code>). The active 2026 Tier-1 policy gets a <code>1.0593&times;</code> boost (<code>final_score = 0.1190</code>) while superseded 2024 Tier-3 decays to <code>0.6373&times;</code> (<code>final_score = 0.0892</code>), moving <code>DOC-SSD-2026-01</code> to Rank #1.
         </div>
         <div class="worked-step">
-          <b>Step 3 — Pre-Synthesis Supersession Pruning &amp; Abstention Gate:</b><br>
-          Stage 4 (<code>SupersessionConflictResolver</code>) inspects <code>superseded_by="DOC-SSD-2026-01"</code> and drops <code>DOC-SSD-2024-01</code> before prompt construction so the LLM never sees contradictory timestamps. Conversely, when <code>DOC-SSD-2026-01</code> is removed in stress mode <code>MISSING_CRITICAL_CONSTRAINT</code>, entity/constraint coverage falls below <code>0.55</code> and VeriRAG deterministically emits <code>ABSTAIN</code> instead of guessing from freight distractors.
+          <b>3. Conflict Pruning &amp; Coverage Refusal Gate:</b><br>
+          Stage 4 (<code>SupersessionConflictResolver</code>) checks <code>superseded_by="DOC-SSD-2026-01"</code> and removes <code>DOC-SSD-2024-01</code> before prompt construction so the model never sees conflicting cutoffs. When <code>DOC-SSD-2026-01</code> is withheld in <code>MISSING_CRITICAL_CONSTRAINT</code> tests, entity coverage drops below <code>0.55</code> and VeriRAG returns <code>ABSTAIN</code> instead of guessing from freight docs.
         </div>
         <div class="worked-step">
-          <b>Step 4 — Grounded Multi-Model Synthesis, 5% Shadow Audit &amp; Replay:</b><br>
-          Live <code>claude-opus-5-5</code> (<code>5,509 ms</code>), <code>gpt-4o-mini</code>, and CloudFront Bedrock Nova (<code>us.amazon.nova-lite-v1:0</code>) synthesize <code>14:30 local facility time [DOC-SSD-2026-01]</code> with <code>100.0%</code> citation grounding precision. Meanwhile, <code>ShadowTrafficRouter</code> logs paired diffs in the background (<code>&lt; 0.001 ms</code> caller overhead) and <code>ReplayDebugger</code> hashes all 5 state transitions (<code>bd1dc58b... &rarr; f4490a12...</code>).
+          <b>4. Cited Synthesis, Shadow Logging &amp; Stage Hashes:</b><br>
+          <code>claude-opus-5-5</code> (<code>5,509 ms</code>), <code>gpt-4o-mini</code>, and Amazon Bedrock Nova (<code>us.amazon.nova-lite-v1:0</code>) emit <code>14:30 local facility time [DOC-SSD-2026-01]</code> with <code>100.0%</code> citation precision, while <code>ShadowTrafficRouter</code> logs paired diffs in the background (<code>&lt; 0.001 ms</code> caller impact) and <code>ReplayDebugger</code> records all five stage hashes (<code>bd1dc58b... &rarr; f4490a12...</code>).
         </div>
       </div>
     </div>
   </section>
 
-  <!-- §02 · SYSTEM ARCHITECTURE -->
+  <!-- 02 · ARCHITECTURE -->
   <section id="architecture" class="sec">
-    <span class="sec-kicker">§02 · System Architecture</span>
+    <span class="sec-kicker">02 · Architecture</span>
     <div class="sec-head">
-      <h2>Five-Plane Grounded RAG, Adversarial Abstention &amp; Causal Replay Architecture</h2>
-      <p>Click any of the 11 components in the diagram (or the numbered pills below) to inspect its plain-English role, internal math, Python module path, and measured benchmark result.</p>
+      <h2>Architecture</h2>
+      <p>Click any of the 11 components in the diagram (or the numbered pills below) to inspect its role, implementation details, Python module path, and measured results.</p>
     </div>
 
     <div class="arch-toolbar">
@@ -608,12 +622,12 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     </div>
   </section>
 
-  <!-- §03 · IMPLEMENTATION -->
+  <!-- 03 · IMPLEMENTATION -->
   <section id="implementation" class="sec">
-    <span class="sec-kicker">§03 · Implementation</span>
+    <span class="sec-kicker">03 · Implementation</span>
     <div class="sec-head">
-      <h2>Four Zero-Dependency Python Modules (<code>veri_rag/</code>)</h2>
-      <p>Every subsystem pairs plain-English intuition with exact retrieval equations, abstention thresholds, paired bootstrap statistics, and SHA-256 trajectory snapshots.</p>
+      <h2>Implementation</h2>
+      <p>Four zero-dependency Python modules in <code>veri_rag/</code> combining hybrid ranking, adversarial coverage gates, paired bootstrap testing, and SHA-256 stage snapshots.</p>
     </div>
 
     <div class="impl-grid">
@@ -623,72 +637,72 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
           <span style="color:#fda4af">veri_rag/hybrid_retriever.py</span>
         </div>
         <div class="impl-body">
-          <h3 style="margin:0;font-size:1.08rem;font-weight:800">BM25Okapi + 512d Signed Feature-Hashing RRF &amp; Authority Scoring</h3>
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">BM25Okapi + 512d Feature-Hashing RRF &amp; Authority Scoring</h3>
           <div class="layer-plain">
-            <b>Plain-English Intuition:</b> Keyword search catches exact SKU codes and acronyms (<code>FBA</code>, <code>ANC</code>, <code>UL-2056</code>) while vector search catches paraphrased questions—but neither knows whether a policy is from 2024 or 2026. VeriRAG fuses both rank lists and scales the score by how recent and authoritative each document is.
+            Keyword search catches exact SKU codes and acronyms (<code>FBA</code>, <code>ANC</code>, <code>UL-2056</code>) while vector search catches paraphrased questions, yet neither knows whether a policy is from 2024 or 2026. VeriRAG fuses both rank lists and weights the score by document recency and authority tier.
           </div>
           <div class="layer-hood">
-            <b>Under the Hood (Exact Math &amp; Code):</b> <code>SemanticChunker(max_chars=420, overlap_chars=60)</code> preserves sentence offsets; <code>BM25OkapiIndex(k1=1.5, b=0.75)</code> + <code>HashingVectorIndex(dim=512)</code> (unigrams <code>1.0</code>, bigrams <code>1.25</code>, char-4grams <code>0.35</code>, MD5 signed L2-normalized buckets) fuse via <code>rrf_s = 0.55/(20 + r_lex) + 0.45/(20 + r_vec)</code> multiplied by <code>compute_freshness_multiplier()</code> (<code>exp(-0.30 * years_old) * tier_bonus[1:1.12, 2:1.00, 3:0.72] * superseded[0.48]</code>). Achieves **<code>100.0%</code> Top-1 Hit, <code>1.0000</code> MRR@3, and <code>100.0%</code> Conflict Win Rate**.
+            <code>SemanticChunker(max_chars=420, overlap_chars=60)</code> preserves sentence offsets; <code>BM25OkapiIndex(k1=1.5, b=0.75)</code> + <code>HashingVectorIndex(dim=512)</code> (unigrams <code>1.0</code>, bigrams <code>1.25</code>, char-4grams <code>0.35</code>, MD5 signed L2-normalized buckets) fuse via <code>rrf_s = 0.55/(20 + r_lex) + 0.45/(20 + r_vec)</code> multiplied by <code>compute_freshness_multiplier()</code> (<code>exp(-0.30 * years_old) * tier_bonus[1:1.12, 2:1.00, 3:0.72] * superseded[0.48]</code>). Achieves <b><code>100.0%</code> top-1 hit rate, <code>1.0000</code> MRR@3, and <code>100.0%</code> conflict win rate</b>.
           </div>
         </div>
       </div>
 
       <div class="impl-card">
         <div class="impl-head">
-          <span>MODULE 02 · ADVERSARIAL ABSTENTION &amp; CONTAMINATION</span>
+          <span>MODULE 02 · REFUSAL GATE &amp; CORPUS AUDIT</span>
           <span style="color:#fda4af">veri_rag/adversarial_harness.py + dataset_contamination.py</span>
         </div>
         <div class="impl-body">
-          <h3 style="margin:0;font-size:1.08rem;font-weight:800">5-Mode Stress Perturbations, Coverage Gate &amp; 4-Gram Leak Audit</h3>
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">Five-Mode Stress Suite, Coverage Gate &amp; Four-Gram Leak Check</h3>
           <div class="layer-plain">
-            <b>Plain-English Intuition:</b> Before trusting an assistant in production, we deliberately sabotage its retrieved context in five realistic ways—hiding the rule it needs, injecting plausible distractors at Rank #1, planting fake <code>[DOC-SPOOF-01]</code> tags, or asking Antarctic/submersible edge cases—to prove it says *"I cannot verify this"* instead of bluffing.
+            Before trusting an assistant in production, we evaluate its retrieved context across five stress cases: withholding the governing rule, placing distractors at Rank #1, planting fake <code>[DOC-SPOOF-01]</code> headers, and querying out-of-scope jurisdictions so it refuses cleanly rather than guessing.
           </div>
           <div class="layer-hood">
-            <b>Under the Hood (Thresholds &amp; Metrics):</b> Across <code>105</code> stress trials (<code>30</code> golden scenarios), <code>VeriRAGGenerator</code> strips <code>superseded_by</code> &amp; unverified spoof IDs, checks entity/constraint token coverage (<code>threshold = 0.55</code>), and validates emitted <code>[DOC-...]</code> tags. Cuts **FCHR from <code>73.3%</code> &rarr; <code>0.0%</code>**, lifts **Abstention Recall to <code>100.0%</code> (<code>95.7%</code> precision, <code>97.8%</code> F1)**, and verifies **<code>0.0%</code> benchmark contamination** (<code>4</code>-gram Jaccard <code>&lt; 0.28</code>, <code>512d</code> cosine <code>&lt; 0.86</code>).
+            Across <code>105</code> stress trials (<code>30</code> golden scenarios), <code>VeriRAGGenerator</code> strips <code>superseded_by</code> and unverified spoof IDs, enforces entity and constraint token coverage (<code>threshold = 0.55</code>), and verifies emitted <code>[DOC-...]</code> citations. Cuts <b>FCHR from <code>73.3%</code> &rarr; <code>0.0%</code></b>, reaches <b><code>100.0%</code> refusal recall (<code>95.7%</code> precision, <code>97.8%</code> F1)</b>, and confirms <b><code>0.0%</code> benchmark leak rate</b> (<code>4</code>-gram Jaccard <code>&lt; 0.28</code>, <code>512d</code> cosine <code>&lt; 0.86</code>).
           </div>
         </div>
       </div>
 
       <div class="impl-card">
         <div class="impl-head">
-          <span>MODULE 03 · ASYNC 5% SHADOW ROUTER &amp; BOOTSTRAP CI</span>
+          <span>MODULE 03 · BACKGROUND SHADOW ROUTER</span>
           <span style="color:#fda4af">veri_rag/shadow_router.py + web_api.py</span>
         </div>
         <div class="impl-body">
-          <h3 style="margin:0;font-size:1.08rem;font-weight:800">Zero-Blocking Traffic Mirroring &amp; 1,000× Paired Resampling</h3>
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">Non-Blocking 5% Traffic Mirroring &amp; 1,000× Paired Bootstrap</h3>
           <div class="layer-plain">
-            <b>Plain-English Intuition:</b> When testing a candidate RAG pipeline on live customer traffic, you never want users waiting on two LLM calls. VeriRAG returns the primary response immediately and silently replays <code>5%</code> of queries on a background worker thread, computing 95% confidence intervals on the exact same queries.
+            Testing a candidate pipeline on live traffic should never make callers wait on two model invocations. VeriRAG returns the primary answer immediately and replays <code>5%</code> of queries on a background worker pool, computing paired confidence intervals on identical inputs.
           </div>
           <div class="layer-hood">
-            <b>Under the Hood (Concurrency &amp; Statistics):</b> <code>ShadowTrafficRouter(sample_rate=0.05, bootstrap_iterations=1000)</code> dispatches candidate runs to <code>ThreadPoolExecutor(max_workers=4)</code> with **<code>&lt; 0.001 ms</code> (<code>0.0 ms</code>) primary caller overhead**. On a <code>400</code>-query production stream (<code>22</code> shadowed = <code>5.5%</code>), paired bootstrap proves **<code>-86.4% ± 15.9%</code> FCHR reduction (<code>95% CI [-100.0%, -68.2%], p = 0.0010</code>)**, backed live by CloudFront <code>/api/verify</code> on Amazon Bedrock <code>us.amazon.nova-lite-v1:0</code>.
+            <code>ShadowTrafficRouter(sample_rate=0.05, bootstrap_iterations=1000)</code> dispatches candidate runs to <code>ThreadPoolExecutor(max_workers=4)</code> with <b><code>&lt; 0.001 ms</code> (<code>0.0 ms</code>) primary caller overhead</b>. On a <code>400</code>-query stream (<code>22</code> shadowed = <code>5.5%</code>), paired bootstrap confirms a <b><code>-86.4% ± 15.9%</code> FCHR drop (<code>95% CI [-100.0%, -68.2%], p = 0.0010</code>)</b>, backed by <code>/api/verify</code> on Amazon Bedrock <code>us.amazon.nova-lite-v1:0</code>.
           </div>
         </div>
       </div>
 
       <div class="impl-card">
         <div class="impl-head">
-          <span>MODULE 04 · COUNTERFACTUAL 5-STAGE REPLAY</span>
+          <span>MODULE 04 · FIVE-STAGE TRACE REPLAY</span>
           <span style="color:#fda4af">veri_rag/replay_debugger.py + llm_generator.py</span>
         </div>
         <div class="impl-body">
-          <h3 style="margin:0;font-size:1.08rem;font-weight:800">SHA-256 State Snapshots &amp; Single-Node Causal Intervention</h3>
+          <h3 style="margin:0;font-size:1.08rem;font-weight:800">SHA-256 Stage Checkpoints &amp; Single-Node Swaps</h3>
           <div class="layer-plain">
-            <b>Plain-English Intuition:</b> Think of the 5-stage RAG pipeline like a video timeline with save-points after every step. When a recorded customer trace hallucinates, an engineer can swap just Stage 3 (<code>RERANK_FILTER</code>) or Stage 4 (<code>CONFLICT_CHECK</code>), fast-forward from the saved Stage 2 snapshot in <code>0 ms</code>, and prove which stage caused the defect.
+            Saving a checkpoint after each of the five pipeline steps turns debugging into a targeted replay. When a recorded trace cites the wrong document, an engineer can replace Stage 3 (<code>RERANK_FILTER</code>) or Stage 4 (<code>CONFLICT_CHECK</code>), reuse Stage 2 in <code>0 ms</code>, and see whether the fix resolves the failure.
           </div>
           <div class="layer-hood">
-            <b>Under the Hood (DAG &amp; Live Models):</b> <code>_hash_state()</code> computes deterministic 16-hex <code>SHA-256</code> digests over <code>(rewritten_query, chunk_ids, conflict_detected, dropped_docs, abstained, cited_docs)</code> across <code>QUERY_REWRITE &rarr; HYBRID_RETRIEVE &rarr; RERANK_FILTER &rarr; CONFLICT_CHECK &rarr; SYNTHESIZE_WITH_CITATIONS</code>. Verified across <code>4/4</code> causal case studies and recorded live on **<code>claude-opus-5-5</code>** and **<code>gpt-4o-mini</code>**.
+            <code>_hash_state()</code> computes deterministic 16-hex <code>SHA-256</code> digests over <code>(rewritten_query, chunk_ids, conflict_detected, dropped_docs, abstained, cited_docs)</code> across <code>QUERY_REWRITE &rarr; HYBRID_RETRIEVE &rarr; RERANK_FILTER &rarr; CONFLICT_CHECK &rarr; SYNTHESIZE_WITH_CITATIONS</code>. Verified across <code>4/4</code> case studies and recorded on <b><code>claude-opus-5-5</code></b> and <b><code>gpt-4o-mini</code></b>.
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- §04 · DESIGN TRADE-OFFS -->
+  <!-- 04 · TRADE-OFFS -->
   <section id="design-tradeoffs" class="sec">
-    <span class="sec-kicker">§04 · Design Trade-Offs</span>
+    <span class="sec-kicker">04 · Trade-Offs</span>
     <div class="sec-head">
-      <h2>Architectural Comparison &amp; Engineering Trade-Offs</h2>
-      <p>Why VeriRAG chooses deterministic hybrid feature-hashing, pre-synthesis conflict pruning, and paired shadow bootstrap over naive vector search or prompt-only guardrails.</p>
+      <h2>Trade-Offs</h2>
+      <p>Where local feature hashing, deterministic refusal checks, and paired shadow traffic outperform naive vector search or prompt-only rules, and what each choice trades away.</p>
     </div>
 
     <div class="table-wrap">
@@ -698,7 +712,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
             <th>Capability / Evaluation Dimension</th>
             <th>Naive Vector Top-K RAG</th>
             <th>Unweighted Hybrid + Prompt-Only Rules</th>
-            <th>VeriRAG (Guarded Production Harness)</th>
+            <th>VeriRAG (Guarded Production Pipeline)</th>
           </tr>
         </thead>
         <tbody>
@@ -738,51 +752,50 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
 
     <div class="grid-3-trade">
       <article class="brutal-card accent">
-        <span class="badge cobalt" style="margin-bottom:8px">Trade-Off 01 · Embedding Architecture</span>
-        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">512d Signed Feature-Hashing + BM25 vs. External Embedding APIs</h3>
+        <span class="badge cobalt" style="margin-bottom:8px">Trade-Off 01 · Local Feature Hashing</span>
+        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">512d Signed Hashing + BM25 vs. Remote Embedding APIs</h3>
         <div class="layer-plain" style="margin-bottom:10px">
-          <b>Plain English:</b> Calling a remote neural embedding API adds <code>40–120 ms</code> of network tail latency and API key fragility, whereas VeriRAG indexes and queries locally in sub-millisecond pure Python.
+          Calling an external embedding endpoint adds <code>40–120 ms</code> of network latency and external service dependencies, whereas VeriRAG indexes and scores documents locally in sub-millisecond Python.
         </div>
         <div class="layer-hood">
-          <b>Engineering Trade-Off:</b> Signed MD5 feature hashing (<code>512d</code>) has slightly lower cross-lingual synonym recall than a 1,536-d transformer, which we offset via word-prefix stems (<code>p4</code>/<code>p5</code>), bigrams, and <code>DomainAcronymRewriter</code>—achieving <code>100.0%</code> Recall@3 with <code>$0</code> embedding cost.
+          Signed MD5 feature hashing (<code>512d</code>) has narrower cross-lingual synonym coverage than a 1,536-d neural encoder, which we compensate for with word-prefix stems (<code>p4</code>/<code>p5</code>), bigrams, and <code>DomainAcronymRewriter</code>, reaching <code>100.0%</code> Recall@3 at <code>$0</code> embedding cost.
         </div>
       </article>
 
       <article class="brutal-card accent">
-        <span class="badge ok" style="margin-bottom:8px">Trade-Off 02 · Abstention Calibration</span>
-        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">Deterministic Pre-Synthesis Pruning vs. Prompt-Only Instructions</h3>
+        <span class="badge ok" style="margin-bottom:8px">Trade-Off 02 · Refusal Calibration</span>
+        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">Pre-Synthesis Conflict Pruning vs. Prompt Instructions</h3>
         <div class="layer-plain" style="margin-bottom:10px">
-          <b>Plain English:</b> Telling an LLM *"ignore superseded documents and abstain if unsure"* inside a long system prompt still fails whenever a stale 2024 doc sits at Rank #1.
+          Asking an LLM to ignore superseded documents inside a long system prompt still fails regularly whenever an outdated 2024 manual lands at Rank #1.
         </div>
         <div class="layer-hood">
-          <b>Engineering Trade-Off:</b> Hard-pruning <code>superseded_by</code> chunks and enforcing coverage <code>&ge; 0.55</code> before synthesis trades a tiny <code>4.3%</code> conservative over-abstention (<code>95.7%</code> precision) for **<code>100.0%</code> abstention recall and <code>0.0%</code> false-confidence hallucinations**.
+          Removing <code>superseded_by</code> chunks in code and requiring coverage <code>&ge; 0.55</code> before synthesis trades a small <code>4.3%</code> conservative refusal margin (<code>95.7%</code> precision) for <b><code>100.0%</code> refusal recall and <code>0.0%</code> false-confidence hallucinations</b>.
         </div>
       </article>
 
       <article class="brutal-card accent">
-        <span class="badge warn" style="margin-bottom:8px">Trade-Off 03 · Online Statistical Proof</span>
-        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">Paired 5% Shadow Bootstrap vs. Unpaired Split Traffic</h3>
+        <span class="badge warn" style="margin-bottom:8px">Trade-Off 03 · Online Rollout Safety</span>
+        <h3 style="margin:0 0 10px;font-size:1.05rem;font-weight:800">Paired 5% Shadow Bootstrap vs. Split A/B Traffic</h3>
         <div class="layer-plain" style="margin-bottom:10px">
-          <b>Plain English:</b> Standard 50/50 A/B tests expose half of live users to an unproven candidate pipeline and suffer high variance when query difficulty fluctuates hour by hour.
+          Splitting live traffic 50/50 exposes half of users to an unverified candidate pipeline and adds noise whenever query difficulty shifts across the day.
         </div>
         <div class="layer-hood">
-          <b>Engineering Trade-Off:</b> Asynchronous <code>5%</code> shadow routing spends <code>+5%</code> background compute (<code>0</code> user exposure, <code>&lt; 0.001 ms</code> caller overhead) while evaluating *both* pipelines on identical queries—giving tight paired CIs (<code>±8.1%</code>, <code>p = 0.0010</code>) with 10× fewer samples.
+          Background <code>5%</code> shadow routing adds <code>+5%</code> async compute with <code>0</code> user exposure and <code>&lt; 0.001 ms</code> caller latency impact, evaluating both pipelines on the exact same queries for tight paired confidence intervals (<code>±8.1%</code>, <code>p = 0.0010</code>).
         </div>
       </article>
     </div>
   </section>
 
-  <!-- §05 · LIVE TRACE SCRUBBER -->
+  <!-- 05 · TRACE REPLAY -->
   <section id="replay-player" class="sec">
-    <span class="sec-kicker">§05 · Live Trace Scrubber</span>
+    <span class="sec-kicker">05 · Trace Replay</span>
     <div class="sec-head">
-      <h2>🎬 Counterfactual Agent Trace Replay Player (<code>claude-opus-5-5</code> vs. <code>gpt-4o-mini</code>)</h2>
-      <p>Step through real recorded 5-stage production trajectories from <code>benchmarks/live_llm_traces.json</code>. Inspect exact BM25+Vector RRF scores, 2026-vs-2024 conflict drops, prompts sent, and verbatim responses from <b>Anthropic <code>claude-opus-5-5</code></b> and <b>OpenAI <code>gpt-4o-mini</code></b>.</p>
+      <h2>Trace Replay</h2>
+      <p>Step through recorded five-stage runs from <code>benchmarks/live_llm_traces.json</code> to inspect hybrid RRF scores, 2026-vs-2024 conflict pruning, exact prompts, and verbatim outputs from <b>Anthropic <code>claude-opus-5-5</code></b> and <b>OpenAI <code>gpt-4o-mini</code></b>.</p>
     </div>
 
     <div class="sandbox-guide">
-      <b>🧭 How to Use This Trace Scrubber (What to Click &amp; What Happens):</b>
-      Pick any of the 4 recorded enterprise scenarios (Same-Day Delivery <code>14:30</code> vs <code>16:00</code>, Seller FBA <code>$5,000</code> vs <code>$2,000</code>, Oncology ANC <code>&lt;1,000</code> vs <code>&lt;1,500</code>, or Stripped-Policy Abstention), choose a model view (<code>claude-opus-5-5 + gpt-4o-mini</code> side by side or <code>Baseline NaiveTopK-RAG</code>), and click <b>▶ Play</b> or any <b>STAGE 01..05</b> card to inspect how <code>SHA-256</code> state hashes, conflict drops, and verbatim LLM citations evolve at each hop.
+      Select any of the four recorded scenarios below (Same-Day Delivery <code>14:30</code> vs <code>16:00</code>, Seller FBA <code>$5,000</code> vs <code>$2,000</code>, Oncology ANC <code>&lt;1,000</code> vs <code>&lt;1,500</code>, or Stripped-Policy Refusal), choose a model comparison view, and click <b>▶ Play</b> or any <b>STAGE 01..05</b> card to inspect <code>SHA-256</code> state hashes and cited answers.
     </div>
 
     <div class="player-shell">
@@ -850,31 +863,30 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     </div>
   </section>
 
-  <!-- §06 · INTERACTIVE STUDIO -->
+  <!-- 06 · LIVE DEMO -->
   <section id="sandbox" class="sec">
-    <span class="sec-kicker">§06 · Interactive Studio</span>
+    <span class="sec-kicker">06 · Live Demo</span>
     <div class="sec-head">
-      <h2>3 Interactive Live Engineering Sandboxes</h2>
-      <p>Explore all scenarios across <b>Amazon Same-Day Delivery SLA</b>, <b>Seller Support Reimbursements</b>, and <b>Clinical Protocol Compliance</b>—or test custom queries and counterfactual node swaps.</p>
+      <h2>Live Demo</h2>
+      <p>Test policy ranking weights, missing-evidence refusals, and single-stage node swaps across <b>Same-Day Delivery</b>, <b>Seller Support</b>, and <b>Clinical Protocol</b> scenarios.</p>
     </div>
 
-    <div class="tab-bar" role="tablist" aria-label="VeriRAG Interactive Sandboxes">
+    <div class="tab-bar" role="tablist" aria-label="VeriRAG Interactive Demo Tabs">
       <button class="btn active" role="tab" aria-selected="true" data-tab="tab1" id="btn-tab1">
-        Tab 1: Hybrid RRF &amp; 2026-vs-2024 Conflict Explorer
+        1. Rank Current vs. Outdated Policies
       </button>
       <button class="btn" role="tab" aria-selected="false" data-tab="tab2" id="btn-tab2">
-        Tab 2: 5-Mode Adversarial Abstention &amp; Bootstrap Simulator
+        2. Test Missing Rules &amp; Refusals
       </button>
       <button class="btn" role="tab" aria-selected="false" data-tab="tab3" id="btn-tab3">
-        Tab 3: Counterfactual 5-Stage Trajectory Replay Debugger
+        3. Replay &amp; Debug Pipeline Stages
       </button>
     </div>
 
     <!-- TAB 1: HYBRID RRF SEARCH & 2026-VS-2024 CONFLICT EXPLORER -->
     <div class="tab-panel active" id="tab1" role="tabpanel" aria-labelledby="btn-tab1">
       <div class="sandbox-guide">
-        <b>🧭 How to Use Tab 1 (Hybrid RRF &amp; Conflict Explorer):</b>
-        Select an enterprise policy scenario (or edit the query text directly), drag the <b>Freshness &amp; Authority Weight</b> slider between <code>0.00</code> (unweighted) and <code>0.60</code>, and click <b>Run Hybrid RRF ▸</b>. Watch the 4-column rank board compare <code>BM25 Only</code>, <code>512d Vector</code>, <code>Unweighted RRF</code>, and <code>VeriRAG Hybrid RRF</code>—and call <code>/api/verify</code> on live AWS Bedrock Nova when left blank!
+        Choose a policy scenario or edit the query directly, adjust the <b>Freshness &amp; Authority Weight</b> between <code>0.00</code> (unweighted) and <code>0.60</code>, and click <b>Run Hybrid RRF ▸</b> to compare all four rankers and invoke <code>/api/verify</code> on Amazon Bedrock Nova.
       </div>
       <div class="ctrl-grid">
         <div class="field">
@@ -886,8 +898,8 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
           <input type="range" id="t1-freshness" min="0" max="0.60" step="0.05" value="0.45">
         </div>
         <div class="field">
-          <label for="t1-apikey">CloudFront Bedrock Nova Live (or Optional Gemini Key)</label>
-          <input type="password" id="t1-apikey" placeholder="Blank = Live AWS Bedrock Nova (/api/verify)">
+          <label for="t1-apikey">Live Bedrock Synthesis (or Optional Gemini Key)</label>
+          <input type="password" id="t1-apikey" placeholder="Blank = Live Amazon Bedrock (/api/verify)">
         </div>
         <button class="btn primary" id="t1-run-btn" type="button">Run Hybrid RRF ▸</button>
       </div>
@@ -908,8 +920,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     <!-- TAB 2: 5-MODE ADVERSARIAL ABSTENTION STRESS TESTER -->
     <div class="tab-panel" id="tab2" role="tabpanel" aria-labelledby="btn-tab2">
       <div class="sandbox-guide">
-        <b>🧭 How to Use Tab 2 (5-Mode Adversarial Stress &amp; Paired Bootstrap):</b>
-        Pick any golden scenario and switch between the 5 perturbation modes (<code>CONTRADICTORY_EVIDENCE_CONFLICT</code>, <code>MISSING_CRITICAL_CONSTRAINT</code>, <code>IRRELEVANT_DISTRACTOR_INJECTION</code>, <code>CITATION_SPOOFING_PROBE</code>, <code>OUT_OF_DISTRIBUTION_BOUNDARY</code>). Compare how <code>NaiveTopK-RAG</code> hallucinates while <code>VeriRAG-Guarded</code> either cites the active 2026 policy or cleanly abstains, then click <b>Re-Run 1,000x Bootstrap ↻</b> to resample the 95% confidence interval live.
+        Select a scenario and switch across the five stress modes (<code>CONTRADICTORY_EVIDENCE_CONFLICT</code>, <code>MISSING_CRITICAL_CONSTRAINT</code>, <code>IRRELEVANT_DISTRACTOR_INJECTION</code>, <code>CITATION_SPOOFING_PROBE</code>, <code>OUT_OF_DISTRIBUTION_BOUNDARY</code>) to compare unguarded answers against VeriRAG, or click <b>Re-Run 1,000x Bootstrap ↻</b> to recompute the paired 95% confidence interval.
       </div>
       <div class="ctrl-grid">
         <div class="field">
@@ -947,8 +958,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     <!-- TAB 3: COUNTERFACTUAL 5-STAGE TRAJECTORY REPLAY DEBUGGER -->
     <div class="tab-panel" id="tab3" role="tabpanel" aria-labelledby="btn-tab3">
       <div class="sandbox-guide">
-        <b>🧭 How to Use Tab 3 (Counterfactual 5-Stage Replay Debugger):</b>
-        Choose a recorded failing trajectory (<code>CONFLICT</code>, <code>DISTRACTOR</code>, <code>MISSING_CONSTRAINT</code>, or <code>CITATION_SPOOF</code>) and toggle Stages 3, 4, and 5 between their <code>Baseline</code> and <code>Counterfactual</code> implementations. Notice how upstream stages (<code>01</code> &amp; <code>02</code>) reuse recorded <code>SHA-256</code> snapshots (<code>0 ms</code>) while the causal attribution banner pinpoints the exact stage that resolves the defect!
+        Pick a recorded failing trace (<code>CONFLICT</code>, <code>DISTRACTOR</code>, <code>MISSING_CONSTRAINT</code>, or <code>CITATION_SPOOF</code>) and swap Stages 3, 4, and 5 between their baseline and guarded implementations. Stages <code>01</code> and <code>02</code> reuse recorded <code>SHA-256</code> snapshots in <code>0 ms</code> while isolating the exact stage that resolves the defect.
       </div>
       <div class="ctrl-grid">
         <div class="field">
@@ -992,21 +1002,20 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
     </div>
   </section>
 
-  <!-- §07 · BENCHMARKS -->
+  <!-- 07 · BENCHMARKS -->
   <section id="benchmarks" class="sec last">
-    <span class="sec-kicker">§07 · Benchmarks</span>
+    <span class="sec-kicker">07 · Benchmarks</span>
     <div class="sec-head">
-      <h2>Verified Benchmark Tables (<code>python3 -m veri_rag.cli</code>)</h2>
-      <p>Generated directly from <code>benchmarks/latest_results.json</code> across 54 enterprise documents, 30 golden multi-doc scenarios, and 105 adversarial stress trials.</p>
+      <h2>Benchmarks</h2>
+      <p>Measured from <code>benchmarks/latest_results.json</code> (<code>python3 -m veri_rag.cli</code>) across 54 enterprise policy documents, 30 golden multi-document scenarios, and 105 adversarial stress trials.</p>
     </div>
 
     <div class="plain-callout">
-      <div style="font:600 11px var(--mono);color:#b01c30;text-transform:uppercase;margin-bottom:6px">📊 Plain-English Benchmark Guide — How to Read These Two Tables</div>
       <p>
-        <b>Table 1 (Retrieval Modes):</b> Notice that all four modes find the right policy somewhere inside the Top 3 (<code>100.0%</code> Recall@3), so a superficial Recall@3 metric makes naive search look "solved." Look at the rightmost column (<b>2026 vs. 2024 Conflict Win Rate</b>): without freshness &amp; authority weighting, <code>BM25</code> and unweighted RRF flip a coin (<code>50.0%</code>), whereas <code>hybrid_rrf</code> puts the active 2026 Tier-1 policy at Rank #1 **<code>100.0%</code>** of the time (<code>MRR@3 = 1.0000</code>).
+        <b>Retrieval Ranking (Table 1):</b> Every retrieval mode finds the governing policy somewhere in the top 3 (<code>100.0%</code> Recall@3), which is why Recall@3 alone makes naive search look reliable. The rightmost column shows what actually breaks in production: without effective-date and authority-tier weighting, <code>BM25</code> and unweighted RRF resolve 2026-vs-2024 conflicts only <code>50.0%</code> of the time, whereas <code>hybrid_rrf</code> places the active 2026 Tier-1 policy at Rank #1 <b><code>100.0%</code></b> of the time (<code>MRR@3 = 1.0000</code>).
       </p>
       <p>
-        <b>Table 2 (5-Mode Adversarial Harness &amp; Paired Bootstrap):</b> Across <code>105</code> hostile trials, <code>NaiveTopK-RAG</code> never abstains (<code>0.0%</code> recall) and hallucinates with high confidence on **<code>73.3%</code>** of missing/OOD queries. <code>VeriRAG-Guarded</code> drives False Confidence Hallucinations down to **<code>0.0%</code>** (<code>95% CI [-81.0%, -64.8%], p = 0.0010</code>) and lifts citation precision from <code>40.3%</code> to **<code>100.0%</code>**.
+        <b>Adversarial Stress &amp; Paired Bootstrap (Table 2):</b> Across <code>105</code> adversarial trials, <code>NaiveTopK-RAG</code> never abstains (<code>0.0%</code> recall) and guesses with false confidence on <b><code>73.3%</code></b> of missing or out-of-scope queries. <code>VeriRAG-Guarded</code> reduces false-confidence hallucinations to <b><code>0.0%</code></b> (<code>95% CI [-81.0%, -64.8%], p = 0.0010</code>) and lifts citation precision from <code>40.3%</code> to <b><code>100.0%</code></b>.
       </p>
     </div>
 
@@ -1107,7 +1116,7 @@ footer{padding:38px 0 56px;border-top:1px solid var(--rule);font:400 12px var(--
 </main>
 
 <footer class="wrap">
-  <span>VeriRAG v1.0.0 — Zero-Dependency Python 3.14 RAG Evaluation &amp; Causal Debugging Framework</span>
+  <span>VeriRAG · Grounded Enterprise Search, Calibrated Refusal &amp; Trace Replay</span>
   <span>Built by Ritwika Kancharla · <a href="https://github.com/ritwikareddykancharla/veri-rag-harness">github.com/ritwikareddykancharla/veri-rag-harness</a></span>
 </footer>
 
@@ -2109,7 +2118,7 @@ function renderTab3() {
         <p style="font:400 1.03rem var(--read);margin-top:4px">
           ${resolved
             ? `<b>ROOT CAUSE ISOLATED AT ${resolvingStageName}:</b> Reusing <b>${reusedCount} upstream recorded stage snapshots</b> and replaying downstream eliminated <code>${origDefect}</code> and restored <code>FAITHFUL</code> output (citations shifted <code>${origCite}</code> &rarr; <code>${cfCite}</code>).`
-            : `<b>DEFECT PERSISTS (<code>${origDefect}</code>):</b> Current node configuration does not intercept this failure mode. Swap Stage 3, 4, or 5 above to isolate the root cause.`
+            : `<b>DEFECT PERSISTS (<code>${origDefect}</code>):</b> Current node configuration does not intercept this defect. Swap Stage 3, 4, or 5 above to isolate the root cause.`
           }
         </p>
       </div>
@@ -2260,8 +2269,8 @@ function selectArchNode(nodeId) {
       </div>
       <div style="font:500 11.5px var(--mono);color:var(--accent);margin-bottom:10px">Module / Resource: <code>${escVr(info.module)}</code></div>
       <div class="grid-2-ins">
-        <div class="layer-plain"><b>Plain English:</b> ${escVr(info.plain)}</div>
-        <div class="layer-hood"><b>Under the Hood:</b> ${escVr(info.hood)}</div>
+        <div class="layer-plain">${escVr(info.plain)}</div>
+        <div class="layer-hood">${escVr(info.hood)}</div>
       </div>
     `;
   }
@@ -2357,7 +2366,7 @@ fetch("/api/health").then(r => r.ok ? r.json() : null).then(d => {
   if (d && d.status === "ok") {
     window._veriCloudFrontLive = true;
     const el = document.getElementById("cfVeriHealth");
-    if (el) el.textContent = `AWS CloudFront + Python ${d.python_version || "3.12"} + Bedrock (${d.bedrock_model || "us.amazon.nova-lite-v1:0"}) Live`;
+    if (el) el.textContent = "Live on AWS · Powered by Amazon Bedrock";
   }
 }).catch(() => {});
 </script>
