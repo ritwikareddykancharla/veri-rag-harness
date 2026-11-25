@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" width="1120" height="520" font-family="'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <pattern id="vr-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#c3cfe2"/>
+    </pattern>
+    <marker id="vr-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0e1a2b"/>
+    </marker>
+    <marker id="vr-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#6b21a8"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="520" fill="#f2f5fa"/>
+  <rect width="1120" height="520" fill="url(#vr-dots)"/>
+  <rect x="1" y="1" width="1118" height="518" fill="none" stroke="#0e1a2b" stroke-width="1.5"/>
+
+  <!-- Header Strip -->
+  <rect x="1" y="1" width="1118" height="62" fill="#0e1a2b"/>
+  <rect x="24" y="18" width="96" height="26" fill="#6b21a8"/>
+  <text x="72" y="35" text-anchor="middle" font-family="'Martian Mono', monospace" font-size="10.5" font-weight="500" fill="#ffffff" letter-spacing="1.2">VERIRAG</text>
+  <text x="136" y="37" font-size="17" font-weight="800" fill="#ffffff" letter-spacing="-0.3">CloudFront + Private S3 (OAC) + Date-Ranked Hybrid RRF + Bedrock Nova Span Verifier</text>
+
+  <!-- Node 01: 3-Domain Viewer -->
+  <rect x="28" y="136" width="172" height="252" fill="#ffffff" stroke="#0e1a2b" stroke-width="1.5"/>
+  <text x="42" y="160" font-family="'Martian Mono', monospace" font-size="9.5" fill="#35527e" letter-spacing="1">01 · 3-DOMAIN STUDIO</text>
+  <text x="42" y="182" font-size="15.5" font-weight="800" fill="#0e1a2b">Fact-Check Client</text>
+  <text x="42" y="206" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• Rufus Catalog Specs</text>
+  <text x="42" y="226" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• Seller SPX 2024v2026</text>
+  <text x="42" y="246" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• CS &amp; Clinical Abstain</text>
+  <text x="42" y="266" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• Claim Span Inspector</text>
+  <text x="42" y="286" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• 5% Shadow Eval Tab</text>
+  <rect x="42" y="314" width="144" height="52" fill="#f3e8ff" stroke="#6b21a8" stroke-width="1.2"/>
+  <text x="114" y="335" text-anchor="middle" font-family="'Martian Mono', monospace" font-size="10" font-weight="500" fill="#6b21a8">SINGLE HTTPS ORIGIN</text>
+  <text x="114" y="353" text-anchor="middle" font-family="'Martian Mono', monospace" font-size="9.5" fill="#0e1a2b">d14kv31n2lrkoa.cf</text>
+
+  <!-- Node 02: CloudFront CDN -->
+  <rect x="240" y="114" width="212" height="296" fill="#ffffff" stroke="#35527e" stroke-width="2"/>
+  <text x="256" y="138" font-family="'Martian Mono', monospace" font-size="9.5" fill="#35527e" letter-spacing="1">02 · EDGE CDN</text>
+  <text x="256" y="160" font-size="16.5" font-weight="800" fill="#0e1a2b">Amazon CloudFront</text>
+  <text x="256" y="178" font-family="'Martian Mono', monospace" font-size="10" fill="#6b7a92">HTTP/3 TLS · Zero CORS</text>
+
+  <rect x="256" y="196" width="180" height="90" fill="#f2f5fa" stroke="#0e1a2b" stroke-width="1.2"/>
+  <text x="268" y="216" font-family="'Martian Mono', monospace" font-size="10" font-weight="500" fill="#0e1a2b">DEFAULT (*) -&gt; S3 OAC</text>
+  <text x="268" y="236" font-size="12" fill="#33425a">Blueprint Web Assets</text>
+  <text x="268" y="256" font-family="'Martian Mono', monospace" font-size="10" fill="#0c8a4d">SigV4 Origin Access Ctrl</text>
+
+  <rect x="256" y="302" width="180" height="92" fill="#f2f5fa" stroke="#0e1a2b" stroke-width="1.2"/>
+  <text x="268" y="322" font-family="'Martian Mono', monospace" font-size="10" font-weight="500" fill="#0e1a2b">PATH (/api/*) -&gt; LAMBDA</text>
+  <text x="268" y="342" font-size="12" fill="#33425a">Verify &amp; Shadow Router</text>
+  <text x="268" y="362" font-family="'Martian Mono', monospace" font-size="10" fill="#6b21a8">CachingDisabled · Dynamic</text>
+
+  <!-- Node 03A: Private S3 -->
+  <rect x="500" y="88" width="300" height="96" fill="#ffffff" stroke="#0e1a2b" stroke-width="1.5"/>
+  <text x="516" y="111" font-family="'Martian Mono', monospace" font-size="9.5" fill="#0c8a4d" letter-spacing="1">03A · PRIVATE STATIC ORIGIN</text>
+  <text x="516" y="132" font-size="15.5" font-weight="800" fill="#0e1a2b">Amazon S3 (BlockPublicAccess=True)</text>
+  <text x="516" y="152" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">verirag-web-796330847946-us-west-2</text>
+  <text x="516" y="170" font-family="'Martian Mono', monospace" font-size="10" fill="#6b7a92">Signed exclusively via CloudFront OAC</text>
+
+  <!-- Node 03B: VeriRAG Core Engine -->
+  <rect x="500" y="204" width="300" height="290" fill="#ffffff" stroke="#0e1a2b" stroke-width="1.5"/>
+  <text x="516" y="227" font-family="'Martian Mono', monospace" font-size="9.5" fill="#6b21a8" letter-spacing="1">03B · VERIRAG HARNESS (US-WEST-2)</text>
+  <text x="516" y="248" font-size="16" font-weight="800" fill="#0e1a2b">verirag-api-origin (Python 3.12)</text>
+
+  <rect x="516" y="264" width="268" height="64" fill="#f2f5fa" stroke="#35527e" stroke-width="1.2"/>
+  <text x="528" y="283" font-family="'Martian Mono', monospace" font-size="10" font-weight="500" fill="#35527e">1. EFFECTIVE-DATE HYBRID RRF RETRIEVER</text>
+  <text x="528" y="301" font-size="11.5" fill="#33425a">BM25Okapi + 512d N-Gram Cosine + Tier Decay</text>
+  <text x="528" y="317" font-family="'Martian Mono', monospace" font-size="10" fill="#0c8a4d">Top-1 Hit Rate: 75.0% -&gt; 100.0% (MRR 1.00)</text>
+
+  <rect x="516" y="340" width="268" height="64" fill="#f3e8ff" stroke="#6b21a8" stroke-width="1.2"/>
+  <text x="528" y="359" font-family="'Martian Mono', monospace" font-size="10" font-weight="500" fill="#6b21a8">2. CONFLICT DROP &amp; ABSTENTION GATES</text>
+  <text x="528" y="377" font-size="11.5" fill="#33425a">Drops 2024 Superseded · OOD &amp; Entity Gate</text>
+  <text x="528" y="393" font-family="'Martian Mono', monospace" font-size="10" fill="#0e1a2b">Hallucinations: 73.3% -&gt; 0.0% (p = 0.001)</text>
+
+  <rect x="516" y="416" width="268" height="64" fill="#f2f5fa" stroke="#0e1a2b" stroke-width="1.2"/>
+  <text x="528" y="435" font-family="'Martian Mono', monospace" font-size="10" font-weight="500" fill="#0e1a2b">3. CLAIM SPAN VERIFIER &amp; 5% SHADOW</text>
+  <text x="528" y="453" font-size="11.5" fill="#33425a">Char-Offset [DOC-ID] Check · Async ThreadPool</text>
+  <text x="528" y="469" font-family="'Martian Mono', monospace" font-size="10" fill="#0c8a4d">&lt;0.001ms Caller Overhead · 1,000x Bootstrap</text>
+
+  <!-- Node 04: Bedrock Nova + Replay -->
+  <rect x="846" y="136" width="246" height="164" fill="#0e1a2b" stroke="#0e1a2b" stroke-width="1.5"/>
+  <text x="862" y="160" font-family="'Martian Mono', monospace" font-size="9.5" fill="#d8b4fe" letter-spacing="1">04 · FOUNDATION MODEL</text>
+  <text x="862" y="182" font-size="16.5" font-weight="800" fill="#ffffff">Amazon Bedrock</text>
+  <text x="862" y="201" font-family="'Martian Mono', monospace" font-size="10.5" fill="#8fb0e6">us.amazon.nova-lite-v1:0</text>
+  <text x="862" y="226" font-family="'Martian Mono', monospace" font-size="10" fill="#d6e0f5">• Grounded [DOC-ID] Synthesis</text>
+  <text x="862" y="246" font-family="'Martian Mono', monospace" font-size="10" fill="#d6e0f5">• Post-Gen Citation Guard</text>
+  <text x="862" y="266" font-family="'Martian Mono', monospace" font-size="10" fill="#d6e0f5">• Strict ABSTAIN Enforcement</text>
+
+  <rect x="846" y="324" width="246" height="150" fill="#ffffff" stroke="#35527e" stroke-width="1.5"/>
+  <text x="862" y="348" font-family="'Martian Mono', monospace" font-size="9.5" fill="#35527e" letter-spacing="1">05 · REPLAY &amp; AUDIT</text>
+  <text x="862" y="370" font-size="15.5" font-weight="800" fill="#0e1a2b">5-Stage DAG &amp; Corpus</text>
+  <text x="862" y="394" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• 62 Versioned Policy Docs</text>
+  <text x="862" y="414" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• 105 Adversarial Trials</text>
+  <text x="862" y="434" font-family="'Martian Mono', monospace" font-size="10" fill="#33425a">• Single-Node Stage Replay</text>
+  <text x="862" y="454" font-family="'Martian Mono', monospace" font-size="10" fill="#0c8a4d">0.0% Train-Test Leakage</text>
+
+  <!-- Connectors -->
+  <line x1="200" y1="262" x2="238" y2="262" stroke="#0e1a2b" stroke-width="1.8" marker-end="url(#vr-ink)"/>
+  <path d="M 452 240 L 476 240 L 476 136 L 498 136" fill="none" stroke="#0e1a2b" stroke-width="1.8" marker-end="url(#vr-ink)"/>
+  <line x1="452" y1="348" x2="498" y2="348" stroke="#6b21a8" stroke-width="2" marker-end="url(#vr-acc)"/>
+  <path d="M 800 310 L 824 310 L 824 218 L 844 218" fill="none" stroke="#6b21a8" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#vr-acc)"/>
+  <line x1="800" y1="400" x2="844" y2="400" stroke="#0e1a2b" stroke-width="1.8" marker-end="url(#vr-ink)"/>
+</svg>
