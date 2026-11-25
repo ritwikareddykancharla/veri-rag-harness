@@ -1,74 +1,17 @@
-/* VeriRAG 3-Domain Grounded Fact-Checking Studio & Shadow Router
- * Stateless in-memory & URL-hash state (strictly no web storage APIs).
- */
+/* VeriRAG Editorial Redline Desk Controller — stateless in-memory UI */
 (function () {
   "use strict";
-
-  const root = document.documentElement;
-  root.classList.add("js");
-
-  const themeBtn = document.querySelector(".theme");
-  if (themeBtn) {
-    themeBtn.addEventListener("click", () => {
-      const next = root.dataset.theme === "dark" ? "light" : "dark";
-      root.dataset.theme = next;
-      history.replaceState(null, "", next === "dark" ? "#theme=dark" : location.pathname);
-    });
-  }
-
-  // Sidebar progress & active section indicator
-  const side = document.querySelector(".side");
-  const postBody = document.querySelector(".post-body");
-  const sideLinks = side ? [...side.querySelectorAll(".side-list a")] : [];
-  const sideTargets = sideLinks.map((a) => document.getElementById(a.hash.slice(1)));
-  const sideInd = side && side.querySelector(".side-ind");
-  const sideBar = side && side.querySelector(".side-bar i");
-  const sidePct = side && side.querySelector(".side-pct");
-  const toTop = document.querySelector(".totop");
-  const ring = toTop && toTop.querySelector(".ring");
-  const RING = 2 * Math.PI * 21;
-  if (ring) ring.style.strokeDasharray = String(RING);
-
-  function updateScrollChrome() {
-    const y = window.scrollY;
-    const max = Math.max(1, root.scrollHeight - window.innerHeight);
-    const whole = Math.min(1, Math.max(0, y / max));
-    if (toTop && ring) {
-      toTop.classList.toggle("show", y > 500);
-      ring.style.strokeDashoffset = String(RING * (1 - whole));
-    }
-    if (side && postBody && sideBar && sidePct) {
-      const r = postBody.getBoundingClientRect();
-      const read = Math.min(1, Math.max(0, (window.innerHeight * 0.45 - r.top) / Math.max(1, r.height)));
-      sideBar.style.transform = `scaleX(${read})`;
-      sidePct.textContent = Math.round(read * 100) + "%";
-      let active = sideLinks[0] || null;
-      sideTargets.forEach((t, i) => {
-        if (t && t.getBoundingClientRect().top <= 140) active = sideLinks[i];
-      });
-      sideLinks.forEach((a) => a.classList.toggle("on", a === active));
-      if (active && sideInd) {
-        const listRect = side.querySelector(".side-list").getBoundingClientRect();
-        const aRect = active.getBoundingClientRect();
-        sideInd.style.transform = `translateY(${aRect.top - listRect.top}px)`;
-        sideInd.style.height = aRect.height + "px";
-      }
-    }
-  }
-  window.addEventListener("scroll", updateScrollChrome, { passive: true });
-  window.addEventListener("resize", updateScrollChrome);
 
   const state = {
     domains: [],
     activeDomainId: "rufus_catalog",
     activePresetId: "rufus-powerbank",
     region: "GLOBAL",
-    activeTab: "grounding",
+    shadowMode: 1.0,
     currentResult: null,
-    benchmarkSummary: null,
   };
 
-  function escapeHtml(val) {
+  function esc(val) {
     return String(val == null ? "" : val)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -76,28 +19,32 @@
       .replace(/"/g, "&quot;");
   }
 
-  function highlightCitations(text) {
-    return escapeHtml(text).replace(
+  function formatRedlinedAnswer(text, abstained) {
+    const safe = esc(text).replace(
       /\[(DOC-[A-Z0-9-]+)\]/g,
-      '<span class="doc-cite-pill">[$1]</span>'
+      '<span class="cite-tag">[$1]</span>'
     );
+    if (abstained) {
+      return `<span class="hl-rose">${safe}</span>`;
+    }
+    return `<span class="hl-verified">${safe}</span>`;
   }
 
-  function renderDomainsAndPresets() {
-    const domWrap = document.getElementById("domainTabs");
-    domWrap.innerHTML = state.domains
+  function renderFoldersAndPresets() {
+    const folderWrap = document.getElementById("domainFolders");
+    folderWrap.innerHTML = state.domains
       .map((d) => {
-        const active = d.id === state.activeDomainId;
-        return `<button type="button" class="dom-tab ${active ? "active" : ""}" data-did="${escapeHtml(d.id)}">
-          <span class="dom-badge">${escapeHtml(d.badge)}</span>
-          <span class="dom-title">${escapeHtml(d.short_title)}</span>
+        const on = d.id === state.activeDomainId;
+        return `<button type="button" class="folder-tab ${on ? "on" : ""}" data-did="${esc(d.id)}">
+          <span class="folder-kicker">${esc(d.badge)}</span>
+          <span class="folder-name">${esc(d.short_title)}</span>
         </button>`;
       })
       .join("");
 
-    domWrap.querySelectorAll(".dom-tab").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.activeDomainId = btn.getAttribute("data-did");
+    folderWrap.querySelectorAll(".folder-tab").forEach((b) => {
+      b.addEventListener("click", () => {
+        state.activeDomainId = b.getAttribute("data-did");
         const dom = state.domains.find((x) => x.id === state.activeDomainId);
         if (dom && dom.presets && dom.presets[0]) {
           const p0 = dom.presets[0];
@@ -105,22 +52,22 @@
           state.region = p0.region || "GLOBAL";
           document.getElementById("regionSelect").value = state.region;
           document.getElementById("verifyQueryInput").value = p0.query;
-          renderDomainsAndPresets();
-          executeVerify(true);
+          renderFoldersAndPresets();
+          runVerification(true);
         }
       });
     });
 
     const curDom = state.domains.find((x) => x.id === state.activeDomainId);
-    const presetWrap = document.getElementById("presetButtons");
+    const pWrap = document.getElementById("presetButtons");
     if (curDom) {
-      presetWrap.innerHTML = (curDom.presets || [])
+      pWrap.innerHTML = (curDom.presets || [])
         .map((p) => {
           const on = p.id === state.activePresetId;
-          return `<button type="button" class="preset-btn ${on ? "active" : ""}" data-pid="${escapeHtml(p.id)}">${escapeHtml(p.label)}</button>`;
+          return `<button type="button" class="case-chip ${on ? "on" : ""}" data-pid="${esc(p.id)}">${esc(p.label)}</button>`;
         })
         .join("");
-      presetWrap.querySelectorAll(".preset-btn").forEach((b) => {
+      pWrap.querySelectorAll(".case-chip").forEach((b) => {
         b.addEventListener("click", () => {
           const pid = b.getAttribute("data-pid");
           const pObj = curDom.presets.find((x) => x.id === pid);
@@ -129,178 +76,173 @@
           state.region = pObj.region || "GLOBAL";
           document.getElementById("regionSelect").value = state.region;
           document.getElementById("verifyQueryInput").value = pObj.query;
-          renderDomainsAndPresets();
-          executeVerify(true);
+          renderFoldersAndPresets();
+          runVerification(true);
         });
       });
     }
   }
 
-  function renderVerificationResult(res) {
+  function renderVerification(res) {
     if (!res) return;
     state.currentResult = res;
     const ans = res.answer;
     const llm = ans.llm_telemetry || {};
 
-    document.getElementById("liveEngineBadge").innerHTML = `
-      <span class="tag cobalt">${escapeHtml(llm.engine || "aws-bedrock (us.amazon.nova-lite-v1:0)")}</span>
-      <span class="mono-kicker" style="margin-left:6px;">${res.wall_time_ms} ms</span>
-    `;
+    document.getElementById("liveEngineBadge").innerHTML =
+      `${esc(llm.engine || "aws-bedrock (nova-lite-v1:0)")} · <strong>${res.wall_time_ms} ms</strong>`;
 
-    // 1. Answer / Safe Abstention Banner
-    const banner = document.getElementById("answerBanner");
-    banner.className = "answer-panel" + (ans.abstained ? " abstained" : "");
-    const statusTag = ans.abstained
-      ? `<span class="tag amber">🛡️ SAFE ABSTENTION ENFORCED · ZERO HALLUCINATION</span>`
-      : `<span class="tag ok">✓ VERIFIED GROUNDED SYNTHESIS · ${escapeHtml((ans.cited_doc_ids || []).join(", "))}</span>`;
-    const droppedInfo =
-      ans.superseded_docs_dropped && ans.superseded_docs_dropped.length
-        ? `<span class="tag bad">EXCLUDED STALE: ${escapeHtml(ans.superseded_docs_dropped.join(", "))}</span>`
-        : "";
-
-    banner.innerHTML = `
-      <div class="answer-top">
-        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">${statusTag}${droppedInfo}</div>
-        <span class="mono-kicker">Grounding Score: ${Number(ans.grounding_score).toFixed(2)}</span>
-      </div>
-      <p class="answer-text">${highlightCitations(ans.text)}</p>
-    `;
-
-    // 2. Side-by-Side 2024 vs 2026 Conflict Diff
-    const diffWrap = document.getElementById("conflictDiffContainer");
+    // Column 1: Conflict Callout + Source Dossier Sheets
     const cp = res.conflict_side_by_side;
+    const diffEl = document.getElementById("conflictDiffContainer");
     if (cp) {
       const s24 = cp.superseded_2024_doc;
       const a26 = cp.active_2026_doc;
-      diffWrap.innerHTML = `
-        <div class="mono-kicker" style="margin-bottom:6px;">VERSION CONFLICT DETECTED &amp; RESOLVED PRE-SYNTHESIS (TOP-1 HIT RATE 75% &rarr; 100%):</div>
-        <div class="conflict-diff-grid">
-          <div class="diff-card stale">
-            <span class="tag amber">SUPERSEDED ${escapeHtml(s24.effective_date.slice(0, 4))} · TIER-${s24.authority_tier} EXCLUDED</span>
-            <div class="diff-title"><code>${escapeHtml(s24.doc_id)}</code> · ${escapeHtml(s24.title)}</div>
-            <p class="diff-body">${escapeHtml(s24.content)}</p>
-            <div class="src-meta" style="margin-top:6px;">Stale numbers blocked: ${escapeHtml((s24.numbers || []).join(", "))}</div>
+      diffEl.innerHTML = `
+        <div class="conflict-callout">
+          <strong>⚡ Version Conflict Caught Pre-Synthesis:</strong>
+          <code>${esc(s24.doc_id)}</code> excluded in favor of <code>${esc(a26.doc_id)}</code>.
+          <div class="conflict-vs">
+            <div class="vs-box stale">2024 Stale: ${esc((s24.numbers || []).slice(0, 3).join(", "))}</div>
+            <div class="vs-box fresh">2026 Active: ${esc((a26.numbers || []).slice(0, 3).join(", "))}</div>
           </div>
-          <div class="diff-card active2026">
-            <span class="tag ok">ACTIVE ${escapeHtml(a26.effective_date.slice(0, 4))} · TIER-${a26.authority_tier} AUTHORITATIVE</span>
-            <div class="diff-title"><code>${escapeHtml(a26.doc_id)}</code> · ${escapeHtml(a26.title)}</div>
-            <p class="diff-body">${escapeHtml(a26.content)}</p>
-            <div class="src-meta" style="margin-top:6px;">Verified thresholds enforced: <strong>${escapeHtml((a26.numbers || []).join(", "))}</strong></div>
-          </div>
-        </div>
-      `;
+        </div>`;
     } else {
-      diffWrap.innerHTML = "";
+      diffEl.innerHTML = "";
     }
 
-    // 3. Claim-by-Claim Verification Breakdown
-    const claimsEl = document.getElementById("claimsList");
-    claimsEl.innerHTML = (res.claims_breakdown || [])
+    document.getElementById("sourcesList").innerHTML = (res.source_cards || [])
+      .map((s) => {
+        let stampHtml = `<span class="stamp stamp-neutral">DISTRACTOR · ${esc(s.effective_date.slice(0, 4))}</span>`;
+        if (s.badge_type === "SUPERSEDED_2024") {
+          stampHtml = `<span class="stamp stamp-superseded">SUPERSEDED · ${esc(s.effective_date.slice(0, 4))}</span>`;
+        } else if (s.badge_type.startsWith("ACTIVE")) {
+          stampHtml = `<span class="stamp stamp-active">ACTIVE · ${esc(s.effective_date.slice(0, 4))} TIER-${s.authority_tier}</span>`;
+        }
+
+        let passageHtml = esc(s.text);
+        if (s.is_cited && s.verbatim_span && s.text.includes(s.verbatim_span)) {
+          passageHtml = esc(s.text).replace(
+            esc(s.verbatim_span),
+            `<mark class="hl-verified">${esc(s.verbatim_span)}</mark>`
+          );
+        }
+
+        return `<article class="dossier-card ${esc(s.badge_type)}">
+          <div class="dossier-top">
+            ${stampHtml}
+            <span class="mono-note">RRF ${s.rrf_final_score} · &times;${s.freshness_multiplier}</span>
+          </div>
+          <h3 class="dossier-title"><code>${esc(s.doc_id)}</code> ${esc(s.title)}</h3>
+          <p class="dossier-passage">${passageHtml}</p>
+          <div class="dossier-foot">Effective ${esc(s.effective_date)} · ${esc(s.region)} · Offsets [${s.char_offsets[0]}..${s.char_offsets[1]}]</div>
+        </article>`;
+      })
+      .join("");
+
+    // Column 2: Redlined Proof Sheet & Claim Verifier
+    const banner = document.getElementById("answerBanner");
+    banner.className = "proof-sheet" + (ans.abstained ? " abstained" : "");
+    const mainStamp = ans.abstained
+      ? `<span class="stamp stamp-superseded">ABSTAINED · MISSING EVIDENCE</span>`
+      : `<span class="stamp stamp-active">SPAN VERIFIED · GROUNDED</span>`;
+    const droppedNote =
+      ans.superseded_docs_dropped && ans.superseded_docs_dropped.length
+        ? `<span class="mono-note" style="color:var(--crimson)">Redlined out: ${esc(ans.superseded_docs_dropped.join(", "))}</span>`
+        : `<span class="mono-note">Grounding: ${Number(ans.grounding_score).toFixed(2)}</span>`;
+
+    banner.innerHTML = `
+      <div class="proof-topline">
+        ${mainStamp}
+        ${droppedNote}
+      </div>
+      <p class="proof-copy">${formatRedlinedAnswer(ans.text, ans.abstained)}</p>
+    `;
+
+    document.getElementById("claimsList").innerHTML = (res.claims_breakdown || [])
       .map((c) => {
         const isAbs = c.status === "SAFE_ABSTENTION_ENFORCED";
-        const quants = (c.quantitative_tokens || []).length
-          ? `<div class="src-meta" style="margin-top:5px;">Quantitative tokens checked: <strong>${escapeHtml(c.quantitative_tokens.join(" · "))}</strong></div>`
-          : "";
-        return `<div class="claim-card ${isAbs ? "abstain-claim" : ""}">
-          <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
-            <span class="mono-kicker">CLAIM #${c.claim_index}</span>
-            <span class="tag ${isAbs ? "amber" : "ok"}">${escapeHtml(c.status.replace(/_/g, " "))}</span>
+        const qToks = (c.quantitative_tokens || [])
+          .map((t) => `<span class="q-tok">✓ ${esc(t)}</span>`)
+          .join("");
+        return `<div class="claim-row">
+          <div class="claim-top">
+            <span class="mono-note">CLAIM #${c.claim_index}</span>
+            <span class="stamp ${isAbs ? "stamp-superseded" : "stamp-active"}" style="transform:none;font-size:9px;">${esc(c.status.replace(/_/g, " "))}</span>
           </div>
-          <p style="font:400 0.98rem/1.5 var(--read);margin:6px 0;color:var(--ink);">${highlightCitations(c.claim_text)}</p>
-          ${quants}
-          <div class="src-meta" style="margin-top:5px;border-top:1px dashed var(--rule);padding-top:5px;">
-            Provenance: ${c.matched_source_id ? `<code>${escapeHtml(c.matched_source_id)}</code> — ` : ""}${escapeHtml(c.matched_source_span)}
-          </div>
+          <div style="font-size:13.5px;margin-bottom:4px;">${esc(c.claim_text).replace(/\[(DOC-[A-Z0-9-]+)\]/g, '<span class="cite-tag">[$1]</span>')}</div>
+          ${qToks ? `<div class="quant-pills">${qToks}</div>` : ""}
+          <div class="mono-note" style="font-size:10.5px;">Source span: ${c.matched_source_id ? `<code>${esc(c.matched_source_id)}</code> — ` : ""}${esc(c.matched_source_span)}</div>
         </div>`;
       })
       .join("");
 
-    // 4. Retrieved Source Cards
-    const srcEl = document.getElementById("sourcesList");
-    srcEl.innerHTML = (res.source_cards || [])
-      .map((s) => {
-        const tagCls = s.badge_type === "SUPERSEDED_2024" ? "amber" : s.badge_type.startsWith("ACTIVE") ? "ok" : "cobalt";
-        return `<div class="source-card ${escapeHtml(s.badge_type)}">
-          <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
-            <span class="tag ${tagCls}">${escapeHtml(s.badge_label)}</span>
-            <span class="src-meta">RRF ${s.rrf_final_score} · Freshness &times;${s.freshness_multiplier}</span>
-          </div>
-          <div class="src-title"><code>${escapeHtml(s.doc_id)}</code> · ${escapeHtml(s.title)}</div>
-          <p class="src-text">${escapeHtml(s.text)}</p>
-          <div class="src-meta">Effective ${escapeHtml(s.effective_date)} · Region ${escapeHtml(s.region)} · Span chars [${s.char_offsets[0]}..${s.char_offsets[1]}]</div>
-        </div>`;
-      })
-      .join("");
-
-    // 5. 5-Stage Pipeline Trace
     document.getElementById("stageDagStrip").innerHTML = (res.stage_trace || [])
-      .map(
-        (st) => `<div class="dag-node">
-          <strong>${escapeHtml(st.stage)}</strong>
-          <span class="tag ${st.status.includes("BLOCKED") || st.status.includes("DROPPED") || st.status.includes("ABSTAIN") ? "amber" : "ok"}" style="margin-bottom:4px;">${escapeHtml(st.status)}</span>
-          <div>${escapeHtml(st.detail)}</div>
-        </div>`
-      )
+      .map((st) => {
+        const shortName = st.stage.replace(/^\d+\.\s*/, "").split("_").slice(0, 2).join(" ");
+        return `<div class="pipe-step">
+          <b>${esc(shortName)}</b>
+          <span style="color:${st.status.includes("ABSTAIN") || st.status.includes("DROPPED") ? "var(--crimson)" : "var(--emerald)"}">${esc(st.status)}</span>
+        </div>`;
+      })
       .join("");
 
-    // 6. Live Query Shadow Diff inside Tab B
+    // Column 3: Live Query Shadow Diff
     const sd = res.shadow_live_diff;
     if (sd) {
       document.getElementById("liveQueryShadowDiff").innerHTML = `
-        <div class="diff-card stale">
-          <span class="tag bad">PRODUCTION BASELINE · ${escapeHtml(sd.production_naive_rag.pipeline)}</span>
-          <div class="diff-title" style="color:var(--bad);margin-top:8px;">Defect: ${escapeHtml(sd.production_naive_rag.defect_detected)}</div>
-          <p style="font:400 0.96rem/1.5 var(--read);color:var(--body);">${escapeHtml(sd.production_naive_rag.answer)}</p>
-          <div class="src-meta">Cited: ${escapeHtml((sd.production_naive_rag.cited_doc_ids || []).join(", ") || "None")}</div>
+        <div class="shadow-box naive">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="font-size:12px;">Unguarded Naive Top-K RAG</strong>
+            <span class="stamp stamp-superseded" style="font-size:8.5px;">CAUGHT DEFECT</span>
+          </div>
+          <div class="shadow-defect">${esc(sd.production_naive_rag.defect_detected)}</div>
+          <div style="font-size:12.5px;color:#4c0519;">${esc(sd.production_naive_rag.answer)}</div>
         </div>
-        <div class="diff-card active2026">
-          <span class="tag ok">ASYNC SHADOW CANDIDATE · ${escapeHtml(sd.candidate_verirag.pipeline)}</span>
-          <div class="diff-title" style="color:var(--ok);margin-top:8px;">Verdict: ${escapeHtml(sd.candidate_verirag.verdict)} (+${sd.caller_added_latency_ms}ms caller impact)</div>
-          <p style="font:400 0.96rem/1.5 var(--read);color:var(--ink);">${highlightCitations(sd.candidate_verirag.answer)}</p>
-          <div class="src-meta">Cited: ${escapeHtml((sd.candidate_verirag.cited_doc_ids || []).join(", ") || "NONE (Safe Abstain)")}</div>
+        <div class="shadow-box candidate">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="font-size:12px;">Candidate VeriRAG (Shadow)</strong>
+            <span class="stamp stamp-active" style="font-size:8.5px;">+${sd.caller_added_latency_ms}ms</span>
+          </div>
+          <div style="font-size:12.5px;margin-top:5px;color:#064e3b;">${esc(sd.candidate_verirag.answer)}</div>
         </div>
       `;
     }
   }
 
-  function renderShadowSimulationReport(rep) {
+  function renderShadowSuite(rep) {
     if (!rep) return;
     const fchr = rep.fchr_bootstrap;
     const cit = rep.citation_precision_bootstrap;
-    const cases = rep.replay_case_studies || [];
+    const cases = (rep.replay_case_studies || []).slice(0, 3);
 
     document.getElementById("shadowBootstrapOutput").innerHTML = `
-      <div class="stats" style="margin:8px 0 18px;border-top-width:1px;">
-        <div><b>${rep.shadowed_queries_count} / ${rep.total_queries_received}</b><span>Queries mirrored (${(rep.actual_sample_rate * 100).toFixed(1)}% sample)</span></div>
-        <div><b>${rep.mean_primary_caller_overhead_ms.toFixed(4)} ms</b><span>Primary caller added latency</span></div>
-        <div><b>${(fchr.mean_delta * 100).toFixed(1)}%</b><span>Hallucination delta (p = ${fchr.p_value})</span></div>
-        <div><b>+${(cit.mean_delta * 100).toFixed(1)}%</b><span>Citation precision gain (p = ${cit.p_value})</span></div>
+      <div class="boot-grid">
+        <div class="boot-cell"><small>Shadow Sampled</small><b>${rep.shadowed_queries_count} / ${rep.total_queries_received}</b></div>
+        <div class="boot-cell"><small>Caller Overhead</small><b style="color:var(--emerald)">${rep.mean_primary_caller_overhead_ms.toFixed(4)} ms</b></div>
+        <div class="boot-cell"><small>Hallucination &Delta;</small><b style="color:var(--crimson)">${(fchr.mean_delta * 100).toFixed(1)}% (p=${fchr.p_value})</b></div>
+        <div class="boot-cell"><small>Citation Gain</small><b style="color:var(--emerald)">+${(cit.mean_delta * 100).toFixed(1)}%</b></div>
       </div>
-      <div class="mono-kicker" style="margin-bottom:8px;">COUNTERFACTUAL 5-STAGE REPLAY ROOT-CAUSE ISOLATION:</div>
-      <div class="tablewrap" style="margin:0;"><table>
-        <thead><tr><th>Trial ID</th><th>Original Defect</th><th>Isolated Stage</th><th>Node Swap</th></tr></thead>
-        <tbody>
-          ${cases
-            .map(
-              (c) => `<tr>
-                <td><code>${escapeHtml(c.trial_id)}</code></td>
-                <td>${escapeHtml(c.original_defect)}</td>
-                <td><span class="tag cobalt">${escapeHtml(c.earliest_resolving_stage)}</span></td>
-                <td><code>${escapeHtml(c.original_node)}</code> &rarr; <code>${escapeHtml(c.replacement_node)}</code></td>
-              </tr>`
-            )
-            .join("")}
-        </tbody>
-      </table></div>
+      <div class="mono-note" style="margin-bottom:6px;">5-STAGE REPLAY NODE-SWAP ISOLATION:</div>
+      <div class="replay-list">
+        ${cases
+          .map(
+            (c) => `<div class="replay-card">
+              <strong>${esc(c.trial_id)}</strong> &rarr; <span style="color:var(--emerald)">[${esc(c.earliest_resolving_stage)}]</span><br>
+              Swapped <code>${esc(c.original_node)}</code> &rarr; <code>${esc(c.replacement_node)}</code>
+            </div>`
+          )
+          .join("")}
+      </div>
     `;
   }
 
-  async function executeVerify(useBedrock) {
+  async function runVerification(useBedrock) {
     const btn = document.getElementById("verifySubmitBtn");
     const q = document.getElementById("verifyQueryInput").value.trim();
     const reg = document.getElementById("regionSelect").value;
     btn.disabled = true;
-    btn.textContent = "Verifying via Bedrock...";
+    btn.textContent = "Redlining...";
     try {
       const resp = await fetch("/api/verify", {
         method: "POST",
@@ -312,59 +254,47 @@
           use_live_bedrock: Boolean(useBedrock),
         }),
       });
-      renderVerificationResult(await resp.json());
+      renderVerification(await resp.json());
     } finally {
       btn.disabled = false;
-      btn.textContent = "Verify & Ground →";
+      btn.textContent = "Redline & Verify →";
     }
   }
 
-  async function runShadowSim(rate) {
+  async function runShadow(rate) {
+    state.shadowMode = rate;
+    document.getElementById("btnShadow5").classList.toggle("on", rate < 0.5);
+    document.getElementById("btnShadow100").classList.toggle("on", rate >= 0.5);
     const resp = await fetch("/api/shadow/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sample_rate: rate }),
     });
-    renderShadowSimulationReport(await resp.json());
-  }
-
-  function setTab(which) {
-    state.activeTab = which;
-    document.getElementById("tabGrounding").classList.toggle("active", which === "grounding");
-    document.getElementById("tabShadow").classList.toggle("active", which === "shadow");
-    document.getElementById("paneGrounding").hidden = which !== "grounding";
-    document.getElementById("paneShadow").hidden = which !== "shadow";
+    renderShadowSuite(await resp.json());
   }
 
   async function init() {
     const resp = await fetch("/api/bootstrap");
     const boot = await resp.json();
     state.domains = boot.domains || [];
-    state.benchmarkSummary = boot.benchmark_summary || {};
-
     if (state.domains.length > 0) {
       document.getElementById("verifyQueryInput").value = state.domains[0].presets[0].query;
     }
-    renderDomainsAndPresets();
-    renderVerificationResult(boot.initial_verification);
-    updateScrollChrome();
+    renderFoldersAndPresets();
+    renderVerification(boot.initial_verification);
 
-    // Immediately upgrade initial answer with live Amazon Bedrock Nova synthesis!
-    executeVerify(true);
-    // Pre-populate Shadow Router simulation report
-    runShadowSim(1.0);
+    // Upgrade initial answer with live Amazon Bedrock Nova synthesis
+    runVerification(true);
+    runShadow(1.0);
 
     document.getElementById("verifyQueryForm").addEventListener("submit", (e) => {
       e.preventDefault();
       state.activePresetId = "";
-      renderDomainsAndPresets();
-      executeVerify(true);
+      renderFoldersAndPresets();
+      runVerification(true);
     });
-
-    document.getElementById("tabGrounding").addEventListener("click", () => setTab("grounding"));
-    document.getElementById("tabShadow").addEventListener("click", () => setTab("shadow"));
-    document.getElementById("btnShadow5").addEventListener("click", () => runShadowSim(0.05));
-    document.getElementById("btnShadow100").addEventListener("click", () => runShadowSim(1.0));
+    document.getElementById("btnShadow5").addEventListener("click", () => runShadow(0.05));
+    document.getElementById("btnShadow100").addEventListener("click", () => runShadow(1.0));
   }
 
   init();

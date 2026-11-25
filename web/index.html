@@ -3,227 +3,107 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="VeriRAG: Version-aware hybrid RRF retrieval, 2024 vs. 2026 policy conflict resolution, Amazon Bedrock Nova claim-level span verification, safe abstention, and 5% async shadow evaluation.">
-  <meta name="theme-color" content="#f2f5fa">
-  <title>VeriRAG — Grounded Commerce, Rufus &amp; Policy Citation Verifier | Ritwika Kancharla</title>
-  <script>
-    (function () {
-      var h = location.hash || "";
-      var t = h.indexOf("theme=dark") !== -1 ? "dark" : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-      document.documentElement.dataset.theme = t;
-    })();
-  </script>
+  <meta name="description" content="VeriRAG — Editorial evidence redliner, 2024 vs 2026 policy conflict resolver, Amazon Bedrock Nova span verifier, and 5% async shadow traffic comparator.">
+  <title>VeriRAG — Editorial Evidence Redliner &amp; Policy Verifier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body id="top">
-<header class="site"><div class="bar">
-  <a class="brand" href="https://ritwikareddykancharla.github.io"><span class="mark">RK</span><span class="name">Ritwika Kancharla</span></a>
-  <nav aria-label="Site">
-    <a href="#live-system" class="on">Live studio</a>
-    <a href="#problem">Problem</a>
-    <a href="#architecture">Architecture</a>
-    <a href="#results">Benchmarks</a>
-    <a href="https://github.com/ritwikareddykancharla/veri-rag-harness" target="_blank" rel="noopener">GitHub</a>
-  </nav>
-  <button class="theme" type="button" aria-label="Switch between light and dark theme">
-    <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg>
-    <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
-  </button>
-  <a class="btn contact" href="https://github.com/ritwikareddykancharla/veri-rag-harness" target="_blank" rel="noopener">Source &rarr;</a>
-</div></header>
-
-<main><article class="demo" style="--accent:#6b21a8"><div class="wrap">
-  <a class="crumb" href="https://ritwikareddykancharla.github.io/#projects">&larr; All projects</a>
-  <header class="post-head">
-    <p class="eyebrow">VeriRAG · Rufus Catalog, Seller SPX &amp; Policy Citation Verifier</p>
-    <h1 class="post-title">Version-Aware Hybrid RRF, Claim-Level Span Verification, and Safe Abstention</h1>
-    <p class="meta">
-      <span>Ritwika Kancharla</span>
-      <span>Amazon CloudFront + Private S3 (OAC) + <code>/api/*</code></span>
-      <span>Amazon Bedrock (<code>us.amazon.nova-lite-v1:0</code>)</span>
-      <span><a href="https://github.com/ritwikareddykancharla/veri-rag-harness" target="_blank" rel="noopener">ritwikareddykancharla/veri-rag-harness</a></span>
-    </p>
-    <div class="stats">
-      <div><b>75% &rarr; 100%</b><span>Top-1 retrieval hit rate across conflicting 2024 vs. 2026 policies (<code>MRR@3 = 1.00</code>)</span></div>
-      <div><b>-73.3% FCHR</b><span>False confidence hallucination rate cut from <code>73.3%</code> to <code>0.0%</code> (<code>p = 0.001</code>)</span></div>
-      <div><b>100.0%</b><span>Citation grounding precision (<code>+60.0%</code> lift over baseline Naive Top-K RAG)</span></div>
-      <div><b>&lt; 0.001 ms</b><span>Caller overhead on 5% async shadow traffic routing with 1,000x paired bootstrap CIs</span></div>
-    </div>
-  </header>
-
-  <div class="post-grid">
-    <aside class="side" aria-label="Contents"><div class="side-in">
-      <p class="side-k"><span>Contents</span><span class="side-pct" aria-hidden="true">0%</span></p>
-      <div class="side-bar" aria-hidden="true"><i></i></div>
-      <ol class="side-list">
-        <i class="side-ind" aria-hidden="true"></i>
-        <li><a href="#live-system" class="on"><span class="sn">01</span><span>Live interactive system</span></a></li>
-        <li><a href="#problem"><span class="sn">02</span><span>Problem &amp; team alignment</span></a></li>
-        <li><a href="#architecture"><span class="sn">03</span><span>System architecture</span></a></li>
-        <li><a href="#results"><span class="sn">04</span><span>Measured benchmarks</span></a></li>
-      </ol>
-      <a class="side-top" href="#top">Back to top</a>
-    </div></aside>
-
-    <div class="post-body">
-      <div class="tldr">
-        <p class="tk">Abstract</p>
-        <p>Standard keyword and vector search rank archived <code>2024</code> seller or refund rules ahead of active <code>2026</code> revisions half the time, while permissive RAG prompts invent dollar thresholds or battery ratings when evidence spans are missing. <strong>VeriRAG</strong> combines effective-date and authority-tier Reciprocal Rank Fusion (<code>75% &rarr; 100%</code> Top-1 hit rate), pre-synthesis conflict exclusion, <strong>Amazon Bedrock Nova</strong> synthesis with character-offset <code>[DOC-ID]</code> span verification, strict safe abstention (<code>73.3% &rarr; 0.0%</code> unsupported answers), and an asynchronous 5% shadow router.</p>
+<body>
+  <!-- TOP EDITORIAL REDLINE DESK MASTHEAD & 3-DOMAIN FOLDER SWITCHER -->
+  <header class="desk-header">
+    <div class="masthead-row">
+      <div class="masthead-brand">
+        <h1>Veri<span>RAG</span></h1>
+        <span class="masthead-sub">Editorial Evidence Redliner · 2024/2026 Conflict Resolver · Bedrock Nova</span>
       </div>
 
-      <h2 id="live-system"><span class="num">01</span>Live interactive system</h2>
-      <p>Switch across the three Amazon scenarios below — <strong>Rufus Conversational Shopping &amp; Catalog Spec Verifier</strong>, <strong>Seller Assistant (SPX) 2024 vs. 2026 Policy Resolver</strong>, and <strong>Customer Service &amp; Clinical Safe Abstention</strong> — or enter any custom question to inspect live conflict resolution, Amazon Bedrock Nova grounding, claim-level span checks, and 5% async shadow evaluation.</p>
-
-      <figure class="fig wide">
-        <div class="plate">
-          <!-- 1. 3-Domain Selector -->
-          <div class="mono-kicker" style="margin-bottom:8px;">SELECT AMAZON VERIFICATION SCENARIO DOMAIN:</div>
-          <div id="domainTabs" class="domain-switcher"></div>
-
-          <!-- 2. Guided Scenario Presets -->
-          <div class="preset-strip">
-            <span class="mono-kicker">1-Click Test Cases:</span>
-            <div id="presetButtons" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-          </div>
-
-          <!-- 3. Custom Query Input Bar -->
-          <form id="verifyQueryForm" class="verify-query-form" autocomplete="off">
-            <select id="regionSelect" aria-label="Jurisdiction filter">
-              <option value="GLOBAL" selected>GLOBAL</option>
-              <option value="US-EAST">US-EAST</option>
-              <option value="US-WEST">US-WEST</option>
-              <option value="EU-WEST">EU-WEST</option>
-            </select>
-            <input
-              type="text"
-              id="verifyQueryInput"
-              placeholder="Ask any product spec, 2024 vs 2026 FBA fee, refund ceiling, or clinical protocol question..."
-              aria-label="Verification question"
-            >
-            <button type="submit" id="verifySubmitBtn">Verify &amp; Ground &rarr;</button>
-          </form>
-
-          <!-- 4. View Switcher: Claim-by-Claim Grounding Inspector vs 5% Async Shadow Eval Tab -->
-          <div class="view-mode-bar">
-            <div class="view-tabs">
-              <button type="button" id="tabGrounding" class="vtab active">1. Claim-by-Claim Grounding &amp; 2024v2026 Inspector</button>
-              <button type="button" id="tabShadow" class="vtab">2. 5% Async Shadow Router &amp; Stage Replay Eval</button>
-            </div>
-            <div id="liveEngineBadge"></div>
-          </div>
-
-          <!-- TAB PANE A: GROUNDING INSPECTOR -->
-          <div id="paneGrounding">
-            <!-- Grounded Answer or Safe Abstention Banner -->
-            <div id="answerBanner" class="answer-panel"></div>
-
-            <!-- Side-by-Side 2024 vs 2026 Conflict Resolver (shown whenever a superseded doc is detected) -->
-            <div id="conflictDiffContainer"></div>
-
-            <!-- Two-Column Claim Verification + Retrieved Source Cards -->
-            <div class="inspector-grid">
-              <div class="bp-box">
-                <div class="bp-box-head">
-                  <h4>Claim-Level Quantitative &amp; Span Verification</h4>
-                  <span class="tag ok">100% Citation Precision</span>
-                </div>
-                <div id="claimsList"></div>
-              </div>
-
-              <div class="bp-box">
-                <div class="bp-box-head">
-                  <h4>Retrieved Corpus Passages (Date-Ranked RRF)</h4>
-                  <span class="mono-kicker">Active 2026 vs. Superseded 2024</span>
-                </div>
-                <div id="sourcesList"></div>
-              </div>
-            </div>
-
-            <!-- 5-Stage Pipeline Trace -->
-            <div class="mono-kicker" style="margin-top:18px;">5-STAGE PIPELINE EXECUTION TRACE:</div>
-            <div id="stageDagStrip" class="stage-dag"></div>
-          </div>
-
-          <!-- TAB PANE B: SHADOW MODEL EVAL & COUNTERFACTUAL REPLAY -->
-          <div id="paneShadow" hidden>
-            <div class="bp-box" style="margin-bottom:18px;">
-              <div class="bp-box-head">
-                <div>
-                  <span class="tag cobalt">LIVE QUERY TRAJECTORY DIFF</span>
-                  <h4 style="margin-top:6px;">Production Naive Top-K RAG vs. Candidate VeriRAG + Bedrock Nova</h4>
-                </div>
-                <span class="tag ok">&lt; 0.001 ms Caller Overhead</span>
-              </div>
-              <div id="liveQueryShadowDiff" class="shadow-compare-grid"></div>
-            </div>
-
-            <div class="bp-box">
-              <div class="bp-box-head">
-                <div>
-                  <span class="mono-kicker">ASYNC THREADPOOLEXECUTOR + 1,000x PAIRED BOOTSTRAP SIGNIFICANCE</span>
-                  <h4 style="margin-top:4px;">Shadow Traffic Stream Simulator (<code>105</code> Perturbed Stress Trials)</h4>
-                </div>
-                <div style="display:flex;gap:8px;">
-                  <button type="button" class="btn" id="btnShadow5">Run 5% Prod Sample</button>
-                  <button type="button" class="btn primary" id="btnShadow100">Run 100% Full Benchmark</button>
-                </div>
-              </div>
-              <div id="shadowBootstrapOutput"></div>
-            </div>
-          </div>
-        </div>
-        <figcaption><b>Figure 1.</b> Live 3-domain VeriRAG fact-checking studio executing effective-date Hybrid RRF, pre-synthesis 2024 supersession exclusion, Amazon Bedrock Nova (<code>us.amazon.nova-lite-v1:0</code>) grounded synthesis, claim-level span checks, and asynchronous 5% shadow traffic comparison.</figcaption>
-      </figure>
-
-      <h2 id="problem"><span class="num">02</span>Problem &amp; Amazon commerce / policy alignment</h2>
-      <p>Customer-facing shopping assistants, seller support copilot workflows, and regulated clinical protocols share the same two catastrophic RAG failure modes: <strong>stale version collisions</strong> (where an archived 2024 fee cap or unverified 3P seller bullet shares higher lexical overlap with the user's question than the authoritative 2026 document) and <strong>false-confidence extrapolation</strong> (where the LLM guesses a refund dollar limit or dosage when the retrieved context lacks the constraint).</p>
-
-      <div class="tablewrap wide"><table>
-        <thead><tr><th>Amazon L5 Target Team</th><th>High-Risk Hallucination / Conflict Mode</th><th>VeriRAG Guardrail</th></tr></thead>
-        <tbody>
-          <tr><td>Amazon Rufus (<code>10461524</code>), Shopping (<code>10593896</code>) &amp; Catalog GenAI (<code>10606046</code>)</td><td>3P seller marketing bullets contradict UL/ISO lab certificates or invent waterproof dive depths</td><td>Authority-tier RRF promotes Tier-1 lab specs; entity gate abstains on unverified battery/waterproof claims</td></tr>
-          <tr><td>Seller Assistant SPX (<code>10556935</code>) &amp; Alexa Shopping (<code>10564469</code>)</td><td>Archived <code>2024</code> FBA reimbursement (<code>$2,000</code>) or SAFE-T window (<code>60d</code>) outranks active <code>2026</code> policy</td><td>Effective-date &amp; supersession decay lifts Top-1 hit rate from <code>75.0%</code> to <code>100.0%</code> (<code>MRR@3 = 1.00</code>)</td></tr>
-          <tr><td>Customer Service AI (<code>10607206</code>) &amp; AWS Healthcare AI (<code>10490705</code>)</td><td>Permissive prompts promise unauthorized returnless refunds (<code>&gt;$75</code>) or unverified pediatric dosages</td><td>4-stage OOD + constraint coverage gate + post-gen <code>[DOC-ID]</code> verifier cuts hallucinations <code>73.3% &rarr; 0.0%</code></td></tr>
-        </tbody>
-      </table></div>
-
-      <h2 id="architecture"><span class="num">03</span>System architecture</h2>
-      <p>Static blueprint assets reside in a private Amazon S3 bucket (<code>BlockPublicAccess=True</code>) behind CloudFront Origin Access Control (OAC), while <code>/api/*</code> routes directly to <code>verirag-api-origin</code> (Python 3.12, <code>us-west-2</code>) with IAM least-privilege access to <strong>Amazon Bedrock (<code>us.amazon.nova-lite-v1:0</code>)</strong>.</p>
-
-      <figure class="fig wide">
-        <div class="plate paper"><img src="architecture.svg" alt="VeriRAG CloudFront + Private S3 OAC + /api/* + Amazon Bedrock Nova architecture diagram"></div>
-        <figcaption><b>Figure 2.</b> Single-origin CloudFront architecture combining private S3 OAC static hosting, version-aware Hybrid RRF retrieval, Amazon Bedrock Nova citation verification, and non-blocking 5% shadow evaluation.</figcaption>
-      </figure>
-
-      <h2 id="results"><span class="num">04</span>Measured benchmarks</h2>
-      <p>Reproducible on Python 3.11+ with zero external package dependencies via <code>python3 -m veri_rag.cli --output benchmarks/latest_results.json</code> across 54 enterprise documents, 30 golden scenarios, and 105 adversarial stress trials.</p>
-
-      <div class="tablewrap wide"><table>
-        <thead><tr><th>Metric</th><th class="r">Baseline Naive RAG</th><th class="r">VeriRAG</th><th>Delta &amp; Paired Bootstrap Significance</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Top-1 Retrieval Hit Rate (2024 vs. 2026 Conflicts)</td><td class="r">75.0% (MRR 0.88)</td><td class="r">100.0% (MRR 1.00)</td><td><strong>+25.0%</strong> Top-1 lift; 100.0% fresh policy win rate</td></tr>
-          <tr class="best"><td>False Confidence Hallucination Rate (105 Trials)</td><td class="r">73.3%</td><td class="r">0.0%</td><td><strong>-73.3%</strong> (95% CI <code>[-81.0%, -64.8%]</code>, <code>p = 0.001</code>)</td></tr>
-          <tr><td>Citation Grounding Precision</td><td class="r">40.3%</td><td class="r">100.0%</td><td><strong>+60.0%</strong> (95% CI <code>[+51.0%, +69.0%]</code>, <code>p = 0.001</code>)</td></tr>
-          <tr><td>Missing-Constraint &amp; OOD Abstention Recall / Precision</td><td class="r">0.0% / 0.0%</td><td class="r">100.0% / 95.7%</td><td><code>F1 = 0.978</code> across missing constraints &amp; OOD boundaries</td></tr>
-          <tr><td>Async 5% Shadow Router Primary Caller Overhead</td><td class="r">—</td><td class="r">&lt; 0.001 ms</td><td>Background <code>ThreadPoolExecutor</code> + 5-stage DAG replay</td></tr>
-        </tbody>
-      </table></div>
+      <div class="masthead-ledger">
+        <span class="ledger-pill">Top-1 Fresh Hit: <b class="good">75% &rarr; 100%</b></span>
+        <span class="ledger-pill">Hallucinations: <b class="crimson">-73.3% (0.0%)</b></span>
+        <span class="ledger-pill">Span Precision: <b class="good">100.0%</b></span>
+      </div>
     </div>
-  </div>
-</div></article></main>
 
-<footer class="site-foot"><div class="wrap">
-  <span>Ritwika Kancharla · VeriRAG (CloudFront + S3 OAC + Bedrock Nova)</span>
-  <span><a href="https://ritwikareddykancharla.github.io">Portfolio</a> &nbsp;·&nbsp; <a href="https://github.com/ritwikareddykancharla/veri-rag-harness">GitHub</a></span>
-</div></footer>
+    <nav id="domainFolders" class="domain-folders" aria-label="Verification Desk Domains"></nav>
+  </header>
 
-<a class="totop" href="#top" aria-label="Back to top">
-  <svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="21"/><circle class="ring" cx="24" cy="24" r="21"/><path d="M24 31V18M18 23.5l6-6 6 6"/></svg>
-</a>
+  <!-- CASE PRESETS & LIVE REDLINE QUERY INPUT -->
+  <section class="query-strip" aria-label="Fact-Check Query Controls">
+    <div class="preset-row">
+      <span class="preset-lbl">1-Click Dossier Cases:</span>
+      <div id="presetButtons" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
 
-<script src="app.js"></script>
+    <form id="verifyQueryForm" class="redline-search" autocomplete="off">
+      <select id="regionSelect" aria-label="Policy region">
+        <option value="GLOBAL" selected>GLOBAL</option>
+        <option value="US-EAST">US-EAST</option>
+        <option value="US-WEST">US-WEST</option>
+        <option value="EU-WEST">EU-WEST</option>
+      </select>
+      <input
+        type="text"
+        id="verifyQueryInput"
+        placeholder="Enter any Rufus product spec, 2024 vs 2026 FBA fee, refund ceiling, or clinical dosing query to redline..."
+        aria-label="Query to verify"
+      >
+      <button type="submit" id="verifySubmitBtn" class="redline-btn">Redline &amp; Verify &rarr;</button>
+    </form>
+  </section>
+
+  <!-- FULL-VIEWPORT 3-COLUMN REDLINE DESK -->
+  <main class="desk-grid">
+    <!-- COLUMN 1: RETRIEVED SOURCE DOSSIER STACK -->
+    <section class="col-sheet" aria-label="Retrieved Source Dossier Stack">
+      <div class="sheet-head">
+        <h2>I. Source Dossier Stack</h2>
+        <span class="mono-note">Date-Ranked Hybrid RRF</span>
+      </div>
+      <div class="sheet-body">
+        <div id="conflictDiffContainer"></div>
+        <div id="sourcesList"></div>
+      </div>
+    </section>
+
+    <!-- COLUMN 2: REDLINED ANSWER PROOF & CLAIM-BY-CLAIM VERIFIER -->
+    <section class="col-sheet" aria-label="Redlined Answer & Claim Verifier">
+      <div class="sheet-head">
+        <h2>II. Redlined Answer &amp; Claim Verifier</h2>
+        <span class="mono-note" id="liveEngineBadge">Bedrock <code>us.amazon.nova-lite-v1:0</code></span>
+      </div>
+      <div class="sheet-body">
+        <div id="answerBanner" class="proof-sheet"></div>
+
+        <div class="claims-header">Atomic Claim &amp; Quantitative Span Check</div>
+        <div id="claimsList"></div>
+
+        <div class="claims-header">5-Stage Guardrail Execution Trace</div>
+        <div id="stageDagStrip" class="pipeline-strip"></div>
+      </div>
+    </section>
+
+    <!-- COLUMN 3: 5% ASYNC SHADOW TRAFFIC COMPARATOR -->
+    <section class="col-sheet" aria-label="Async Shadow Traffic Comparator">
+      <div class="sheet-head">
+        <h2>III. 5% Async Shadow Comparator</h2>
+        <span class="mono-note">&lt; 0.001 ms Caller Overhead</span>
+      </div>
+      <div class="sheet-body">
+        <div class="mono-note" style="margin-bottom:7px;">ACTIVE QUERY: UNGUARDED PROD vs. VERIRAG</div>
+        <div id="liveQueryShadowDiff"></div>
+
+        <div class="shadow-controls">
+          <button type="button" id="btnShadow5" class="sh-btn">Mirror 5% Prod Stream</button>
+          <button type="button" id="btnShadow100" class="sh-btn on">100% Stress Suite (105)</button>
+        </div>
+
+        <div id="shadowBootstrapOutput"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>
